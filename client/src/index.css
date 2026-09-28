@@ -1,0 +1,1771 @@
+/* Blinga Text System — Inter Variable for sharp, optical-size-aware rendering */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+  --background: #fdfcfc;
+  --foreground: hsl(240, 10%, 3.9%);
+  --muted: hsl(220, 18%, 91%);
+  --muted-foreground: hsl(240, 3.8%, 46.1%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(240, 10%, 3.9%);
+  --card: #ffffff;
+  --card-foreground: hsl(240, 10%, 3.9%);
+  --border: hsl(220, 13%, 76%);
+  --input: hsl(220, 13%, 76%);
+  --primary: hsl(240, 9%, 10%);
+  --primary-foreground: hsl(0, 0%, 98%);
+  --secondary: hsl(240, 4.8%, 95.9%);
+  --secondary-foreground: hsl(240, 5.9%, 10%);
+  --accent: hsl(240, 4.8%, 95.9%);
+  --accent-foreground: hsl(240, 5.9%, 10%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 5%, 64.9%);
+  --radius: 1.25rem;
+
+  /* Custom Blinga colors */
+  --light-primary: hsl(0, 0%, 100%);
+  --light-secondary: hsl(240, 4.8%, 95.9%);
+  --light-accent: hsl(240, 4.8%, 95.9%);
+  --text-primary: hsl(240, 10%, 3.9%);
+  --text-secondary: hsl(240, 3.8%, 46.1%);
+  
+  /* macOS-style colors */
+  --macos-gray: hsl(220, 9%, 46%);
+  --macos-gray-light: hsl(220, 14%, 96%);
+  --macos-gray-dark: hsl(220, 13%, 18%);
+  --macos-border-light: hsl(220, 8%, 75%);
+  /* UI accent color — overridden by JS when accent is enabled */
+  --blinga-ui-accent: #3b82f6;
+}
+
+.dark {
+  --background: #1b1b18;
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: #262626;
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 10%, 3.9%);
+  --input: hsl(240, 10%, 3.9%);
+  --primary: hsl(0, 0%, 98%);
+  --primary-foreground: hsl(240, 10%, 3.9%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    /* Universal optical sizing — prevents resets in shadcn/radix portals */
+    font-optical-sizing: auto;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-family: var(--blinga-app-font, 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif);
+    /* Use the browser's legible text renderer instead of forcing SVG-style
+       geometricPrecision, which can rasterize mobile UI text softly. */
+    text-rendering: optimizeLegibility;
+    font-optical-sizing: auto;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+    font-kerning: normal;
+    font-synthesis: none;
+    -webkit-font-smoothing: auto;
+    -moz-osx-font-smoothing: auto;
+  }
+
+  input, textarea, select {
+    text-rendering: optimizeLegibility;
+    font-optical-sizing: auto;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+    -webkit-font-smoothing: auto;
+    -moz-osx-font-smoothing: auto;
+  }
+
+  /* Code blocks — monospace chars must stay distinct, no ligatures */
+  code, pre, kbd, samp {
+    font-feature-settings: 'kern' 0, 'liga' 0, 'calt' 0;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: auto;
+    -moz-osx-font-smoothing: auto;
+  }
+
+  /* Limit maximum font weight to 500 across the app as requested */
+  h1, h2, h3, h4, h5, h6,
+  strong, b,
+  .font-semibold, .font-bold, .font-extrabold, .font-black {
+    font-weight: 500 !important;
+  }
+}
+
+@layer components {
+  .logo-container {
+    transform-origin: center;
+  }
+
+  .logo-container:hover {
+    animation: logoSpin 0.8s ease-in-out;
+  }
+
+  /* Message input styling for dark theme - transparent backgrounds */
+  .dark .message-input-container {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 1.5rem;
+    box-shadow: none !important;
+  }
+  
+  .dark .message-input {
+    background: transparent !important;
+    border: 1px solid hsl(240, 3.7%, 15.9%) !important;
+    color: hsl(0, 0%, 98%) !important;
+  }
+  
+  .dark .message-input:focus {
+    border-color: hsl(240, 5%, 25%) !important;
+    box-shadow: none !important;
+  }
+  
+  /* Fix all borders and elements in dark theme with transparent backgrounds */
+  .dark [role="combobox"],
+  .dark [role="combobox"]:focus,
+  .dark [role="combobox"][data-state="open"] {
+    border: none !important;
+    outline: none !important;
+    ring: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+  
+  [role="combobox"],
+  [role="combobox"]:focus,
+  [role="combobox"][data-state="open"] {
+    border: none !important;
+    outline: none !important;
+    ring: 0 !important;
+    box-shadow: none !important;
+  }
+  
+  .dark [data-radix-select-content],
+  .dark [role="listbox"],
+  .dark [role="menu"],
+  .dark .select-content {
+    background-color: #262626 !important;
+    background: #262626 !important;
+    border: 1px solid hsl(240, 3.7%, 15.9%) !important;
+  }
+
+  /* Improve visibility of hover effects in white theme dropdowns */
+  [data-radix-select-content] [role="option"]:hover,
+  [data-radix-select-content] [role="option"]:focus,
+  [role="menu"] [role="menuitem"]:hover,
+  [role="menu"] [role="menuitem"]:focus {
+    background-color: rgba(0, 0, 0, 0.08) !important;
+  }
+
+  .dark [data-radix-select-content] [role="option"]:hover,
+  .dark [data-radix-select-content] [role="option"]:focus,
+  .dark [role="menu"] [role="menuitem"]:hover,
+  .dark [role="menu"] [role="menuitem"]:focus {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  /* Fix dialog and modal borders in dark theme */
+  .dark [role="dialog"] {
+    border: 1px solid hsl(240, 3.7%, 15.9%) !important;
+  }
+
+  /* Spotlight search modal — no border ever */
+  .spotlight-modal,
+  .dark .spotlight-modal {
+    border: none !important;
+    outline: none !important;
+    box-shadow: 0 25px 60px -10px rgba(0,0,0,0.6) !important;
+  }
+
+  /* Fix button borders in dark theme */
+  .dark .border {
+    border-color: hsl(240, 3.7%, 15.9%) !important;
+  }
+
+  /* Fix card borders in dark theme */
+  .dark .bg-card {
+    border: 1px solid hsl(240, 3.7%, 15.9%);
+  }
+
+  /* Fix input borders in dark theme */
+  .dark input {
+    border: 1px solid hsl(240, 3.7%, 15.9%) !important;
+  }
+
+  /* Fix textarea borders in dark theme */
+  .dark textarea {
+    border: none !important;
+  }
+
+  /* Fix Blinga settings text color in dark theme */
+  .dark .sidebar-settings {
+    color: hsl(0, 0%, 98%) !important;
+  }
+
+  /* Improve theme toggle styling */
+  .theme-toggle-premium {
+    background: linear-gradient(135deg, #fbbf24, #3b82f6);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .theme-toggle-premium:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  }
+
+  /* Premium gradient toggles */
+  .premium-toggle-active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 4px 15px 0 rgba(102, 126, 234, 0.4);
+  }
+
+  .premium-toggle-inactive {
+    background: #e2e8f0;
+    transition: background-color 0.3s ease;
+  }
+
+  .dark .premium-toggle-inactive {
+    background: #374151;
+  }
+
+  .moving-grid {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    opacity: 0.1;
+    background-image: 
+      linear-gradient(hsl(0, 0%, 0%) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(0, 0%, 0%) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: gridMoveInfinite 20s linear infinite;
+    z-index: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  /* Hide background during AI thinking */
+  .ai-thinking .moving-grid {
+    opacity: 0 !important;
+  }
+
+  .dark .moving-grid {
+    background-image: 
+      linear-gradient(hsl(0, 0%, 100%) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(0, 0%, 100%) 1px, transparent 1px);
+    opacity: 0.12;
+    transition: opacity 0.3s ease;
+  }
+
+  .floating-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .particle {
+    position: absolute;
+    background: linear-gradient(45deg, hsl(240, 100%, 70%), hsl(180, 100%, 70%));
+    border-radius: 50%;
+    opacity: 0.1;
+    animation: float 15s infinite linear;
+    transition: opacity 0.3s ease;
+  }
+
+  /* Hide particles during AI thinking */
+  .ai-thinking .particle {
+    opacity: 0 !important;
+  }
+
+  .dark .particle {
+    background: linear-gradient(45deg, hsl(240, 100%, 80%), hsl(180, 100%, 80%));
+    opacity: 0.15;
+  }
+
+  .particle:nth-child(1) {
+    width: 4px;
+    height: 4px;
+    left: 10%;
+    animation-delay: 0s;
+    animation-duration: 12s;
+  }
+
+  .particle:nth-child(2) {
+    width: 6px;
+    height: 6px;
+    left: 20%;
+    animation-delay: -2s;
+    animation-duration: 18s;
+  }
+
+  .particle:nth-child(3) {
+    width: 3px;
+    height: 3px;
+    left: 30%;
+    animation-delay: -4s;
+    animation-duration: 15s;
+  }
+
+  .particle:nth-child(4) {
+    width: 5px;
+    height: 5px;
+    left: 40%;
+    animation-delay: -6s;
+    animation-duration: 20s;
+  }
+
+  .particle:nth-child(5) {
+    width: 4px;
+    height: 4px;
+    left: 50%;
+    animation-delay: -8s;
+    animation-duration: 14s;
+  }
+
+  .particle:nth-child(6) {
+    width: 7px;
+    height: 7px;
+    left: 60%;
+    animation-delay: -10s;
+    animation-duration: 16s;
+  }
+
+  .particle:nth-child(7) {
+    width: 3px;
+    height: 3px;
+    left: 70%;
+    animation-delay: -12s;
+    animation-duration: 22s;
+  }
+
+  .particle:nth-child(8) {
+    width: 5px;
+    height: 5px;
+    left: 80%;
+    animation-delay: -14s;
+    animation-duration: 13s;
+  }
+
+  .particle:nth-child(9) {
+    width: 4px;
+    height: 4px;
+    left: 90%;
+    animation-delay: -16s;
+    animation-duration: 19s;
+  }
+
+  .particle:nth-child(10) {
+    width: 6px;
+    height: 6px;
+    left: 95%;
+    animation-delay: -18s;
+    animation-duration: 17s;
+  }
+
+  .gradient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.3;
+    animation: orbit 25s infinite linear;
+    z-index: 0;
+  }
+
+  .gradient-orb:nth-child(1) {
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, hsl(240, 100%, 70%) 0%, transparent 70%);
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+  }
+
+  .gradient-orb:nth-child(2) {
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, hsl(180, 100%, 70%) 0%, transparent 70%);
+    top: 60%;
+    right: 15%;
+    animation-delay: -8s;
+    animation-duration: 30s;
+  }
+
+  .gradient-orb:nth-child(3) {
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, hsl(300, 100%, 70%) 0%, transparent 70%);
+    bottom: 30%;
+    left: 50%;
+    animation-delay: -15s;
+    animation-duration: 35s;
+  }
+
+  .chat-bubble {
+    /* Keep message bubbles visually stable while ChatInterface updates
+       response state. Entrance animations on this shared class restart or
+       replay during response rendering and look like flicker. */
+    animation: none;
+  }
+
+  .glassmorphism {
+    background: hsla(240, 6%, 10%, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid hsla(0, 0%, 98%, 0.1);
+  }
+
+  .voice-pulse {
+    animation: pulse 1.5s infinite;
+  }
+
+  .loading-dots::after {
+    content: '';
+    animation: dots 1.5s infinite;
+  }
+
+  /* Begin Experience Button Animations - Main Page Functions */
+  .begin-experience-btn {
+    position: relative;
+    overflow: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    will-change: transform, box-shadow;
+  }
+
+  .begin-experience-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+    backface-visibility: hidden;
+  }
+
+  .begin-experience-btn:hover::before {
+    left: 100%;
+  }
+
+  .begin-experience-btn:hover {
+    animation: mainFunctionsPreview 2s ease-in-out;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  }
+
+  @keyframes mainFunctionsPreview {
+    0% { 
+      transform: scale3d(1, 1, 1) translateZ(0);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+    25% { 
+      transform: scale3d(1.02, 1.02, 1) translateZ(0);
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+    }
+    50% { 
+      transform: scale3d(1.05, 1.05, 1) translateZ(0);
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
+    }
+    75% { 
+      transform: scale3d(1.02, 1.02, 1) translateZ(0);
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+    }
+    100% { 
+      transform: scale3d(1, 1, 1) translateZ(0);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+  }
+
+
+
+  .message-input {
+    min-height: 80px;
+    max-height: 200px;
+    resize: none;
+    line-height: 27px;
+    font-size: 18px;
+    border: none !important;
+    transition: background-color 0.22s ease, color 0.22s ease, border-color 0.22s ease;
+    padding-top: 8px !important;
+    padding-left: 16px !important;
+    letter-spacing: 0px;
+    text-align: left;
+  }
+
+  .message-input:focus {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    transform: none;
+  }
+
+  /* Force remove all borders from inputs/triggers in message bar */
+  .message-input-container button,
+  .message-input-container [role="combobox"],
+  .message-input-container [role="menuitem"],
+  .message-input-container [data-state],
+  .message-input-container button:focus,
+  .message-input-container button:active,
+  .message-input-container .absolute.left-1.bottom-1 button {
+    border: none !important;
+    border-width: 0 !important;
+    box-shadow: none !important;
+    outline: none !important;
+    ring: 0 !important;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Target specifically the attachment button trigger and its states */
+  [data-radix-menu-content-trigger],
+  [data-state="open"],
+  [data-state="closed"] {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  .dark .message-input {
+    min-height: 80px;
+    max-height: 200px;
+    resize: none;
+    line-height: 27px;
+    font-size: 18px;
+    border: none !important;
+    transition: background-color 0.22s ease, color 0.22s ease, border-color 0.22s ease;
+    padding-top: 8px !important;
+    padding-left: 16px !important;
+    letter-spacing: 0px;
+    text-align: left;
+    background: transparent !important;
+    color: hsl(0, 0%, 98%) !important;
+  }
+
+  .dark .message-input:focus {
+    border-color: hsl(240, 3.7%, 15.9%) !important;
+    outline: none !important;
+    box-shadow: none !important;
+    transform: none;
+    background: transparent !important;
+  }
+
+  .macos-function-bar {
+    border: none !important;
+    border-width: 0 !important;
+    box-shadow: none !important;
+  }
+
+  /*
+   * The chat transcript is an absolute scrolling layer.  Once a response
+   * exists, the function bar must paint an opaque surface over that layer;
+   * otherwise transcript text can show through the transparent gaps between
+   * the controls.
+   */
+  .macos-function-bar-with-messages {
+    position: relative;
+    z-index: 30 !important;
+    isolation: isolate;
+  }
+
+  .macos-function-bar-with-messages::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    /* Fade in from the transcript into the solid function-bar surface. */
+    top: -30px;
+    right: -100vw;
+    bottom: -18px;
+    left: -100vw;
+    background: linear-gradient(
+      to bottom,
+      transparent 0,
+      var(--background) 30px,
+      var(--background) 100%
+    );
+    pointer-events: none;
+  }
+
+  .macos-function-bar-with-messages > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .message-composer-with-messages {
+    position: relative;
+    z-index: 40 !important;
+    isolation: isolate;
+  }
+
+  .message-composer-with-messages::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    /* Start at the composer edge (not inside the rounded input) and continue
+       below it so the transcript cannot show through beneath the bar. */
+    top: 0;
+    right: -100vw;
+    bottom: -56px;
+    left: -100vw;
+    background: var(--background);
+    pointer-events: none;
+  }
+
+  .message-composer-with-messages > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .dark .macos-function-bar {
+    border: none !important;
+    background: transparent !important;
+  }
+
+  .macos-button {
+    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+                background-color 0.22s ease, color 0.22s ease, opacity 0.22s ease;
+    transform-origin: center;
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+
+  /* First normalize all buttons when function bar is hovered */
+  .macos-function-bar:hover .macos-button {
+    transform: scale3d(1.0, 1.0, 1) translateZ(0);
+    transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1),
+                background-color 0.22s ease, color 0.22s ease, opacity 0.22s ease;
+  }
+
+  /* Then apply hover effect to specific button */
+  .macos-function-bar:hover .macos-button:hover {
+    transform: scale3d(1.35, 1.35, 1) translateZ(0) !important;
+    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+                background-color 0.22s ease, color 0.22s ease, opacity 0.22s ease;
+  }
+
+  /* Direct hover when not in function bar context */
+  .macos-button:hover {
+    transform: scale3d(1.35, 1.35, 1) translateZ(0);
+  }
+
+  .macos-button:active {
+    transform: scale3d(1.2, 1.2, 1) translateZ(0);
+    transition: transform 0.15s cubic-bezier(0.23, 1, 0.32, 1),
+                background-color 0.15s ease, color 0.15s ease;
+  }
+
+  /* macOS-style dialog animations */
+  @keyframes macos-dialog-enter {
+    0% {
+      opacity: 0;
+      transform: scale(0.8) translate(-50%, -50%);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1.05) translate(-50%, -50%);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translate(-50%, -50%);
+    }
+  }
+
+  @keyframes macos-dialog-exit {
+    0% {
+      opacity: 1;
+      transform: scale(1) translate(-50%, -50%);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0.8) translate(-50%, -50%);
+    }
+  }
+
+  @keyframes macos-backdrop-enter {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  .macos-dialog-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: macos-dialog-enter 0.35s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  }
+
+  .macos-dialog-content[data-state="closed"] {
+    animation: macos-dialog-exit 0.25s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  }
+
+  .macos-dialog-backdrop {
+    animation: macos-backdrop-enter 0.3s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  }
+
+  /* macOS authentic app opening animation */
+  @keyframes macos-app-line {
+    0% { 
+      width: 2px; 
+      height: 2px; 
+      opacity: 1;
+    }
+    30% { 
+      width: 60px; 
+      height: 4px; 
+      opacity: 1;
+    }
+    60% { 
+      width: 200px; 
+      height: 8px; 
+      opacity: 0.8;
+    }
+    100% { 
+      width: 0px; 
+      height: 0px; 
+      opacity: 0;
+    }
+  }
+
+  @keyframes macos-window-appear {
+    0% { 
+      opacity: 0; 
+      transform: scale(0.3) translate(-50%, -50%);
+    }
+    100% { 
+      opacity: 1; 
+      transform: scale(1) translate(-50%, -50%);
+    }
+  }
+
+  .macos-app-line {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(90deg, #ffffff, #f0f0f0);
+    border-radius: 4px;
+    z-index: 9999;
+    animation: macos-app-line 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .macos-dialog-content.opening {
+    animation: macos-window-appear 0.5s cubic-bezier(0.23, 1, 0.32, 1) 0.6s both;
+  }
+
+  .attribution {
+    font-family: 'Inter', sans-serif;
+    font-style: italic;
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════
+     BLINGA TEXT SYSTEM — SVG-level sharpness across the entire app.
+     Keep text legible without forcing a soft SVG-style rasterized layer.
+     ═══════════════════════════════════════════════════════════════════ */
+
+  /* ── Universal: every non-code element gets SVG-mode rendering ── */
+  *:not(code):not(pre):not(kbd):not(samp) {
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+    font-kerning: normal;
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: auto;
+    -moz-osx-font-smoothing: auto;
+  }
+
+  /* ── AI message prose ── */
+  .prose {
+    font-optical-sizing: auto;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+  }
+
+  /* Inline code inside prose — no ligatures, mono chars stay distinct */
+  .prose :not(pre) > code {
+    font-feature-settings: 'kern' 0, 'liga' 0;
+  }
+
+  .prose pre {
+    font-feature-settings: 'kern' 0, 'liga' 0;
+  }
+
+  /* ── Message input ── */
+  .message-input,
+  .dark .message-input {
+    font-optical-sizing: auto;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+  }
+
+  /* ── Radix/shadcn portals (dropdowns, dialogs, tooltips, sheets) ──
+     These render outside the body subtree so they need explicit coverage */
+  [data-radix-popper-content-wrapper],
+  [data-radix-popper-content-wrapper] *:not(code):not(pre),
+  [role="dialog"] *:not(code):not(pre),
+  [role="menu"] *,
+  [role="listbox"] *,
+  [role="tooltip"] {
+    text-rendering: geometricPrecision;
+    font-optical-sizing: auto;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+    -webkit-font-smoothing: auto;
+    -moz-osx-font-smoothing: auto;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes blinga-onboarding-enter {
+  from { opacity: 0; transform: translateY(18px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes blinga-picker-backdrop {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes blinga-picker-panel {
+  from { opacity: 0; transform: translateY(18px) scale(0.975); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes blinga-picker-row {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes blinga-logo-breathe {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-2px) scale(1.025); }
+}
+
+.blinga-onboarding-enter {
+  animation: blinga-onboarding-enter 0.7s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.blinga-logo-breathe {
+  animation: blinga-logo-breathe 4.8s ease-in-out infinite;
+}
+
+.blinga-account-icon {
+  animation: blinga-onboarding-enter 0.7s 0.12s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.blinga-progress-sweep {
+  animation: blinga-progress-sweep 1.2s 0.25s cubic-bezier(0.23, 1, 0.32, 1) both;
+  transform-origin: left;
+}
+
+@keyframes blinga-progress-sweep {
+  from { transform: scaleX(0.18); opacity: 0.4; }
+  to { transform: scaleX(1); opacity: 1; }
+}
+
+.blinga-picker-backdrop {
+  animation: blinga-picker-backdrop 0.22s ease-out both;
+}
+
+.blinga-picker-panel {
+  animation: blinga-picker-panel 0.42s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.blinga-picker-row {
+  animation: blinga-picker-row 0.28s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+/* Onboarding fields keep one intentional outer border. The global app styles
+   also touch inputs, so reset their native/legacy inner border explicitly. */
+#root .blinga-onboarding-input,
+#root .blinga-country-picker-input,
+body .blinga-onboarding-input,
+body .blinga-country-picker-input {
+  border: 0 !important;
+  border-width: 0 !important;
+  border-style: none !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blinga-onboarding-enter,
+  .blinga-logo-breathe,
+  .blinga-account-icon,
+  .blinga-progress-sweep,
+  .blinga-picker-backdrop,
+  .blinga-picker-panel,
+  .blinga-picker-row {
+    animation: none !important;
+  }
+}
+
+@keyframes popup-slide-up {
+  from { opacity: 0; transform: translateY(8px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)  scale(1);    }
+}
+@keyframes popup-slide-down {
+  from { opacity: 1; transform: translateY(0)  scale(1);    }
+  to   { opacity: 0; transform: translateY(8px) scale(0.97); }
+}
+
+@keyframes slideUpSheet {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes sheetEnter {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes sheetExit {
+  from { transform: translateY(0); }
+  to { transform: translateY(100%); }
+}
+@keyframes overlayEnter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes overlayExit {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes dots {
+  0%, 20% { content: ''; }
+  40% { content: '.'; }
+  60% { content: '..'; }
+  80%, 100% { content: '...'; }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% { 
+    transform: scale(1.5);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.08; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.6); }
+}
+
+@keyframes gradient-breathe {
+  0%, 100% { width: 20%; opacity: 0.6; }
+  50% { width: 34%; opacity: 1; }
+}
+
+@keyframes rainbow-shift {
+  0%   { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+@keyframes own-owl-twinkle {
+  0%, 100% { opacity: 0.12; transform: scale(0.82); }
+  50%       { opacity: 0.55; transform: scale(1.12); }
+}
+@keyframes own-mode-pulse {
+  0%, 100% { opacity: 0.88; transform: scale(1); }
+  50%       { opacity: 1;    transform: scale(1.05); }
+}
+.own-mode-icon-pc { animation: own-mode-pulse 3s ease-in-out infinite; }
+.own-mode-icon-m  { animation: own-mode-pulse 3s ease-in-out infinite; }
+
+@keyframes star-drift-1 {
+  0%   { translate: 0px 0px; }
+  25%  { translate: 6px -8px; }
+  50%  { translate: 12px 2px; }
+  75%  { translate: 4px 10px; }
+  100% { translate: 0px 0px; }
+}
+
+@keyframes star-drift-2 {
+  0%   { translate: 0px 0px; }
+  25%  { translate: -8px 5px; }
+  50%  { translate: -3px 12px; }
+  75%  { translate: 7px 6px; }
+  100% { translate: 0px 0px; }
+}
+
+@keyframes star-drift-3 {
+  0%   { translate: 0px 0px; }
+  33%  { translate: 10px 6px; }
+  66%  { translate: -5px 9px; }
+  100% { translate: 0px 0px; }
+}
+
+@keyframes star-drift-4 {
+  0%   { translate: 0px 0px; }
+  20%  { translate: -9px -4px; }
+  50%  { translate: 3px -11px; }
+  80%  { translate: 8px -2px; }
+  100% { translate: 0px 0px; }
+}
+
+/* CTA click feedback — instant squash then overshoot-grow, then settle. */
+@keyframes btnClickPop {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(0.86); }
+  60%  { transform: scale(1.1); }
+  80%  { transform: scale(0.97); }
+  100% { transform: scale(1); }
+}
+.btn-click-pop {
+  animation: btnClickPop 0.48s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Legacy streaming text styles. Responses now render as stable markdown. */
+.ai-stream-text {
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--foreground);
+  white-space: normal;
+  word-break: break-word;
+  contain: layout style;
+  transform: translateZ(0);
+}
+
+/* Keep this class safe for any older caller, but do not animate response text. */
+.ai-stream-cursor::after {
+  content: '';
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: currentColor;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  border-radius: 1px;
+   animation: none;
+  opacity: 0.7;
+}
+
+@keyframes ai-cursor-blink {
+  0%, 100% { opacity: 0.7; }
+  50%       { opacity: 0; }
+}
+
+/* Completed responses must not fade/replay on parent state updates. */
+.typing-message {
+  animation: none;
+}
+
+@keyframes typingTextIn {
+  from { opacity: 0.6; }
+  to   { opacity: 1; }
+}
+
+
+
+@keyframes logoSpin {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes gridMove {
+  0% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(20px, 10px) scale(1.02); }
+  50% { transform: translate(40px, 40px) scale(1); }
+  75% { transform: translate(20px, 30px) scale(0.98); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+@keyframes gridMoveInfinite {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(-40px, -40px); }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(100vh) translateX(0px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.3;
+  }
+  90% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(-100px) translateX(50px);
+    opacity: 0;
+  }
+}
+
+@keyframes orbit {
+  0% {
+    transform: rotate(0deg) translateX(100px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(100px) rotate(-360deg);
+  }
+}
+
+/* ── Custom scrollbar: slim, clean, always-visible ── */
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(155, 155, 155, 0.35) transparent;
+}
+.dark * {
+  scrollbar-color: rgba(200, 200, 200, 0.20) transparent;
+}
+
+/* WebKit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(155, 155, 155, 0.35);
+  border-radius: 999px;
+  transition: background 0.2s ease;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(120, 120, 120, 0.60);
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Dark mode thumb */
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(210, 210, 210, 0.20);
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(220, 220, 220, 0.45);
+}
+
+/* Compact msg-bar textarea — scrollbar inset so it stays inside rounded container */
+.compact-textarea::-webkit-scrollbar {
+  width: 4px;
+}
+.compact-textarea::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 8px 0;
+}
+.compact-textarea::-webkit-scrollbar-thumb {
+  background: rgba(155, 155, 155, 0.40);
+  border-radius: 999px;
+}
+.dark .compact-textarea::-webkit-scrollbar-thumb {
+  background: rgba(220, 220, 220, 0.25);
+}
+.compact-textarea {
+  scrollbar-gutter: stable;
+}
+
+
+.settings-content-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(155, 155, 155, 0.25) transparent;
+}
+.dark .settings-content-scroll {
+  scrollbar-color: rgba(200, 200, 200, 0.15) transparent;
+}
+.settings-content-scroll::-webkit-scrollbar {
+  width: 2px;
+}
+.settings-content-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.settings-content-scroll::-webkit-scrollbar-thumb {
+  background: rgba(155, 155, 155, 0.30);
+  border-radius: 999px;
+}
+.dark .settings-content-scroll::-webkit-scrollbar-thumb {
+  background: rgba(210, 210, 210, 0.15);
+}
+
+/* Nomad horizontal scroller — always-visible bar */
+.nomad-hscroll {
+  overflow-x: scroll !important;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(155, 155, 155, 0.70) rgba(100, 100, 100, 0.10);
+}
+.dark .nomad-hscroll {
+  scrollbar-color: rgba(200, 200, 200, 0.55) rgba(255, 255, 255, 0.06);
+}
+.nomad-hscroll::-webkit-scrollbar {
+  height: 5px;
+  display: block;
+}
+.nomad-hscroll::-webkit-scrollbar-track {
+  background: rgba(100, 100, 100, 0.10);
+  border-radius: 999px;
+}
+.nomad-hscroll::-webkit-scrollbar-thumb {
+  background: rgba(155, 155, 155, 0.70);
+  border-radius: 999px;
+}
+.dark .nomad-hscroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.06);
+}
+.dark .nomad-hscroll::-webkit-scrollbar-thumb {
+  background: rgba(200, 200, 200, 0.55);
+}
+.nomad-hscroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 100, 100, 0.90);
+}
+.dark .nomad-hscroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(220, 220, 220, 0.80);
+}
+
+/* Utility: fully hidden scrollbar */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+@keyframes pop-out {
+  0%   { transform: scale(1.1);  opacity: 1; }
+  30%  { transform: scale(1.22); opacity: 1; }
+  100% { transform: scale(0.05); opacity: 0; }
+}
+
+@keyframes pop-in {
+  0%   { transform: scale(0.82) translateY(14px); opacity: 0; }
+  48%  { transform: scale(1.08) translateY(-5px); opacity: 1; }
+  70%  { transform: scale(0.96) translateY(2px);  opacity: 1; }
+  86%  { transform: scale(1.02) translateY(-1px); opacity: 1; }
+  100% { transform: scale(1)    translateY(0);    opacity: 1; }
+}
+
+/* Spring-settle: slides in, overshoots hard, bounces to rest — feels physical */
+@keyframes spring-in {
+  0%   { transform: translateY(18px) scale(0.88); opacity: 0; }
+  38%  { transform: translateY(-10px) scale(1.07);opacity: 1; }
+  58%  { transform: translateY(5px)  scale(0.97); opacity: 1; }
+  74%  { transform: translateY(-3px) scale(1.02); opacity: 1; }
+  86%  { transform: translateY(1.5px)scale(0.995);opacity: 1; }
+  94%  { transform: translateY(-0.5px) scale(1);  opacity: 1; }
+  100% { transform: translateY(0)    scale(1);    opacity: 1; }
+}
+
+.animate-pop-out {
+  animation: pop-out 0.2s ease-in forwards;
+  transition: none !important;
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+
+.animate-pop-in {
+  animation: pop-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-spring-in {
+  animation: spring-in 0.52s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Pill squish-bounce: plays when pill arrives at new position — single overshoot */
+@keyframes pill-squish {
+  0%   { transform: scaleX(1); }
+  38%  { transform: scaleX(1.12); }
+  100% { transform: scaleX(1); }
+}
+
+/* Global: Radix dropdown/menu close — instant fade, no zoom shake */
+/* Only target menu CONTENT, never trigger buttons or sub-trigger items */
+[role="menu"][data-state="closed"],
+[role="listbox"][data-state="closed"],
+[data-radix-popper-content-wrapper] [data-state="closed"]:not([role="menuitem"]),
+[data-radix-dropdown-menu-content][data-state="closed"],
+[data-radix-select-content][data-state="closed"] {
+  animation: none !important;
+  transition: opacity 0.08s ease !important;
+  opacity: 0 !important;
+}
+
+.hero-btn {
+  transition: transform 0.2s ease-out;
+}
+.hero-btn:hover {
+  transform: scale(1.1);
+}
+
+.btn-icon {
+  filter: brightness(0) drop-shadow(0 0 0.3px rgba(0,0,0,0.55));
+}
+.dark .btn-icon {
+  filter: brightness(0) invert(1) brightness(0.85);
+}
+
+.composer-message-icon {
+  filter: brightness(0);
+  transition: filter 0.42s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.3s ease, transform 0.3s ease;
+}
+
+.dark .composer-message-icon {
+  filter: brightness(0) invert(1) brightness(0.68);
+}
+
+.composer-send-button {
+  background: linear-gradient(to bottom, #a3a3a3 0%, #000000 100%) !important;
+  transition: background 0.48s cubic-bezier(0.23, 1, 0.32, 1),
+    opacity 0.3s ease, transform 0.3s ease !important;
+}
+
+.dark .composer-send-button {
+  background: linear-gradient(to bottom, #ffffff 0%, #a3a3a3 100%) !important;
+}
+
+
+.glossy-outline {
+  box-shadow: 0 2px 14px rgba(0,0,0,0.13), 0 0 0 1px rgba(0,0,0,0.18), inset 0 -4px 0 rgba(0,0,0,0.42) !important;
+}
+
+.dark .glossy-outline {
+  box-shadow: 0 6px 18px rgba(255,255,255,0.10), inset 0 -4px 0 rgba(255,255,255,1), inset 0 -12px 20px rgba(255,255,255,0.10) !important;
+}
+
+.flat-shadow {
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.92), inset 0 1px 0 rgba(255,255,255,0.60) !important;
+}
+
+.dark .flat-shadow {
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.82), inset 0 1px 0 rgba(0,0,0,0.55) !important;
+}
+
+/* Game card banner outline — ::after overlay so it works over overflow:hidden children */
+.game-card-outline {
+  position: relative;
+}
+.game-card-outline::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem; /* rounded-2xl = 16px */
+  box-shadow: 0 2px 14px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.18), inset 0 -4px 0 rgba(0,0,0,0.45);
+  pointer-events: none;
+  z-index: 10;
+}
+.dark .game-card-outline::after {
+  box-shadow: 0 6px 18px rgba(255,255,255,0.08), 0 0 0 1px rgba(255,255,255,0.12), inset 0 -4px 0 rgba(255,255,255,1), inset 0 -14px 22px rgba(255,255,255,0.10);
+}
+
+/* Radix SubTrigger text color fix — visible at rest, not just on hover */
+[role="menu"] [role="menuitem"][aria-haspopup="menu"] {
+  color: #111 !important;
+}
+.dark [role="menu"] [role="menuitem"][aria-haspopup="menu"] {
+  color: #fff !important;
+}
+
+/* Hide message bar and function bar immediately when voice mode is active.
+   CSS class is set directly on document.body, so this takes effect in the
+   same style-recalculation pass as the portal paint — no React timing gap. */
+body.voice-mode-active .macos-function-bar,
+body.voice-mode-active [data-message-bar] {
+  display: none !important;
+}
+
+
+/* Nomad notification: slide down first, then pop bounce */
+@keyframes nomad-pop-slide-in {
+  /* Phase 1 (0–50%): slide down from above into final position */
+  0%   { opacity: 0; transform: translateX(-50%) scale(1) translateY(-60px); }
+  45%  { opacity: 1; transform: translateX(-50%) scale(1) translateY(0);     }
+  50%  { opacity: 1; transform: translateX(-50%) scale(1) translateY(0);     }
+  /* Phase 2 (50–100%): pop bounce in place */
+  70%  { opacity: 1; transform: translateX(-50%) scale(1.08) translateY(0);  }
+  85%  { opacity: 1; transform: translateX(-50%) scale(0.96) translateY(0);  }
+  100% { opacity: 1; transform: translateX(-50%) scale(1)    translateY(0);  }
+}
+
+@keyframes nomad-pop-slide-out {
+  /* Smooth slide upward and fade — no pop */
+  0%   { opacity: 1; transform: translateX(-50%) scale(1) translateY(0);     }
+  100% { opacity: 0; transform: translateX(-50%) scale(1) translateY(-55px); }
+}
+
+.nomad-pop-slide-in {
+  animation: nomad-pop-slide-in 0.8s ease-out forwards;
+}
+
+.nomad-pop-slide-out {
+  animation: nomad-pop-slide-out 0.55s ease-in-out forwards;
+}
+
+/* ─── Logo wavy circle (traveling-wave style) ─── */
+/* Light mode: dark gray ring + letter; Dark mode: full white */
+:root .blinga-logo-ring   { stroke-opacity: 1; }
+:root .blinga-logo-letter { fill-opacity:   1; }
+.dark .blinga-logo-ring   { stroke-opacity: 1; }
+.dark .blinga-logo-letter { fill-opacity:   1; }
+/* Animation is handled entirely via SVG <animateTransform> in logo.tsx */
+
+/* ─── Thinking animation ─── */
+
+/* Shimmer: bright beam sweeps LEFT → RIGHT */
+@keyframes text-shimmer {
+  0%   { background-position: 220% center; }
+  100% { background-position: -220% center; }
+}
+
+/* Logo: breathes (scale) while a fast spin fires at peak */
+@keyframes thinking-logo-breathe {
+  0%, 100% { transform: scale(1);    }
+  50%      { transform: scale(1.22); }
+}
+@keyframes thinking-logo-spin {
+  0%,  43% { transform: rotate(0deg);   }
+  57%      { transform: rotate(360deg); }
+  100%     { transform: rotate(360deg); }
+}
+
+/* Transparent container — no bg, no border, no entrance */
+.thinking-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+}
+
+/* Logo wrapper layers */
+.thinking-logo-breathe {
+  animation: thinking-logo-breathe 3.4s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.thinking-logo-spin {
+  animation: thinking-logo-spin 3.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Shimmer label */
+.thinking-label {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+
+  /* dark: yellow shimmer */
+  background: linear-gradient(
+    90deg,
+    rgba(200,160,30,0.85)  0%,
+    rgba(200,160,30,0.85)  30%,
+    rgba(255,220,60,1)     50%,
+    rgba(200,160,30,0.85)  70%,
+    rgba(200,160,30,0.85)  100%
+  );
+  background-size: 280% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: text-shimmer 2.2s ease-in-out infinite;
+}
+
+/* light: dark beam on medium-gray base */
+:root:not(.dark) .thinking-label {
+  background: linear-gradient(
+    90deg,
+    rgba(180,130,0,0.85)   0%,
+    rgba(180,130,0,0.85)   30%,
+    rgba(240,185,0,1)      50%,
+    rgba(180,130,0,0.85)   70%,
+    rgba(180,130,0,0.85)   100%
+  );
+  background-size: 280% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Preload icon suppression ─────────────────────────────────────────────
+   While html.preload is present (before preload-images.ts resolves),
+   images that are AI logos / UI icons are hidden to avoid a flash of
+   broken icons. Once the Promise resolves, the class is removed and
+   images fade in with a quick transition.                                  */
+html.preload img[src$=".png"],
+html.preload img[src$=".jpg"],
+html.preload img[src$=".svg"] {
+  opacity: 0;
+  transition: none;
+}
+html:not(.preload) img {
+  transition: opacity 0.25s ease;
+}
+
+/* ── Word-by-word streaming fade-in ───────────────────────────────────────── */
+@keyframes wordFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Light mode: dark shimmer on light cloud */
+:root:not(.dark) .thinking-label {
+  background: linear-gradient(
+    90deg,
+    rgba(160,110,0,0.85)  0%,
+    rgba(160,110,0,0.85)  38%,
+    rgba(220,170,0,1)     50%,
+    rgba(160,110,0,0.85)  62%,
+    rgba(160,110,0,0.85)  100%
+  );
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+
+/* ─── Global drag prevention ────────────────────────────────────────────────── */
+/* Prevent native browser drag-ghost on images and interactive elements app-wide.
+   File-upload drop zones override this explicitly with their own drag handlers.  */
+img, a, button, [role="button"] {
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+/* ─── Text selection / highlight colour ─────────────────────────────────────── */
+/* Default (accent off or multicolor): soft light-blue                            */
+::selection {
+  background-color: rgba(59, 130, 246, 0.52);
+  color: inherit;
+}
+/* When a solid accent is active: tint the selection with the accent colour       */
+.blinga-accent-on ::selection {
+  background-color: color-mix(in srgb, var(--blinga-ui-accent) 38%, transparent);
+  color: inherit;
+}
+
+/* ─── Caret / text-insertion indicator ──────────────────────────────────────── */
+/* Light theme default: black caret                                               */
+textarea, input[type="text"], input[type="search"], input[type="email"], input[type="password"] {
+  caret-color: #f5b800;
+  caret-width: 2px;
+}
+/* Dark theme default: white caret                                                */
+.dark textarea,
+.dark input[type="text"],
+.dark input[type="search"],
+.dark input[type="email"],
+.dark input[type="password"] {
+  caret-color: #fcd703 !important;
+  caret-width: 2px !important;
+}
+/* Accent overrides both when a solid accent is active                            */
+.blinga-accent-on textarea,
+.blinga-accent-on input[type="text"],
+.blinga-accent-on input[type="search"],
+.blinga-accent-on input[type="email"],
+.blinga-accent-on input[type="password"] {
+  caret-color: var(--blinga-ui-accent) !important;
+}
+
+/* ─── Accent Color ───────────────────────────────────────────────────────────── */
+/* When uiAccentEnabled=true & a specific color is chosen, body gets .blinga-accent-on */
+
+/* Switches: checked = accent bg + always-white thumb so on/off is always clear */
+.blinga-accent-on [data-state=checked] {
+  background-color: var(--blinga-ui-accent) !important;
+}
+.blinga-accent-on [data-state=checked] > span {
+  background-color: #ffffff !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.35) !important;
+}
+/* Unchecked: subtle accent border so you can clearly see checked vs unchecked */
+.blinga-accent-on [data-state=unchecked] {
+  border: 2px solid color-mix(in srgb, var(--blinga-ui-accent) 35%, transparent) !important;
+}
+
+.blinga-accent-on .user-msg-bubble {
+  background-color: var(--blinga-ui-accent) !important;
+  color: #fff !important;
+}
+.blinga-accent-on .user-msg-bubble * {
+  color: #fff !important;
+}
+
+/* ─── Logo variant 2 (rings) accent colour ───────────────────────────────────── */
+/* Overlay div uses mix-blend-mode:color to recolour the spinning rings PNG.
+   The ƒ letter (z-index:2) sits above it and also picks up the accent.          */
+.blinga-accent-on .blinga-rings-accent-tint {
+  background-color: var(--blinga-ui-accent);
+  mix-blend-mode: color;
+  opacity: 0.82;
+}
+.blinga-accent-on [data-testid="logo-blinga-rings"] span {
+  color: var(--blinga-ui-accent) !important;
+}
+
+/* Reply button pop — scales up from small with a spring overshoot */
+@keyframes reply-btn-pop {
+  0%   { transform: translate(-50%, -100%) scale(0.5); opacity: 0; }
+  55%  { transform: translate(-50%, -100%) scale(1.08); opacity: 1; }
+  75%  { transform: translate(-50%, -100%) scale(0.96); opacity: 1; }
+  88%  { transform: translate(-50%, -100%) scale(1.02); opacity: 1; }
+  100% { transform: translate(-50%, -100%) scale(1);    opacity: 1; }
+}
+.reply-btn-pop {
+  animation: reply-btn-pop 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Reply chip slide-in from below */
+@keyframes reply-chip-in {
+  0%   { transform: translateY(6px); opacity: 0; }
+  100% { transform: translateY(0);   opacity: 1; }
+}
+.reply-chip-in {
+  animation: reply-chip-in 0.18s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/*
+ * Mobile sharp-rendering reset
+ *
+ * The desktop optical-rendering rules use `geometricPrecision` on every
+ * element. Mobile browsers can rasterize that whole subtree as a soft
+ * composited layer, especially when fixed sheets and translucent surfaces are
+ * present. Keep the desktop treatment, but use the browser's legible text
+ * renderer on mobile and remove decorative backdrop filters that can blur
+ * everything behind a sheet or navigation surface.
+ */
+@media (max-width: 1023px) {
+  html,
+  body,
+  #root,
+  #root *:not(code):not(pre):not(kbd):not(samp) {
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    font-optical-sizing: auto;
+  }
+
+  html,
+  body,
+  #root {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* Mobile UI should remain crisp; dim overlays still work without blur. */
+  #root * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* The country picker is portaled to body, but keep this exception for
+     preview/browser shells that still place the overlay under #root. */
+  #root .blinga-picker-backdrop {
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+  }
+
+  /*
+   * Touch browsers can keep :hover active after a tap. Scale/3D hover states
+   * then promote the control (and sometimes its parent) to a filtered bitmap,
+   * making nearby text look blurred. Mobile has no useful hover affordance, so
+   * retain color/background feedback but keep the layout on one pixel grid.
+   */
+  #root button:hover,
+  #root a:hover,
+  #root button:active,
+  #root a:active,
+  #root [class*="hover:scale-"]:hover,
+  #root [class*="active:scale-"]:active,
+  #root [class*="group-hover:scale-"]:hover,
+  #root .group:hover [class*="group-hover:scale-"] {
+    transform: none !important;
+  }
+
+  #root [class*="hover:scale-"],
+  #root [class*="active:scale-"],
+  #root [class*="group-hover:scale-"] {
+    transition-property: color, background-color, border-color, opacity, box-shadow !important;
+  }
+
+  /* The full mobile sidebar is already in its final position when open. */
+  #root .mobile-sidebar-open {
+    transform: none !important;
+    transition-property: width !important;
+  }
+
+  /* Settings is intentionally a stable, non-composited surface. */
+  #root .mobile-settings-sheet,
+  #root .mobile-settings-sheet * {
+    backface-visibility: visible !important;
+    perspective: none !important;
+    will-change: auto !important;
+  }
+
+  #root .mobile-settings-sheet [class*="animate-"] {
+    animation: none !important;
+  }
+}
+
+.crisp-outline {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+.dark .crisp-outline {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+

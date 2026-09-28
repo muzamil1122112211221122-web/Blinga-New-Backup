@@ -1,0 +1,1411 @@
+{/* Nomad Summarize bar — above msg bar */}
+        {activeTab === 'nomad' && Object.values(nomadMessages).some(msgs => msgs.some(m => m.role === 'assistant')) && (
+          <div className="flex justify-center mb-2">
+            <button onClick={handleNomadSummarize}
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold bg-card border border-border hover:bg-accent transition-all shadow-sm text-foreground">
+              <Sparkles className="w-3.5 h-3.5" /> Summarize all responses
+            </button>
+          </div>
+        )}
+
+
+        {/* ── Attached images tray — floats ABOVE the bar ── */}
+        {attachedImages.length > 0 && (
+          <div className="mb-2 rounded-2xl bg-zinc-100 dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700 shadow-sm overflow-hidden" style={{ maxWidth: 'calc(2 * 80px + 8px + 20px)' }}>
+            <div
+              ref={attachTrayRef}
+              className="flex gap-2 overflow-x-auto p-2"
+              style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(160,160,160,0.4) transparent', maxWidth: '100%' }}
+            >
+              {attachedImages.map((img, i) => (
+                <div key={i} className="relative flex-shrink-0 group">
+                  <img
+                    src={img.preview}
+                    alt={`Attached ${i + 1}`}
+                    className="h-20 w-20 object-cover rounded-xl border border-zinc-300 dark:border-zinc-600 cursor-zoom-in shadow-sm hover:scale-105 transition-transform"
+                    onClick={() => setFullscreenImg(img.preview)}
+                  />
+                  <button
+                    onClick={() => setAttachedImages(prev => prev.filter((_, idx) => idx !== i))}
+                    className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-zinc-700 hover:bg-zinc-600 text-white rounded-full flex items-center justify-center transition-all shadow"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                  {attachedImages.length > 2 && i === attachedImages.length - 1 && (
+                    <div className="absolute bottom-1 right-1 bg-black/60 text-white text-[9px] rounded px-1">+{attachedImages.length - 2} more</div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── Files tray (inside-bar style kept for non-image files) ── */}
+        {attachedFiles.length > 0 && (
+          <div className="flex gap-2 flex-wrap mb-2">
+            {attachedFiles.map((f, i) => (
+              <div key={i} className="relative flex items-center gap-2 bg-white dark:bg-zinc-800 border border-white/10 rounded-xl px-3 py-2 pr-8 max-w-[200px] shadow-sm">
+                <FileText className="w-5 h-5 text-blue-400 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-xs font-medium text-black dark:text-white truncate">{f.name}</p>
+                  <p className="text-[10px] text-zinc-500">{f.size}</p>
+                </div>
+                <button
+                  onClick={() => setAttachedFiles(prev => prev.filter((_, idx) => idx !== i))}
+                  className="absolute top-1.5 right-1.5 w-5 h-5 bg-zinc-700 hover:bg-zinc-600 text-white rounded-full flex items-center justify-center transition-all"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {replyQuote && (
+          <div className="reply-chip-in flex items-center gap-0 mb-2 w-fit max-w-xs overflow-hidden rounded-xl
+            bg-zinc-100 dark:bg-zinc-800/80 border border-zinc-200/80 dark:border-zinc-700/60 shadow-sm">
+            {/* Left accent bar */}
+            <div className="w-[3px] self-stretch bg-zinc-400 dark:bg-zinc-500 flex-shrink-0" />
+            <div className="flex items-center gap-2 px-2.5 py-1.5 min-w-0">
+              <CornerDownLeft className="w-3 h-3 flex-shrink-0 text-zinc-500 dark:text-zinc-400" />
+              <span className="truncate text-[11px] text-zinc-600 dark:text-zinc-300 italic leading-snug">
+                {replyQuote.slice(0, 60)}{replyQuote.length > 60 ? '…' : ''}
+              </span>
+              <button
+                onClick={() => { setReplyQuote(null); setReplyBtnPos(null); }}
+                className="flex-shrink-0 w-4 h-4 flex items-center justify-center rounded-full text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all"
+              >
+                <X className="w-2.5 h-2.5" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {documentMode && (
+          <div className="flex items-center gap-2 mb-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-indigo-500/15 to-purple-500/15 border border-indigo-500/30 text-xs font-medium text-indigo-600 dark:text-indigo-300 w-fit">
+            <FileSignature className="w-3.5 h-3.5" />
+            Document mode — type a topic, I'll write the full document
+            <button onClick={() => setDocumentMode(false)} className="ml-1 hover:text-red-500 transition-colors" data-testid="button-cancel-document-mode">
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
+
+        <div
+          className={`relative bg-white dark:bg-[#383838] transition-all duration-300 crisp-outline !border-none !outline-none ${messageBarStyle === 'compact' && attachedFiles.length === 0 ? 'rounded-full' : 'rounded-[1.5rem]'}`}
+        >
+          {messageBarStyle === 'compact' ? (
+            /* ── Compact: single-row pill layout ── */
+            <div className="flex items-end px-2 pt-2 pb-[7px] gap-1">
+              {/* LEFT: Attachment + function-bar buttons */}
+              <div className="flex items-center gap-1 mb-[3px]">
+              <Tooltip open={attachOpen ? false : undefined}>
+                <DropdownMenu open={attachOpen} onOpenChange={setAttachOpen}>
+                  <TooltipTrigger asChild>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="w-8 h-8 text-zinc-400 hover:text-white hover:bg-white/10 rounded-full transition-all flex-shrink-0"
+                        data-testid="button-attachment"
+                      >
+                        <img src={resolvedTheme === "dark" ? "/plus-gray.png" : "/plus-black.png"} style={{ opacity: 1, width: 18, height: 18, transform: attachOpen ? "rotate(45deg)" : "rotate(0deg)", transition: "transform 0.25s cubic-bezier(0.4, 0, 0.2, 1)" }} alt="attach" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                  </TooltipTrigger>
+                   <DropdownMenuContent className="bg-white dark:bg-[#383838] !bg-white dark:!bg-[#383838] border-none text-black dark:text-white rounded-xl shadow-2xl p-1 min-w-[190px]">
+                     <DropdownMenuSub>
+                       <DropdownMenuSubTrigger className="flex items-center gap-3 px-3 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 cursor-pointer rounded-lg focus:bg-black/10 dark:focus:bg-white/10 data-[state=open]:bg-black/10 dark:data-[state=open]:bg-white/10">
+                         <Paperclip className="w-4 h-4 text-zinc-400" />
+                         <span style={{ color: resolvedTheme === 'dark' ? '#fff' : '#111' }}>Attachments</span>
+                       </DropdownMenuSubTrigger>
+                       <DropdownMenuPortal>
+                         <DropdownMenuSubContent className="bg-white dark:bg-[#383838] !bg-white dark:!bg-[#383838] border-none text-black dark:text-white rounded-xl shadow-2xl p-1 min-w-[160px]">
+                           <DropdownMenuItem className="flex items-center gap-3 px-3 py-2 text-sm text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/10 cursor-pointer rounded-lg focus:bg-black/10 dark:focus:bg-white/10" onClick={() => fileInputRef.current?.click()}>
+                             <FileText className="w-4 h-4 text-zinc-400" /><span>Upload File</span>
+                           </DropdownMenuItem>
+                           <DropdownMenuItem className="flex items-center gap-3 px-3 py-2 text-sm text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/10 cursor-pointer rounded-lg focus:bg-black/10 dark:focus:bg-white/10" onClick={() => imageInputRef.current?.click()}>
+                             <Image className="w-4 h-4 text-zinc-400" /><span>Upload Image</span>
+                           </DropdownMenuItem>
+                           <div
+                             onDragEnter={handleAttachBoxDragEnter}
+                             onDragOver={handleAttachBoxDragOver}
+                             onDragLeave={handleAttachBoxDragLeave}
+                             onDrop={handleAttachBoxDrop}
+                             onClick={() => fileInputRef.current?.click()}
+                             className={`mx-1 mt-1 mb-0.5 aspect-square w-[148px] rounded-xl border-2 border-dashed flex flex-col items-center justify-center gap-1.5 text-center cursor-pointer transition-colors select-none ${isDraggingFiles ? 'border-indigo-500 bg-indigo-500/10' : 'border-zinc-300 dark:border-white/20 hover:border-zinc-400 dark:hover:border-white/30'}`}
+                           >
+                             <Upload className={`w-5 h-5 ${isDraggingFiles ? 'text-indigo-500' : 'text-zinc-400'}`} />
+                             <span className={`text-[11px] leading-tight px-2 ${isDraggingFiles ? 'text-indigo-600 dark:text-indigo-300 font-medium' : 'text-zinc-400 dark:text-zinc-500'}`}>
+                               {isDraggingFiles ? 'Drop to attach' : 'Drag & drop files here'}
+                             </span>
+                           </div>
+                         </DropdownMenuSubContent>
+                       </DropdownMenuPortal>
+                     </DropdownMenuSub>
+                     <DropdownMenuItem className="flex items-center gap-3 px-3 py-2 text-sm text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/10 cursor-pointer rounded-lg focus:bg-black/10 dark:focus:bg-white/10" onClick={() => { setDocumentMode(true); showToast('Document mode: type a topic and I’ll write a full document.'); }}>
+                       <FileSignature className="w-4 h-4 text-purple-400" /><span>Create Document</span>
+                     </DropdownMenuItem>
+                   </DropdownMenuContent>
+                </DropdownMenu>
+                <TooltipContent>Tools</TooltipContent>
+              </Tooltip>
+              {functionBarStyle === 'message-bar' && activeTab !== 'philosopher' && activeTab !== 'blinga-games' && (
+                <>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon" className={`w-8 h-8 rounded-full transition-all flex-shrink-0 ${blingaIntegrationMode ? 'text-blue-400 bg-blue-500/10' : 'text-zinc-400 hover:text-white hover:bg-white/10'}`} onClick={adjustBlinga}>
+                        <img src="/integration-icon.png" alt="Integration" className="btn-icon" style={{width:'18px',height:'18px'}} />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Long Answer</TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon" className="w-8 h-8 text-zinc-800 dark:text-white/85 hover:bg-white/10 rounded-full transition-all flex-shrink-0" onClick={openVoiceMode}>
+                        <AudioLines className="w-3.5 h-3.5" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Voice Mode</TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="icon" className="w-8 h-8 text-zinc-400 hover:text-white hover:bg-white/10 rounded-full transition-all flex-shrink-0" onClick={() => setIsCustomizeModalOpen(true)}>
+                        <img src="/settings-icon.png" alt="Settings" className="btn-icon" style={{width:'17px',height:'17px'}} />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Settings</TooltipContent>
+                  </Tooltip>
+                </>
+              )}
+              </div>
+              {/* Textarea — grows to fill space */}
+              <Textarea
+                ref={textareaRef}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                onPaste={handleComposePaste}
+                placeholder={['imagine', 'presentations', 'motion-studio'].includes(activeTab) ? 'Just Prompt and image is in your hands!' : activeTab === 'philosopher' && selectedPersonality ? `Talk with ${selectedPersonality.name}...` : typingPlaceholder}
+                className="flex-1 bg-transparent dark:text-white text-black placeholder-zinc-400 resize-none focus:outline-none border-none shadow-none ring-0 focus:ring-0 focus-visible:ring-0 focus-visible:outline-none focus-visible:ring-offset-0 text-sm leading-normal !rounded-none transition-[height] duration-300 ease-out"
+                style={{ minHeight: '38px', maxHeight: '200px', lineHeight: '1.5', overflowY: 'auto', paddingTop: '8px', paddingBottom: '8px', paddingLeft: '4px', paddingRight: '4px' }}
+                data-testid="input-message"
+              />
+              {/* RIGHT: expand + model selector + mic + send */}
+              <div className="flex items-center gap-1 mb-[3px]">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    className={`w-4 h-4 flex items-center justify-center transition-all flex-shrink-0 ${inputValue.trim() ? 'text-zinc-600 dark:text-zinc-300 opacity-90 hover:opacity-100 scale-110' : 'text-zinc-400 opacity-30 hover:opacity-60'}`}
+                    onClick={() => setPromptFullscreen(true)}
+                    tabIndex={-1}
+                  >
+                    <Maximize2 className="w-2.5 h-2.5" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>Expand prompt</TooltipContent>
+              </Tooltip>
+              {['imagine', 'presentations', 'motion-studio'].includes(activeTab) && (() => {
+                const ORIENTS = [
+                  { id: 'none' as const,     name: 'Auto',    ratio: 'Default' },
+                  { id: 'square' as const,   name: 'Square',  ratio: '1:1'     },
+                  { id: 'portrait' as const, name: 'Portrait',ratio: '9:16'    },
+                  { id: 'wide' as const,     name: 'Wide',    ratio: '4:3'     },
+                ];
+                const active = ORIENTS.find(o => o.id === imagineOrientation)!;
+                const activeIdx = ORIENTS.findIndex(o => o.id === imagineOrientation);
+                return (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-white/[0.07] hover:bg-zinc-200 dark:hover:bg-white/10 transition-all flex-shrink-0 border border-zinc-200/60 dark:border-white/10">
+                        <img src={`/icon-orient-${imagineOrientation}.png`} alt={imagineOrientation} className="w-[17px] h-[17px] dark:invert" />
+                        <span>{active.name}</span>
+                        <span className="opacity-50 font-normal">{active.ratio}</span>
+                        <ChevronDown className="w-3 h-3 opacity-60" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent side="top" align="start" className="bg-white dark:bg-[#383838] border-none text-black dark:text-white rounded-2xl shadow-2xl p-1.5 w-auto data-[state=closed]:animate-none data-[state=closed]:duration-0">
+                      <div className="relative flex flex-row items-center gap-0">
+                        <div
+                          className="absolute top-0 bottom-0 rounded-xl bg-zinc-200 dark:bg-white "
+                          style={{ width: `${100 / ORIENTS.length}%`, transform: `translateX(${activeIdx * 100}%)`, transition: 'transform 0.48s cubic-bezier(0.34,1.56,0.64,1)' }}
+                        />
+                        {ORIENTS.map(o => {
+                          const isActive = imagineOrientation === o.id;
+                          return (
+                            <button
+                              key={o.id}
+                              onClick={() => setImagineOrientation(o.id)}
+                              className={`relative z-10 flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-[10px] font-semibold transition-colors duration-200 min-w-[56px] ${isActive ? 'text-zinc-800 dark:text-black' : 'text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}
+                            >
+                              <img src={`/icon-orient-${o.id}.png`} alt={o.name} className={`w-[23px] h-[23px] ${isActive ? 'dark:invert-0' : 'dark:invert opacity-50'}`} />
+                              <span>{o.name}</span>
+                              <span className={`text-[9px] font-normal ${isActive ? 'opacity-70' : 'opacity-40'}`}>{o.ratio}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                );
+              })()}
+              {activeTab !== 'nomad' && activeTab !== 'imagine' && (
+              <Select value={selectedModel} onValueChange={(value: AvailableModel) => {
+                if (isChatModelLocked(value)) {
+                  toast({ title: "Locked on Free plan", description: "Upgrade to Blinga Ultimate to unlock this model.", variant: "destructive" });
+                  return;
+                }
+                setSelectedModel(value);
+              }}>
+                <SelectTrigger className="h-7 px-2 text-xs font-semibold text-zinc-700 dark:text-zinc-300 hover:bg-black/5 dark:hover:bg-white/5 !border-none !border-0 bg-transparent shadow-none !shadow-none ring-0 !ring-0 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:outline-none focus-visible:ring-offset-0 transition-all rounded-full outline-none flex-shrink-0 w-auto">
+                  <span className="truncate">{MODEL_OPTIONS.find(m => m.id === selectedModel)?.name ?? selectedModel}</span>
+                </SelectTrigger>
+                <SelectContent className="bg-white dark:bg-[#383838] !border-none !border-0 text-black dark:text-white rounded-xl shadow-2xl overflow-hidden ring-0 !ring-0 outline-none !outline-none p-1">
+                  {tabModelOptions.map((modelOption) => (
+                    <SelectItem key={modelOption.id} value={modelOption.id} className={`text-xs !w-auto !rounded-full mx-0.5 hover:bg-black/10 dark:hover:bg-white/10 cursor-pointer focus:bg-black/10 dark:focus:bg-white/10 ${isChatModelLocked(modelOption.id) ? 'opacity-50' : ''}`}>
+                      <div className="flex items-center gap-2">
+                        <div className={`w-1.5 h-1.5 rounded-full ${modelOption.provider === 'openai' ? 'bg-emerald-500' : modelOption.provider === 'anthropic' ? 'bg-orange-500' : modelOption.provider === 'google' ? 'bg-blue-500' : 'bg-zinc-500'}`}></div>
+                        {modelOption.name}
+                        {isChatModelLocked(modelOption.id) && <Lock className="w-2.5 h-2.5 text-amber-500 flex-shrink-0" />}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              )}
+              {/* Enhance — slides in left of mic when user types */}
+              {!(isTyping || isAnimatingResponse) && (
+                <div className={`overflow-hidden transition-all duration-300 ease-out flex-shrink-0 ${inputValue.trim() || attachedImages.length || attachedFiles.length ? 'max-w-[36px] opacity-100' : 'max-w-0 opacity-0 '}`}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="w-8 h-8 bg-transparent border-none rounded-full transition-all flex-shrink-0 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
+                        onClick={handleEnhancePrompt}
+                        disabled={!inputValue.trim() || isEnhancing}
+                        data-testid="button-enhance"
+                      >
+                        {isEnhancing ? (
+                          <div className="animate-spin w-4 h-4 border-2 border-zinc-400 border-t-transparent rounded-full" />
+                        ) : (
+                          <img src={resolvedTheme === "dark" ? "/enhance-icon-dark.png" : "/enhance-icon-light.png"} alt="Enhance" className="w-5 h-5" style={{ filter: resolvedTheme === "dark" ? "none" : "brightness(0)" }} />
+                        )}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Enhance prompt</TooltipContent>
+                  </Tooltip>
+                </div>
+              )}
+              {/* Mic */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={`w-8 h-8 bg-transparent border-none ${isListening ? 'text-emerald-400' : 'text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200'} rounded-full transition-all flex-shrink-0`}
+                    onClick={toggleListening}
+                    disabled={!speechSupported}
+                    data-testid="button-mic"
+                  >
+                    <img src={resolvedTheme === "dark" ? "/mic-icon-dark.png" : "/mic-icon-light.png"} alt="Mic" className="w-5 h-5" style={{ filter: resolvedTheme === "dark" ? "none" : "brightness(0)" }} />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>{isListening ? 'Stop listening' : 'Voice input'}</TooltipContent>
+              </Tooltip>
+              {/* Stop or Send */}
+              {(isTyping || isAnimatingResponse) ? (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button onClick={handleStopResponse} className="w-8 h-8 rounded-full flex items-center justify-center transition-all bg-zinc-800 hover:bg-zinc-700 dark:bg-white dark:hover:bg-zinc-100 flex-shrink-0" data-testid="button-stop-response">
+                      <div className="w-3 h-3 rounded-sm bg-white dark:bg-zinc-800 flex-shrink-0" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Stop response</TooltipContent>
+                </Tooltip>
+              ) : (
+                <div className={`overflow-hidden transition-all duration-300 ease-out flex-shrink-0 ${inputValue.trim() || attachedImages.length || attachedFiles.length ? 'max-w-[36px] opacity-100' : 'max-w-0 opacity-0 '}`}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button onClick={handleSendMessage} disabled={!inputValue.trim() && !attachedImages.length && !attachedFiles.length} className="w-8 h-8 bg-[#fcc603] dark:bg-[#fcd703] hover:opacity-90 text-white rounded-full flex items-center justify-center transition-all flex-shrink-0" data-testid="button-send-message">
+                        <ArrowUp className="w-4 h-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Send message</TooltipContent>
+                  </Tooltip>
+                </div>
+              )}
+              </div>
+            </div>
+          ) : (
+            /* ── Default: two-row layout (unchanged) ── */
+            <>
+              <div className="p-1.5 sm:p-2">
+                <Textarea
+                  ref={textareaRef}
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  onPaste={handleComposePaste}
+                  placeholder={['imagine', 'presentations', 'motion-studio'].includes(activeTab) ? 'Just Prompt and image is in your hands!' : activeTab === 'philosopher' && selectedPersonality ? `Talk with ${selectedPersonality.name}...` : activeTab === 'blinga-games' ? 'Type your answer or move...' : 'What do you want to know ?'}
+                  className="w-full !min-h-[40px] max-h-[140px] bg-transparent dark:text-white text-black placeholder-zinc-500 resize-none focus:outline-none border-none shadow-none ring-0 focus:ring-0 focus-visible:ring-0 focus-visible:outline-none focus-visible:ring-offset-0 text-[21px] sm:text-[22px] leading-relaxed p-2 !rounded-none overflow-y-auto"
+                  data-testid="input-message"
+                />
+              </div>
+
+              <div className="flex items-center justify-between px-2 pb-2">
+                <div className="flex items-center gap-1">
+                  {/* Expand prompt inline, left of model selector */}
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        className={`w-4 h-4 flex items-center justify-center transition-all flex-shrink-0 ${inputValue.trim() ? 'text-zinc-600 dark:text-zinc-300 opacity-90 hover:opacity-100 scale-110' : 'text-zinc-400 opacity-30 hover:opacity-60'}`}
+                        onClick={() => setPromptFullscreen(true)}
+                        tabIndex={-1}
+                      >
+                        <Maximize2 className="w-2.5 h-2.5" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>Expand prompt</TooltipContent>
+                  </Tooltip>
+                  {['imagine', 'presentations', 'motion-studio'].includes(activeTab) && (() => {
+                    const ORIENTS = [
+                      { id: 'none' as const,     name: 'Auto',    ratio: 'Default' },
+                      { id: 'square' as const,   name: 'Square',  ratio: '1:1'     },
+                      { id: 'portrait' as const, name: 'Portrait',ratio: '9:16'    },
+                      { id: 'wide' as const,     name: 'Wide',    ratio: '4:3'     },
+                    ];
+                    const active = ORIENTS.find(o => o.id === imagineOrientation)!;
+                    const activeIdx = ORIENTS.findIndex(o => o.id === imagineOrientation);
+                    return (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-white/[0.07] hover:bg-zinc-200 dark:hover:bg-white/10 transition-all flex-shrink-0 border border-zinc-200/60 dark:border-white/10">
+                            <img src={`/icon-orient-${imagineOrientation}.png`} alt={imagineOrientation} className="w-[17px] h-[17px] dark:invert" />
+                            <span>{active.name}</span>
+                            <span className="opacity-50 font-normal">{active.ratio}</span>
+                            <ChevronDown className="w-3 h-3 opacity-60" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent side="top" align="start" className="bg-white dark:bg-[#383838] border-none text-black dark:text-white rounded-2xl shadow-2xl p-1.5 w-auto data-[state=closed]:animate-none data-[state=closed]:duration-0">
+                          <div className="relative flex flex-row items-center gap-0">
+                            <div
+                              className="absolute top-0 bottom-0 rounded-xl bg-zinc-200 dark:bg-white "
+                              style={{ width: `${100 / ORIENTS.length}%`, transform: `translateX(${activeIdx * 100}%)`, transition: 'transform 0.48s cubic-bezier(0.34,1.56,0.64,1)' }}
+                            />
+                            {ORIENTS.map(o => {
+                              const isActive = imagineOrientation === o.id;
+                              return (
+                                <button
+                                  key={o.id}
+                                  onClick={() => setImagineOrientation(o.id)}
+                                  className={`relative z-10 flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-[10px] font-semibold transition-colors duration-200 min-w-[56px] ${isActive ? 'text-zinc-800 dark:text-black' : 'text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}
+                                >
+                                  <img src={`/icon-orient-${o.id}.png`} alt={o.name} className={`w-[23px] h-[23px] ${isActive ? 'dark:invert-0' : 'dark:invert opacity-50'}`} />
+                                  <span>{o.name}</span>
+                                  <span className={`text-[9px] font-normal ${isActive ? 'opacity-70' : 'opacity-40'}`}>{o.ratio}</span>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    );
+                  })()}
+                  {activeTab !== 'nomad' && activeTab !== 'imagine' && (
+                  <Select value={selectedModel} onValueChange={(value: AvailableModel) => {
+                    if (isChatModelLocked(value)) {
+                      toast({ title: "Locked on Free plan", description: "Upgrade to Blinga Ultimate to unlock this model.", variant: "destructive" });
+                      return;
+                    }
+                    setSelectedModel(value);
+                  }}>
+                    <SelectTrigger className="h-8 px-2 text-xs font-semibold text-zinc-700 dark:text-zinc-300 hover:bg-black/5 dark:hover:bg-white/5 !border-none !border-0 bg-transparent shadow-none !shadow-none ring-0 !ring-0 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:outline-none focus-visible:ring-offset-0 transition-all rounded-full outline-none flex-shrink-0 w-auto">
+                      <span className="truncate">{MODEL_OPTIONS.find(m => m.id === selectedModel)?.name ?? selectedModel}</span>
+                    </SelectTrigger>
+                    <SelectContent forceMount className="bg-white dark:bg-[#383838] !bg-white dark:!bg-[#383838] !border-none !border-0 text-black dark:text-white rounded-xl shadow-2xl overflow-hidden ring-0 !ring-0 outline-none !outline-none">
+                      {tabModelOptions.map((modelOption) => (
+                        <SelectItem key={modelOption.id} value={modelOption.id} className={`text-xs hover:bg-black/10 dark:hover:bg-white/10 cursor-pointer focus:bg-black/10 dark:focus:bg-white/10 ${isChatModelLocked(modelOption.id) ? 'opacity-50' : ''}`}>
+                          <div className="flex items-center gap-2">
+                            <div className={`w-1.5 h-1.5 rounded-full ${
+                              modelOption.provider === 'openai' ? 'bg-emerald-500' :
+                              modelOption.provider === 'anthropic' ? 'bg-orange-500' :
+                              modelOption.provider === 'google' ? 'bg-blue-500' :
+                              'bg-zinc-500'
+                            }`}></div>
+                            {modelOption.name}
+                            {isChatModelLocked(modelOption.id) && <Lock className="w-2.5 h-2.5 text-amber-500 flex-shrink-0" />}
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  )}
+                </div>
+
+                <div className="flex items-center space-x-1.5 sm:space-x-2">
+                  {/* Function bar buttons in message bar mode */}
+                  {functionBarStyle === 'message-bar' && activeTab !== 'philosopher' && activeTab !== 'blinga-games' && (
+                    <>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className={`w-9 h-9 rounded-full transition-all crisp-outline ${blingaIntegrationMode ? 'text-blue-400 bg-blue-500/10' : 'text-zinc-400 hover:text-white hover:bg-white/10 dark:hover:bg-white/10'}`}
+                            onClick={adjustBlinga}
+                          >
+                            <img src="/integration-icon.png" alt="Integration" className="btn-icon" style={{width:'23px',height:'23px'}} />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Long Answer</TooltipContent>
+                      </Tooltip>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="w-9 h-9 text-zinc-800 dark:text-white/85 hover:bg-white/10 dark:hover:bg-white/10 rounded-full transition-all crisp-outline"
+                            onClick={openVoiceMode}
+                          >
+                            <AudioLines className="w-4 h-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Voice Mode</TooltipContent>
+                      </Tooltip>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="w-9 h-9 text-zinc-400 hover:text-white hover:bg-white/10 dark:hover:bg-white/10 rounded-full transition-all crisp-outline"
+                            onClick={() => setIsCustomizeModalOpen(true)}
+                          >
+                            <img src="/settings-icon.png" alt="Settings" className="btn-icon" style={{width:'21px',height:'21px'}} />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Settings</TooltipContent>
+                      </Tooltip>
+                      {selectedModel === 'blinga-education' && (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="w-9 h-9 text-zinc-400 hover:text-white hover:bg-white/10 dark:hover:bg-white/10 rounded-full transition-all crisp-outline"
+                              onClick={() => setIsEducationModalOpen(true)}
+                            >
+                              <GraduationCap className="w-4 h-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>Education Settings</TooltipContent>
+                        </Tooltip>
+                      )}
+                    </>
+                  )}
+                  <Tooltip>
+                    <DropdownMenu>
+                      <TooltipTrigger asChild>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="w-9 h-9 text-zinc-400 hover:text-white hover:bg-white/10 rounded-full transition-all"
+                            data-testid="button-attachment"
+                          >
+                            <img src={resolvedTheme === "dark" ? "/plus-gray.png" : "/plus-black.png"} style={{ opacity: 1, width: 18, height: 18 }} alt="attach" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                      </TooltipTrigger>
+                       <DropdownMenuContent className="bg-white dark:bg-[#383838] !bg-white dark:!bg-[#383838] border-none text-black dark:text-white rounded-xl shadow-2xl p-1 min-w-[190px]">
+                         <DropdownMenuSub>
+                           <DropdownMenuSubTrigger className="flex items-center gap-3 px-3 py-2 text-sm hover:bg-black/10 dark:hover:bg-white/10 cursor-pointer rounded-lg focus:bg-black/10 dark:focus:bg-white/10 data-[state=open]:bg-black/10 dark:data-[state=open]:bg-white/10">
+                             <Paperclip className="w-4 h-4 text-zinc-400" />
+                             <span style={{ color: resolvedTheme === 'dark' ? '#fff' : '#111' }}>Attachments</span>
+                           </DropdownMenuSubTrigger>
+                           <DropdownMenuPortal>
+                             <DropdownMenuSubContent className="bg-white dark:bg-[#383838] !bg-white dark:!bg-[#383838] border-none text-black dark:text-white rounded-xl shadow-2xl p-1 min-w-[160px]">
+                               <DropdownMenuItem
+                                 className="flex items-center gap-3 px-3 py-2 text-sm text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/10 cursor-pointer rounded-lg focus:bg-black/10 dark:focus:bg-white/10"
+                                 onClick={() => fileInputRef.current?.click()}
+                               >
+                                 <FileText className="w-4 h-4 text-zinc-400" />
+                                 <span>Upload File</span>
+                               </DropdownMenuItem>
+                               <DropdownMenuItem
+                                 className="flex items-center gap-3 px-3 py-2 text-sm text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/10 cursor-pointer rounded-lg focus:bg-black/10 dark:focus:bg-white/10"
+                                 onClick={() => imageInputRef.current?.click()}
+                               >
+                                 <Image className="w-4 h-4 text-zinc-400" />
+                                 <span>Upload Image</span>
+                               </DropdownMenuItem>
+                               <div
+                                 onDragEnter={handleAttachBoxDragEnter}
+                                 onDragOver={handleAttachBoxDragOver}
+                                 onDragLeave={handleAttachBoxDragLeave}
+                                 onDrop={handleAttachBoxDrop}
+                                 onClick={() => fileInputRef.current?.click()}
+                                 className={`mx-1 mt-1 mb-0.5 aspect-square w-[148px] rounded-xl border-2 border-dashed flex flex-col items-center justify-center gap-1.5 text-center cursor-pointer transition-colors select-none ${isDraggingFiles ? 'border-indigo-500 bg-indigo-500/10' : 'border-zinc-300 dark:border-white/20 hover:border-zinc-400 dark:hover:border-white/30'}`}
+                               >
+                                 <Upload className={`w-5 h-5 ${isDraggingFiles ? 'text-indigo-500' : 'text-zinc-400'}`} />
+                                 <span className={`text-[11px] leading-tight px-2 ${isDraggingFiles ? 'text-indigo-600 dark:text-indigo-300 font-medium' : 'text-zinc-400 dark:text-zinc-500'}`}>
+                                   {isDraggingFiles ? 'Drop to attach' : 'Drag & drop files here'}
+                                 </span>
+                               </div>
+                             </DropdownMenuSubContent>
+                           </DropdownMenuPortal>
+                         </DropdownMenuSub>
+                         <DropdownMenuItem
+                           className="flex items-center gap-3 px-3 py-2 text-sm text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/10 cursor-pointer rounded-lg focus:bg-black/10 dark:focus:bg-white/10"
+                           onClick={() => { setDocumentMode(true); showToast('Document mode: type a topic and I’ll write a full document.'); }}
+                         >
+                           <FileSignature className="w-4 h-4 text-purple-400" />
+                           <span>Create Document</span>
+                         </DropdownMenuItem>
+                       </DropdownMenuContent>
+                    </DropdownMenu>
+                    <TooltipContent>Tools</TooltipContent>
+                  </Tooltip>
+
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="w-9 h-9 rounded-full transition-all text-zinc-400 hover:text-white hover:bg-white/10"
+                        onClick={handleEnhancePrompt}
+                        disabled={!inputValue.trim() || isEnhancing}
+                        data-testid="button-enhance"
+                      >
+                        {isEnhancing ? (
+                          <div className="animate-spin w-5 h-5 border-2 border-zinc-400 border-t-transparent rounded-full"></div>
+                        ) : (
+                          <img
+                            src={resolvedTheme === "dark" ? "/enhance-icon-dark.png" : "/enhance-icon-light.png"}
+                            alt="Enhance"
+                            className="w-5 h-5" style={{ filter: resolvedTheme === "dark" ? "none" : "brightness(0)" }} />
+                        )}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Enhance prompt</TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className={`w-9 h-9 ${isListening ? 'text-emerald-400 bg-emerald-500/10' : 'text-zinc-400 hover:text-white hover:bg-white/10 dark:hover:bg-white/10'} rounded-full transition-all`}
+                        onClick={toggleListening}
+                        disabled={!speechSupported}
+                        data-testid="button-mic"
+                      >
+                        <img
+                          src={resolvedTheme === "dark" ? "/mic-icon-dark.png" : "/mic-icon-light.png"}
+                          alt="Mic"
+                          className="w-5 h-5" style={{ filter: resolvedTheme === "dark" ? "none" : "brightness(0)" }} />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>{isListening ? 'Stop listening' : 'Voice input'}</TooltipContent>
+                  </Tooltip>
+                  {(isTyping || isAnimatingResponse) ? (
+                    <Button
+                      onClick={handleStopResponse}
+                      className="w-10 h-10 rounded-full flex items-center justify-center transition-all ml-0.5 bg-zinc-800 hover:bg-zinc-700 dark:bg-white dark:hover:bg-zinc-100"
+                      data-testid="button-stop-response"
+                    >
+                      <div className="w-4 h-4 rounded-md bg-white dark:bg-zinc-800 flex-shrink-0" />
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={handleSendMessage}
+                      disabled={!inputValue.trim() && !attachedImages.length && !attachedFiles.length}
+                      className="w-10 h-10 composer-send-button hover:opacity-90 text-white rounded-full flex items-center justify-center transition-all disabled:opacity-30 ml-0.5"
+                      data-testid="button-send-message"
+                    >
+                      <ArrowUp className="w-5 h-5" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+          {/* Voice Listening Indicator Overlay moved inside the relative container */}
+          {isListening && (
+            <div className="absolute inset-x-0 -top-8 flex justify-center">
+              <div className="bg-emerald-500/10 backdrop-blur-md px-3 py-1 rounded-full border border-emerald-500/20 flex items-center space-x-2">
+                <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></div>
+                <span className="text-[10px] uppercase tracking-wider font-bold text-emerald-400">Listening...</span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* ── Quick action chips — Ask tab empty state ── */}
+        {activeTab === 'ask' && messages.length === 0 && (
+          <div className="flex items-center justify-center gap-2 mt-5 flex-wrap">
+            {([
+              { label: 'Create Visuals', light: '/quick-visuals-light.png', dark: '/quick-visuals-dark.png', action: () => changeTab('imagine') },
+              { label: 'Web Search',     light: '/quick-websearch-light.png', dark: '/quick-websearch-dark.png', action: () => setInputValue('Search the web for: ') },
+              { label: 'Create Files',   light: '/quick-files-light.png', dark: '/quick-files-dark.png', action: () => setDocumentMode(true) },
+              { label: 'Play Games',     light: '/quick-games-light.png', dark: '/quick-games-dark.png', action: () => changeTab('blinga-games') },
+            ] as const).map(({ label, light, dark, action }) => (
+              <button key={label} onClick={action}
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[13px] font-medium transition-all hover:scale-[1.05] hover:-translate-y-0.5 hover:shadow-md active:scale-[0.97] bg-zinc-100 dark:bg-[#2e2e2e] text-zinc-700 dark:text-zinc-300 border border-zinc-200/80 dark:border-zinc-600/30 hover:bg-zinc-200 dark:hover:bg-[#3a3a3a]">
+                <img src={resolvedTheme === 'dark' ? dark : light} alt="" className="w-4 h-4 object-contain flex-shrink-0" style={{ opacity: 1 }} />
+                {label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+
+        {/* Hidden file input for template photo upload */}
+        <input
+          ref={templatePhotoInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+              const dataUrl = ev.target?.result as string;
+              const base64 = dataUrl.split(',')[1];
+              const photo = { preview: dataUrl, base64 };
+              setTemplateUploadPhoto(photo);
+              setRecentUploads(prev => {
+                const updated = [photo, ...prev.filter(p => p.preview !== dataUrl)].slice(0, 6);
+                try { localStorage.setItem('blinga_recent_template_uploads', JSON.stringify(updated)); } catch {}
+                return updated;
+              });
+            };
+            reader.readAsDataURL(file);
+            e.target.value = '';
+          }}
+        />
+
+
+        {/* ── Browse All Templates — FULLSCREEN ───────────────────────────── */}
+        {showAllTemplates && (() => {
+          const activeCat = imagineTemplateCategory;
+          const filteredTpls = activeCat === 'All' ? STUDIO_VISUAL_TEMPLATES : STUDIO_VISUAL_TEMPLATES.filter(t => t.category === activeCat);
+
+          return (
+            <div className="fixed inset-0 z-[999] flex flex-col" style={{ background: resolvedTheme === 'dark' ? '#09090f' : '#ffffff', fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif' }}>
+
+              {/* Top bar: back + close only, no title/icon */}
+              <div className="flex-shrink-0 flex items-center justify-between px-5 pt-4 pb-0">
+                <button
+                  onClick={() => setShowAllTemplates(false)}
+                  className="flex items-center gap-1.5 text-[13px] font-semibold transition-colors"
+                  style={{ color: resolvedTheme === 'dark' ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)' }}
+                  onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = resolvedTheme === 'dark' ? '#fff' : '#000'}
+                  onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = resolvedTheme === 'dark' ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)'}
+                >
+                  <ChevronLeft className="w-4 h-4" /> Back
+                </button>
+                <button
+                  onClick={() => setShowAllTemplates(false)}
+                  className="flex h-8 w-8 items-center justify-center rounded-full transition"
+                  style={{ color: resolvedTheme === 'dark' ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.35)', background: resolvedTheme === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = resolvedTheme === 'dark' ? '#fff' : '#000'; (e.currentTarget as HTMLElement).style.background = resolvedTheme === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = resolvedTheme === 'dark' ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.35)'; (e.currentTarget as HTMLElement).style.background = resolvedTheme === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'; }}
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Filter pill bar — exact Minds style */}
+              <div className="flex-shrink-0 flex justify-center py-3 px-5">
+                <div
+                  ref={tplNavRef}
+                  className="relative flex items-center gap-1 px-2 py-2"
+                  style={{
+                    background: resolvedTheme === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)',
+                    border: resolvedTheme === 'dark' ? '1px solid rgba(255,255,255,0.09)' : '1px solid rgba(0,0,0,0.08)',
+                    borderRadius: 999,
+                  }}
+                >
+                  {/* sliding pill */}
+                  {tplPillStyle.ready && (
+                    <div aria-hidden style={{
+                      position: 'absolute',
+                      left: tplPillStyle.left,
+                      width: tplPillStyle.width,
+                      top: 5, bottom: 5,
+                      transition: 'left 0.48s cubic-bezier(0.34,1.56,0.64,1), width 0.48s cubic-bezier(0.34,1.56,0.64,1)',
+                      pointerEvents: 'none',
+                      zIndex: 0,
+                    }}>
+                      <div style={{
+                        position: 'absolute', inset: 0,
+                        background: resolvedTheme === 'dark' ? 'rgba(255,255,255,0.92)' : 'rgba(0,0,0,0.09)',
+                        borderRadius: 999,
+                        boxShadow: resolvedTheme === 'dark' ? '0 1px 10px rgba(255,255,255,0.15)' : '0 1px 4px rgba(0,0,0,0.08)',
+                        animation: tplPillAnimateRef.current ? 'pill-squish 0.48s cubic-bezier(0.34,1.56,0.64,1) both' : 'none',
+                      }} />
+                    </div>
+                  )}
+                  {TPL_FILTER_CATS.map((cat, i) => (
+                    <button
+                      key={cat}
+                      ref={el => { tplBtnRefs.current[i] = el; }}
+                      onClick={() => { tplPillAnimateRef.current = true; setImagineTemplateCategory(cat); }}
+                      className="relative z-10 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-none"
+                      style={activeCat === cat && tplPillStyle.ready
+                        ? { color: resolvedTheme === 'dark' ? 'rgba(0,0,0,0.85)' : 'rgba(0,0,0,0.85)', fontWeight: 600 }
+                        : { color: resolvedTheme === 'dark' ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)', fontWeight: 500 }}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Grid — full width, bigger cards */}
+              <div className="flex-1 overflow-y-auto px-5 pb-5" style={{ contain: 'layout style' }}>
+                {activeCat === 'All' ? (
+                  <div className="flex flex-col gap-8">
+                    {TPL_FILTER_CATS.filter(c => c !== 'All').map(catName => {
+                      const catTpls = STUDIO_VISUAL_TEMPLATES.filter(t => t.category === catName);
+                      if (!catTpls.length) return null;
+                      return (
+                        <div key={catName}>
+                          <p className="text-[12px] font-semibold mb-3" style={{ color: resolvedTheme === 'dark' ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.35)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>{catName}</p>
+                          <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fill,minmax(200px,1fr))' }}>
+                            {catTpls.map(t => (
+                              <button
+                                key={t.id}
+                                onClick={() => { setShowAllTemplates(false); setImagineTemplateModal({ label: t.name, color: '#111', img: t.thumb, prompt: t.prompt }); setTemplateUploadPhoto(null); }}
+                                className="group relative overflow-hidden text-left"
+                                style={{ aspectRatio: '9/13', borderRadius: 20, background: resolvedTheme === 'dark' ? '#0e0e16' : '#f0f0f0', boxShadow: resolvedTheme === 'dark' ? '0 8px 28px rgba(0,0,0,0.5)' : '0 4px 16px rgba(0,0,0,0.1)', transition: 'transform 0.25s ease, box-shadow 0.25s ease' }}
+                                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-6px) scale(1.03)'; (e.currentTarget as HTMLElement).style.boxShadow = resolvedTheme === 'dark' ? '0 24px 56px rgba(0,0,0,0.65)' : '0 16px 40px rgba(0,0,0,0.2)'; }}
+                                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = ''; (e.currentTarget as HTMLElement).style.boxShadow = resolvedTheme === 'dark' ? '0 8px 28px rgba(0,0,0,0.5)' : '0 4px 16px rgba(0,0,0,0.1)'; }}
+                              >
+                                <img src={t.thumb} alt={t.name} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+                                <div className="absolute inset-0" style={{ background: 'linear-gradient(to top,rgba(0,0,0,0.88) 0%,rgba(0,0,0,0.02) 50%,transparent 100%)' }} />
+                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200" style={{ background: 'rgba(0,0,0,0.28)', backdropFilter: 'blur(4px)' }}>
+                                  <span className="px-4 py-1.5 rounded-full text-[10px] font-bold text-white" style={{ background: 'rgba(255,255,255,0.14)', backdropFilter: 'blur(8px)' }}>✦ Use this style</span>
+                                </div>
+                                <div className="absolute inset-x-0 bottom-0 px-3 pb-3 group-hover:opacity-0 transition-opacity duration-200">
+                                  <span className="block text-[11px] font-bold leading-tight text-white" style={{ textShadow: '0 1px 8px rgba(0,0,0,1)' }}>{t.name}</span>
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fill,minmax(200px,1fr))' }}>
+                    {filteredTpls.map(t => (
+                      <button
+                        key={t.id}
+                        onClick={() => { setShowAllTemplates(false); setImagineTemplateModal({ label: t.name, color: '#111', img: t.thumb, prompt: t.prompt }); setTemplateUploadPhoto(null); }}
+                        className="group relative overflow-hidden text-left"
+                        style={{ aspectRatio: '9/13', borderRadius: 20, background: resolvedTheme === 'dark' ? '#0e0e16' : '#f0f0f0', boxShadow: resolvedTheme === 'dark' ? '0 8px 28px rgba(0,0,0,0.5)' : '0 4px 16px rgba(0,0,0,0.1)', transition: 'transform 0.25s ease, box-shadow 0.25s ease' }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-6px) scale(1.03)'; (e.currentTarget as HTMLElement).style.boxShadow = resolvedTheme === 'dark' ? '0 24px 56px rgba(0,0,0,0.65)' : '0 16px 40px rgba(0,0,0,0.2)'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = ''; (e.currentTarget as HTMLElement).style.boxShadow = resolvedTheme === 'dark' ? '0 8px 28px rgba(0,0,0,0.5)' : '0 4px 16px rgba(0,0,0,0.1)'; }}
+                      >
+                        <img src={t.thumb} alt={t.name} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+                        <div className="absolute inset-0" style={{ background: 'linear-gradient(to top,rgba(0,0,0,0.88) 0%,rgba(0,0,0,0.02) 50%,transparent 100%)' }} />
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200" style={{ background: 'rgba(0,0,0,0.28)', backdropFilter: 'blur(4px)' }}>
+                          <span className="px-4 py-1.5 rounded-full text-[10px] font-bold text-white" style={{ background: 'rgba(255,255,255,0.14)', backdropFilter: 'blur(8px)' }}>✦ Use this style</span>
+                        </div>
+                        <div className="absolute inset-x-0 bottom-0 px-3 pb-3 group-hover:opacity-0 transition-opacity duration-200">
+                          <span className="block text-[11px] font-bold leading-tight text-white" style={{ textShadow: '0 1px 8px rgba(0,0,0,1)' }}>{t.name}</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* ── Imagine Gallery Modal ───────────────────────────────────────── */}
+        {imagineGalleryOpen && (
+          <div
+            className="fixed inset-0 z-[999] flex items-end justify-center sm:items-center p-0 sm:p-4"
+            style={{ background: 'rgba(0,0,0,0.82)', backdropFilter: 'blur(16px)' }}
+            onClick={(e) => { if (e.target === e.currentTarget) setImagineGalleryOpen(false); }}
+          >
+            <div className="relative w-full max-w-4xl bg-zinc-950 rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl border border-white/10 flex flex-col" style={{ maxHeight: '88vh' }}>
+              {/* Header */}
+              <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-white/10 flex-shrink-0">
+                <div className="flex items-center gap-2.5">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m21 15-5-5L5 21"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>
+                  <h3 className="text-lg font-bold text-white">My Gallery</h3>
+                  <span className="text-xs text-zinc-500">{imagineMyPhotos.length} photo{imagineMyPhotos.length !== 1 ? 's' : ''}</span>
+                </div>
+                <button onClick={() => setImagineGalleryOpen(false)} className="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-all">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              {/* Grid */}
+              <div className="flex-1 overflow-y-auto p-5" style={{ scrollbarWidth: 'thin' }}>
+                {imagineMyPhotos.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-20 text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12 text-zinc-700 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m21 15-5-5L5 21"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>
+                    <p className="text-zinc-400 font-semibold text-base mb-1">No photos yet</p>
+                    <p className="text-zinc-600 text-sm">Images you generate in Imagine Studio will appear here.</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                    {[...imagineMyPhotos].reverse().map((photo, i) => (
+                      <div key={i} className="group relative aspect-square rounded-2xl overflow-hidden bg-zinc-900 border border-white/5 cursor-pointer hover:border-violet-500/50 transition-all"
+                        onClick={() => setFullscreenImg(photo.url)}>
+                        <img src={photo.url} alt={photo.prompt || `Photo ${i + 1}`} className="w-full h-full object-cover" />
+                        {photo.prompt && (
+                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex items-end p-3">
+                            <p className="text-white text-[11px] leading-snug line-clamp-3">{photo.prompt}</p>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── Template Upload Modal ───────────────────────────────────────── */}
+        {imagineTemplateModal && (
+          <div
+            className="fixed inset-0 z-[999] flex items-center justify-center p-4"
+            style={{ background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(12px)' }}
+            onClick={(e) => { if (e.target === e.currentTarget) { setImagineTemplateModal(null); setTemplateUploadPhoto(null); } }}
+          >
+            <div className="relative w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl" style={{ background: '#18181b' }}>
+              {/* Hero image */}
+              <div className="relative h-44 overflow-hidden">
+                <img
+                  src={imagineTemplateModal.img}
+                  alt={imagineTemplateModal.label}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+                />
+                <div className="absolute inset-0" style={{ background: imagineTemplateModal.color, opacity: 0.4 }} />
+                <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, #18181b 0%, transparent 60%)' }} />
+                {/* Close */}
+                <button
+                  onClick={() => { setImagineTemplateModal(null); setTemplateUploadPhoto(null); }}
+                  className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 flex items-center justify-center text-white hover:bg-black/70 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="px-5 pb-5 -mt-1">
+                <h3 className="text-xl font-bold text-white mb-1">{imagineTemplateModal.label}</h3>
+                <p className="text-[12px] text-zinc-400 mb-4 leading-relaxed line-clamp-2">{imagineTemplateModal.prompt.split(',')[0]}.</p>
+
+                {/* Upload area — drag & drop */}
+                {!templateUploadPhoto ? (
+                  <div
+                    onDragOver={(e) => { e.preventDefault(); e.currentTarget.setAttribute('data-drag','1'); e.currentTarget.style.borderColor = 'rgba(255,255,255,0.5)'; }}
+                    onDragLeave={(e) => { e.currentTarget.style.borderColor = ''; }}
+                    onDrop={(e) => {
+                      e.preventDefault(); e.currentTarget.style.borderColor = '';
+                      const file = e.dataTransfer.files?.[0];
+                      if (file && file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = (ev) => {
+                          const dataUrl = ev.target?.result as string;
+                          const base64 = dataUrl.split(',')[1];
+                          const photo = { preview: dataUrl, base64 };
+                          setTemplateUploadPhoto(photo);
+                          setRecentUploads(prev => {
+                            const updated = [photo, ...prev.filter(p => p.preview !== dataUrl)].slice(0, 6);
+                            try { localStorage.setItem('blinga_recent_template_uploads', JSON.stringify(updated)); } catch {}
+                            return updated;
+                          });
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                    className="relative rounded-2xl border-2 border-dashed border-zinc-600 hover:border-zinc-500 transition-colors flex flex-col items-center justify-center gap-2 py-5"
+                    style={{ background: 'rgba(255,255,255,0.04)' }}
+                  >
+                    <div className="w-11 h-11 rounded-2xl bg-white/10 flex items-center justify-center">
+                      <Upload className="w-5 h-5 text-zinc-300" />
+                    </div>
+                    <div className="text-center">
+                      <p className="text-[13px] font-semibold text-white">Drag & drop your photo here</p>
+                      <p className="text-[11px] text-zinc-500 mt-0.5">JPG, PNG, WEBP supported</p>
+                    </div>
+                    <button
+                      onClick={() => templatePhotoInputRef.current?.click()}
+                      className="mt-1 px-4 py-1.5 rounded-lg text-[12px] font-semibold text-white/80 hover:text-white transition-all hover:bg-white/15"
+                      style={{ background: 'rgba(255,255,255,0.10)' }}
+                    >Browse files</button>
+                  </div>
+                ) : (
+                  /* Preview */
+                  <div className="relative rounded-2xl overflow-hidden" style={{ height: 130 }}>
+                    <img src={templateUploadPhoto.preview} alt="Uploaded" className="absolute inset-0 w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-black/30 flex items-end p-3">
+                      <div className="flex items-center gap-2 w-full">
+                        <span className="text-[11px] text-white font-medium flex-1">✓ Photo ready</span>
+                        <button
+                          onClick={() => { setTemplateUploadPhoto(null); templatePhotoInputRef.current?.click(); }}
+                          className="text-[11px] text-white/70 hover:text-white underline transition-colors"
+                        >Change</button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Recently Uploaded */}
+                {recentUploads.length > 0 && (
+                  <div className="mt-3">
+                    <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-2">Recently Uploaded</p>
+                    <div className="flex gap-2 flex-wrap">
+                      {recentUploads.map((u, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setTemplateUploadPhoto(u)}
+                          className="relative w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 transition-all hover:scale-110 hover:shadow-lg"
+                          style={{ outline: templateUploadPhoto?.preview === u.preview ? '2px solid #a855f7' : '2px solid rgba(255,255,255,0.12)', outlineOffset: 2 }}
+                        >
+                          <img src={u.preview} alt="" className="w-full h-full object-cover" />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Action buttons */}
+                <div className="flex flex-col gap-2 mt-4">
+                  <button
+                    onClick={() => {
+                      if (!imagineTemplateModal) return;
+                      const t = imagineTemplateModal;
+                      setImagineTemplateModal(null);
+                      setTemplateUploadPhoto(null);
+                      triggerImagineTemplate(t.prompt, null);
+                    }}
+                    className="w-full py-2.5 rounded-xl text-[13px] font-bold text-white transition-all hover:opacity-90"
+                    style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)' }}
+                  >✦ Generate directly</button>
+                  <div className="flex gap-2.5">
+                    <button
+                      onClick={() => { setImagineTemplateModal(null); setTemplateUploadPhoto(null); }}
+                      className="flex-1 py-2.5 rounded-xl text-[13px] font-semibold text-zinc-400 hover:text-white transition-colors"
+                      style={{ background: 'rgba(255,255,255,0.07)' }}
+                    >Cancel</button>
+                    <button
+                      disabled={!templateUploadPhoto}
+                      onClick={() => {
+                        if (!templateUploadPhoto || !imagineTemplateModal) return;
+                        const t = imagineTemplateModal;
+                        const p = templateUploadPhoto;
+                        setImagineTemplateModal(null);
+                        setTemplateUploadPhoto(null);
+                        triggerImagineTemplate(t.prompt, p);
+                      }}
+                      className="flex-1 py-2.5 rounded-xl text-[13px] font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                      style={{ background: 'rgba(255,255,255,0.12)', color: templateUploadPhoto ? 'white' : '#666' }}
+                    >Apply to Photo</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+
+      {/* Attachment Dialog */}
+      <Dialog open={isAttachmentDialogOpen} onOpenChange={setIsAttachmentDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Add Attachment</DialogTitle>
+          </DialogHeader>
+          <div className="grid grid-cols-2 gap-4 py-4">
+            <Button
+              variant="outline"
+              className="h-20 flex flex-col items-center justify-center space-y-2"
+              onClick={() => {
+                setIsAttachmentDialogOpen(false);
+                setTimeout(() => fileInputRef.current?.click(), 100);
+              }}
+              data-testid="attachment-upload-file"
+            >
+              <FileText className="h-6 w-6" />
+              <span className="text-sm">Upload File</span>
+            </Button>
+            
+            <Button
+              variant="outline"
+              className="h-20 flex flex-col items-center justify-center space-y-2"
+              onClick={() => {
+                setIsAttachmentDialogOpen(false);
+                setTimeout(() => imageInputRef.current?.click(), 100);
+              }}
+              data-testid="attachment-upload-image"
+            >
+              <Image className="h-6 w-6" />
+              <span className="text-sm">Upload Image</span>
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Customize Modal */}
+      <CustomizeModal
+        isOpen={isCustomizeModalOpen}
+        onClose={() => setIsCustomizeModalOpen(false)}
+        currentPreset={currentPreset}
+        customInstructions={customInstructions}
+        onSave={handleCustomizeSave}
+        toggles={settingsToggles}
+        aiOrder={aiOrder}
+        user={user}
+        profilePicture={profilePicture || undefined}
+        onUserRename={(newName) => setUser(prev => prev ? { ...prev, username: newName, displayName: newName } : prev)}
+        onProfilePictureChange={(dataUrl) => { setProfilePicture(dataUrl); localStorage.setItem('profilePicture', dataUrl); }}
+      />
+
+      {/* Image Generation Dialog */}
+      <ImageGenerationDialog
+        open={isImageGenerationDialogOpen}
+        onOpenChange={setIsImageGenerationDialogOpen}
+      />
+
+      {/* Education Modal */}
+      <EducationModal
+        isOpen={isEducationModalOpen}
+        onClose={() => setIsEducationModalOpen(false)}
+        onStartExamination={handleStartExamination}
+        onStartSelfListen={handleStartSelfListen}
+      />
+
+      {/* Quiz Modal */}
+      <QuizModal
+        isOpen={isQuizOpen}
+        onClose={() => setIsQuizOpen(false)}
+        questions={quizQuestions}
+        isLoading={quizLoading}
+        title={quizTitle}
+      />
+
+      {/* Voice Mode Modal */}
+      <VoiceModeModal
+        isOpen={isVoiceModeModalOpen}
+        onClose={() => setIsVoiceModeModalOpen(false)}
+        isListening={isListening}
+        onToggleListening={toggleListening}
+        isPlaying={false}
+        onTogglePlaying={() => {}}
+      />
+
+      {/* Imagine Modal — Image Generation GUI */}
+      <ImagineModal isOpen={isImagineOpen} onClose={() => setIsImagineOpen(false)} />
+
+      {/* Video Call / Screen Share Modal */}
+      <VideoCallModal isOpen={isVideoCallOpen} onClose={() => setIsVideoCallOpen(false)} />
+
+      {/* Nomad Notification - recurring, respects settings toggle, rotates between enabled variants */}
+      {showNomadNotification && (settingsToggles.nomadNotification ?? true) && (
+        <NomadNotification
+          enabledVariants={[
+            "nomad",
+            ...(settingsToggles.philosopherNotification ?? true ? ["philosopher"] : []),
+            ...(settingsToggles.blingaGamesNotification ?? true ? ["blinga-games"] : []),
+          ]}
+          onClose={handleNomadNotifClose}
+        />
+      )}
+
+      {/* Hidden file input elements */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*,.pdf,.doc,.docx,.txt"
+        multiple
+        onChange={handleFileUpload}
+        style={{ display: 'none' }}
+      />
+      <input
+        ref={imageInputRef}
+        type="file"
+        accept="image/*"
+        multiple
+        onChange={handleImageUpload}
+        style={{ display: 'none' }}
+      />
+      <input
+        ref={imagineUploadRef}
+        type="file"
+        accept="image/*"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            const base64 = (ev.target?.result as string)?.split(',')[1] ?? '';
+            const preview = ev.target?.result as string;
+            setImagineRefImage({ preview, base64 });
+          };
+          reader.readAsDataURL(file);
+          e.target.value = '';
+        }}
+        style={{ display: 'none' }}
+      />
+
+      {/* ── Feedback Dialog ── */}
+      <Dialog open={feedbackOpen} onOpenChange={setFeedbackOpen}>
+        <DialogContent className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-0 max-w-sm w-full shadow-2xl">
+          <DialogHeader className="px-5 pt-5 pb-3 border-b border-zinc-100 dark:border-zinc-800">
+            <DialogTitle className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+              {feedbackType === 'like' ? 'What did you like?' : 'What went wrong?'}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="px-5 py-4 space-y-4">
+            <div className="flex flex-wrap gap-2">
+              {(feedbackType === 'like'
+                ? ['Accurate', 'Helpful', 'Well written', 'Clear & concise', 'Creative', 'Other']
+                : ['Inaccurate', 'Not helpful', 'Harmful content', 'Off-topic', 'Too long', 'Too short', 'Other']
+              ).map(opt => (
+                <button
+                  key={opt}
+                  onClick={() => setFeedbackSelected(prev => {
+                    const s = new Set(prev);
+                    if (s.has(opt)) s.delete(opt); else s.add(opt);
+                    return new Set(s);
+                  })}
+                  className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
+                    feedbackSelected.has(opt)
+                      ? feedbackType === 'like'
+                        ? 'bg-green-50 border-green-300 text-green-700 dark:bg-green-900/30 dark:border-green-600 dark:text-green-300'
+                        : 'bg-red-50 border-red-300 text-red-700 dark:bg-red-900/30 dark:border-red-600 dark:text-red-300'
+                      : 'bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700'
+                  }`}
+                >{opt}</button>
+              ))}
+            </div>
+            <textarea
+              value={feedbackText}
+              onChange={e => setFeedbackText(e.target.value)}
+              placeholder="Add more details (optional)"
+              rows={3}
+              className="w-full px-3 py-2 text-sm rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 resize-none outline-none focus:border-zinc-400 dark:focus:border-zinc-500 transition-colors"
+            />
+            <div className="flex gap-2 justify-end">
+              <button
+                onClick={() => setFeedbackOpen(false)}
+                className="px-4 py-2 text-sm text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+              >Cancel</button>
+              <button
+                onClick={submitFeedback}
+                className={`px-4 py-2 text-sm font-medium rounded-xl text-white transition-all ${
+                  feedbackType === 'like'
+                    ? 'bg-green-500 hover:bg-green-600'
+                    : 'bg-zinc-800 hover:bg-zinc-700 dark:bg-zinc-700 dark:hover:bg-zinc-600'
+                }`}
+              >Submit</button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* ── Fullscreen prompt editor (Gemini-style) ── */}
+      {promptFullscreen && (
+        <div className="fixed inset-0 z-[9998] bg-background flex flex-col" style={{ animation: "sheetEnter 0.32s cubic-bezier(0.23,1,0.32,1) both" }}>
+          {/* Header */}
+          <div className="flex items-center justify-between px-5 py-3.5 flex-shrink-0">
+            <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Type your message</span>
+            <button
+              onClick={() => { setPromptFullscreen(false); setLongPromptMode(false); setTimeout(() => textareaRef.current?.focus(), 100); }}
+              className="p-1.5 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
+            >
+              <Minimize2 className="w-4 h-4 text-zinc-500" />
+            </button>
+          </div>
+          {/* Textarea */}
+          <div className="flex-1 overflow-hidden p-5">
+            <textarea
+              autoFocus
+              value={inputValue}
+              onChange={e => setInputValue(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Escape') { setPromptFullscreen(false); setLongPromptMode(false); }
+              }}
+              placeholder="Type a detailed prompt here…"
+              className="w-full h-full text-[15px] bg-transparent text-zinc-900 dark:text-zinc-100 resize-none focus:outline-none placeholder:text-zinc-400 leading-relaxed"
+            />
+          </div>
+          {/* Bottom bar */}
+          <div className="flex items-center gap-2 px-4 py-3 flex-shrink-0">
+            {/* Mic */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={toggleListening}
+                    disabled={!speechSupported}
+                    className={`w-9 h-9 rounded-full flex items-center justify-center transition-all flex-shrink-0 ${isListening ? "bg-emerald-500/15 text-emerald-400" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"} disabled:opacity-30`}
+                  >
+                    <Mic className="w-4 h-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>{isListening ? "Stop listening" : "Voice input"}</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            {/* Enhance */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={handleEnhancePrompt}
+                    disabled={!inputValue.trim() || isEnhancing}
+                    className="w-9 h-9 rounded-full flex items-center justify-center bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all flex-shrink-0 disabled:opacity-30"
+                  >
+                    {isEnhancing
+                      ? <div className="w-4 h-4 border-2 border-zinc-400 border-t-transparent rounded-full animate-spin" />
+                      : <Sparkles className="w-4 h-4" />}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>Enhance prompt</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            {/* Long Answer toggle */}
+            <button
+              onClick={() => setLongPromptMode(v => !v)}
+              className={`h-9 px-3 rounded-full flex items-center gap-1.5 transition-all flex-shrink-0 text-[11px] font-semibold ${longPromptMode ? "bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"}`}
+            >
+              <AlignLeft className="w-3.5 h-3.5 flex-shrink-0" />
+              Long
+            </button>
+            {/* Char count */}
+            <span className="text-xs text-zinc-400 flex-1 text-right tabular-nums">
+              {inputValue.length > 0 ? inputValue.length : ""}
+            </span>
+            {/* Cancel */}
+            <button
+              onClick={() => { setPromptFullscreen(false); setLongPromptMode(false); }}
+              className="h-9 px-4 rounded-full text-sm font-medium text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex-shrink-0"
+            >
+              Cancel
+            </button>
+            {/* Done / Send */}
+            <button
+              onClick={() => {
+                if (longPromptMode && inputValue.trim()) {
+                  setInputValue(inputValue.trim() + "\n\nPlease provide a very detailed and thorough answer.");
+                  setLongPromptMode(false);
+                }
+                setPromptFullscreen(false);
+                setTimeout(() => textareaRef.current?.focus(), 50);
+              }}
+              disabled={!inputValue.trim()}
+              className="h-9 px-5 rounded-full flex items-center gap-1.5 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-sm font-semibold disabled:opacity-30 transition-all hover:opacity-90 flex-shrink-0"
+            >
+              Done
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── Fullscreen image lightbox ── */}
+      {fullscreenImg && (
+        <div
+          className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center"
+          onClick={() => setFullscreenImg(null)}
+        >
+          <button
+            className="absolute top-4 right-4 w-9 h-9 bg-white/10 hover:bg-white/25 text-white rounded-full flex items-center justify-center transition-all text-lg"
+            onClick={() => setFullscreenImg(null)}
+          >
+            <X className="w-5 h-5" />
+          </button>
+          <img
+            src={fullscreenImg}
+            alt="Full screen"
+            className="max-w-[95vw] max-h-[95vh] object-contain rounded-lg shadow-2xl"
+            onClick={e => e.stopPropagation()}
+          />
+        </div>
+      )}
+    </div>
+
+    {/* ── Nomad disabled model notification ── */}
+    <AnimatePresence>
+      {nomadDisabledNotif && (
+        <motion.div
+          key="nomad-notif"
+          initial={{ opacity: 0, x: 60, y: -8 }}
+          animate={{ opacity: 1, x: 0, y: 0 }}
+          exit={{ opacity: 0, x: 60, y: -8 }}
+          transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+          style={{
+            position: 'fixed',
+            top: 18,
+            right: 18,
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            background: resolvedTheme === 'dark' ? 'rgba(24,24,28,0.96)' : 'rgba(255,255,255,0.97)',
+            border: `1.5px solid ${nomadDisabledNotif.color}44`,
+            borderRadius: 999,
+            padding: '9px 18px 9px 14px',
+            boxShadow: '0 4px 24px rgba(0,0,0,0.18)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            minWidth: 0,
+            pointerEvents: 'none',
+          }}
+        >
+          <div style={{ width: 8, height: 8, borderRadius: '50%', background: nomadDisabledNotif.color, flexShrink: 0, opacity: 0.85 }} />
+          <span style={{ fontSize: 12, fontWeight: 600, color: resolvedTheme === 'dark' ? '#e4e4e7' : '#18181b', whiteSpace: 'nowrap' }}>
+            {nomadDisabledNotif.label}
+          </span>
+          <span style={{ fontSize: 11, color: resolvedTheme === 'dark' ? 'rgba(200,200,210,0.55)' : 'rgba(80,80,100,0.55)', whiteSpace: 'nowrap' }}>
+            disabled · gone to end
+          </span>
+        </motion.div>
+      )}
+    </AnimatePresence>
+
+    {/* ── Floating text-selection Reply button ── */}
+    {replyBtnPos && (
+      <div
+        data-reply-btn="true"
+        className="fixed z-[9999] pointer-events-auto reply-btn-pop"
+        style={{ left: replyBtnPos.x, top: replyBtnPos.y }}
+      >
+        <button
+          onMouseDown={(e) => {
+            e.preventDefault();
+            const sel = window.getSelection();
+            const text = sel?.toString().trim();
+            if (text) {
+              setReplyQuote(text);
+              sel?.removeAllRanges();
+            }
+            setReplyBtnPos(null);
+          }}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full shadow-xl active:scale-95 transition-transform
+            bg-zinc-900 text-white hover:bg-zinc-700
+            dark:bg-zinc-600/90 dark:text-white dark:hover:bg-zinc-500/90
+            backdrop-blur-sm border border-white/10"
+        >
+          <CornerDownLeft className="w-3 h-3 opacity-80" />
+          Reply
+        </button>
+      </div>
+    )}
+
+    </div>
+    </TooltipProvider>
+  );
+}
+
+
