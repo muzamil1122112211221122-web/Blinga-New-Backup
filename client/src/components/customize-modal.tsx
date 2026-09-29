@@ -443,6 +443,7 @@ export function CustomizeModal({
     glossyOutline: true,
     topbarTabIcons: true,
     tabsInSidebar: false,
+    minimalAnimations: false,
   });
 
   const settingsContentRef = useRef<HTMLDivElement | null>(null);
@@ -1008,6 +1009,14 @@ export function CustomizeModal({
 
                 <div className="flex items-center justify-between">
                   <div>
+                    <span className="text-sm text-zinc-700 dark:text-zinc-200">Minimal Animations</span>
+                    <p className="text-xs text-zinc-500 mt-0.5">Removes hover scale effects, pill slide animations, and uses instant tab switching</p>
+                  </div>
+                  <Switch checked={localToggles.minimalAnimations ?? false} onCheckedChange={() => handleToggle('minimalAnimations')} />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div>
                     <span className="text-sm text-zinc-700 dark:text-zinc-200">UI Sounds</span>
                     <p className="text-xs text-zinc-500 mt-0.5">Play a click sound when switching tabs &amp; pill options</p>
                   </div>
@@ -1307,17 +1316,17 @@ export function CustomizeModal({
                     'blinga-ai': 'Blinga',
                   };
                   const modelLogos: Record<string, string | null> = {
-                    'gpt-4o': theme === 'dark' ? '/chatgpt-logo-white.png' : '/chatgpt-logo.png',
-                    'claude-3.5-sonnet': '/claude-logo.png',
-                    'gemini-pro': '/gemini-logo.png',
-                    'perplexity': '/perplexity-logo.png',
-                    'grok-4': '/grok-logo.png',
-                    'deepseek-r1': '/deepseek-logo.png',
-                    'doubao': '/doubao-logo.png',
-                    'kimi': '/kimi-logo.png',
-                    'qwen': '/qwen-logo.png',
-                    'llama-4': '/llama-logo.png',
-                    'mistral': '/mistral-logo.png',
+                    'gpt-4o': theme === 'dark' ? '/chatgpt-logo-white.png' : '/chatgpt-logo.svg',
+                    'claude-3.5-sonnet': '/claude-logo.svg',
+                    'gemini-pro': '/gemini-logo.svg',
+                    'perplexity': '/perplexity-logo.svg',
+                    'grok-4': '/grok-logo.svg',
+                    'deepseek-r1': '/deepseek-logo.svg',
+                    'doubao': '/doubao-logo.svg',
+                    'kimi': '/kimi-logo.svg',
+                    'qwen': '/qwen-logo.svg',
+                    'llama-4': '/llama-logo.svg',
+                    'mistral': '/mistral-logo.svg',
                     'copilot': '/copilot-logo.png',
                     'blinga-ai': null,
                   };
@@ -1633,4 +1642,7 @@ export function CustomizeModal({
   </>
   );
 }
+
+
+
 

@@ -1,4 +1,4 @@
-import { NanoAgentsOverlay } from './NanoAgentsOverlay';
+﻿import { NanoAgentsOverlay } from './NanoAgentsOverlay';
 import React, { useState, useRef, useEffect, useLayoutEffect, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -11,12 +11,12 @@ import animeBoy6 from "@assets/HD-wallpaper-handsome-anime-boy-hōtarō-oreki-ha
 import render3d1 from "@assets/5e835680417d8f37b203d006_5ad102cf0f7efdaab0f155e6_Who-is-the-_1780675830862.jpeg";
 import render3d2 from "@assets/3d-rendering-box_1780675830864.avif";
 import render3d3 from "@assets/media_1976b43e20a9983ad2b30c4524f9248e32dee7a22_1780675830865.jpg";
-import pixelArt1 from "@assets/how-to-draw-a-rose-pixel-art-featured-image-1200_1780675830865.png";
+import pixelArt1 from "@assets/how-to-draw-a-rose-pixel-art-featured-image-1200_1780675830865.svg";
 import pixelArt2 from "@assets/a1b857df7f3bd73ec2ff9f2ee45b0b67_1780675830866.jpg";
-import pixelArt3 from "@assets/3367465_1780675830867.png";
+import pixelArt3 from "@assets/3367465_1780675830867.svg";
 import pixelArt4 from "@assets/images_(1)_1780675830868.jpg";
 import pixelArt5 from "@assets/Pixel-art-Creez-un-adorable-cochon-en-quelques-pixels_1780675830868.jpeg";
-import studioHero from "@assets/new_banner_bg.png";
+import studioHero from "@assets/new_banner_bg.svg";
 import { supabase } from "@/lib/supabaseClient";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -282,7 +282,7 @@ function GeneratedImageDisplay({ src, alt, className }: { src: string; alt?: str
           <p className="mt-3 text-xs text-slate-500 dark:text-slate-400 font-medium">{loadingMsg}</p>
           {elapsed >= 30 && (
             <button onClick={handleRetry}
-              className="mt-3 px-4 py-1.5 rounded-full text-xs font-bold text-white transition-all hover:scale-105"
+              className="mt-3 px-4 py-1.5 rounded-full text-xs font-bold text-white "
               style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)' }}>
               Try different seed
             </button>
@@ -293,7 +293,7 @@ function GeneratedImageDisplay({ src, alt, className }: { src: string; alt?: str
         <div className="flex flex-col items-center justify-center bg-gradient-to-br from-slate-100 to-rose-50 dark:from-slate-800 dark:to-rose-900/20 p-8 gap-3" style={{ minHeight: 140 }}>
           <p className="text-sm text-slate-500 dark:text-slate-400">Image didn't load — Blinga Studio is busy, please retry</p>
           <button onClick={handleRetry}
-            className="px-5 py-2 rounded-full text-xs font-bold text-white transition-all hover:scale-105"
+            className="px-5 py-2 rounded-full text-xs font-bold text-white "
             style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)' }}>
             ↺ Retry with new seed
           </button>
@@ -450,9 +450,9 @@ interface ChatInterfaceProps {
   onShowAuth: () => void;
 }
 
-import microphoneIcon from "@assets/microphone_1784996715112.png";
-import improvePromptIcon from "@assets/improve_promt__1784996516976.png";
-import plusButtonIcon from "@assets/add_1784996715112.png";
+import microphoneIcon from "@assets/microphone_1784996715112.svg";
+import improvePromptIcon from "@assets/improve_promt__1784996516976.svg";
+import plusButtonIcon from "@assets/add_1784996715112.svg";
 
 function WikiFace({ name, wikiTitle, className = '' }: { name: string; wikiTitle?: string; className?: string }) {
   const articleTitle = wikiTitle || name;
@@ -667,7 +667,7 @@ function ImagineImageCard({ imageUrl, fallbackUrls, onExpand }: { imageUrl: stri
           <span className="text-xs text-muted-foreground font-medium text-center px-4">{statusMsg}</span>
           {elapsed >= 22 && (
             <button onClick={() => { setElapsed(0); setAttempt(a => a + 1); setSrc(freshUrl(imageUrl)); }}
-              className="mt-1 px-4 py-1.5 rounded-full text-xs font-semibold text-white transition-all hover:scale-105"
+              className="mt-1 px-4 py-1.5 rounded-full text-xs font-semibold text-white "
               style={{ background: 'linear-gradient(135deg,#7c3aed,#a855f7)' }}>
               ↺ Try new seed
             </button>
@@ -810,7 +810,7 @@ function PCFollowUpSuggestions({ msgContent, onSelect }: { msgContent: string; o
     <div className="mt-2.5 flex flex-col gap-1.5">
       {suggestions.map((s, i) => (
         <button key={i} onClick={() => onSelect(s)}
-          className="px-3 py-1.5 rounded-full border border-border bg-background hover:bg-accent text-[11.5px] text-foreground font-medium transition-all active:scale-95 text-left shadow-sm flex items-center gap-1.5 w-fit max-w-full">
+          className="px-3 py-1.5 rounded-full border border-border bg-background hover:bg-accent text-[11.5px] text-foreground font-medium transition-all  text-left shadow-sm flex items-center gap-1.5 w-fit max-w-full">
           <span className="text-muted-foreground text-[13px] leading-none">⤷</span>
           {s}
         </button>
@@ -838,12 +838,12 @@ function PCScrollButtons({ scrollAreaRef }: { scrollAreaRef: React.RefObject<HTM
     <div className="fixed bottom-36 right-6 flex flex-col gap-1.5 z-[1000]">
       <button onClick={() => scrollAreaRef.current?.scrollTo({ top: 0, behavior: 'smooth' })}
         disabled={atTop}
-        className={`w-7 h-7 rounded-full bg-card border border-border shadow-md flex items-center justify-center transition-all duration-200 active:scale-90 ${atTop ? "opacity-30 cursor-default" : "text-muted-foreground hover:text-foreground hover:bg-accent"}`} title="Scroll to top">
+        className={`w-7 h-7 rounded-full bg-card border border-border shadow-md flex items-center justify-center transition-all duration-200  ${atTop ? "opacity-30 cursor-default" : "text-muted-foreground hover:text-foreground hover:bg-accent"}`} title="Scroll to top">
         <ChevronUp className="w-3.5 h-3.5" />
       </button>
       <button onClick={() => scrollAreaRef.current?.scrollTo({ top: scrollAreaRef.current.scrollHeight, behavior: 'smooth' })}
         disabled={atBottom}
-        className={`w-7 h-7 rounded-full bg-card border border-border shadow-md flex items-center justify-center transition-all duration-200 active:scale-90 ${atBottom ? "opacity-30 cursor-default" : "text-muted-foreground hover:text-foreground hover:bg-accent"}`} title="Scroll to bottom">
+        className={`w-7 h-7 rounded-full bg-card border border-border shadow-md flex items-center justify-center transition-all duration-200  ${atBottom ? "opacity-30 cursor-default" : "text-muted-foreground hover:text-foreground hover:bg-accent"}`} title="Scroll to bottom">
         <ChevronDown className="w-3.5 h-3.5" />
       </button>
     </div>
@@ -1672,6 +1672,7 @@ export function ChatInterface({ onShowAuth }: ChatInterfaceProps) {
     glossyOutline: true,
     topbarTabIcons: true,
     tabsInSidebar: true,
+      minimalAnimations: false,
   };
   const [settingsToggles, setSettingsToggles] = useState(() => {
     try {
@@ -2660,6 +2661,7 @@ Rules:
       document.body.classList.remove('ai-thinking');
     };
   }, [isTyping]);
+
 
   // AI auto-names a conversation based on the user's first message
   const autoNameConversation = async (conversationId: string, firstMessage: string) => {
@@ -4112,7 +4114,7 @@ Let's start the self-listen session!`;
   return (
     <TooltipProvider delayDuration={400}>
     <div
-      className={`h-screen overflow-hidden flex flex-col bg-background relative transition-[padding] duration-300 ${isSidebarOpen && sidebarOpenMode === 'mini' ? 'md:pl-[76px]' : ''} ${(isTyping || isAnyNomadModelTyping || philosopherIsTyping) ? 'ai-thinking' : ''}`}
+      className={`h-screen overflow-hidden flex flex-col bg-background relative transition-[padding] duration-300 ${isSidebarOpen && sidebarOpenMode === 'mini' ? 'md:pl-[76px]' : ''} ${(isTyping || isAnyNomadModelTyping || philosopherIsTyping) ? 'ai-thinking' : ''} ${settingsToggles.minimalAnimations ? 'minimal-animations-enabled' : ''}`}
     >
 
       {/* Top Mini Navigation Pill */}
@@ -4172,6 +4174,7 @@ Let's start the self-listen session!`;
          onTabChange={(tab) => { if (!(settingsToggles.tabsInSidebar ?? false)) { setSidebarOpenMode('mini'); } changeTab(tab as any); }}
          activeTab={activeTab}
          tabsInSidebar={settingsToggles.tabsInSidebar ?? false}
+          minimalAnimations={settingsToggles.minimalAnimations ?? false}
          askHasMessages={messages.length > 0}
          ownMode={ownMode}
          onToggleOwnMode={() => { if (ownMode) { setOwnMode(false); if (projects.length > 0) handleProjectSelect(projects[0].id); } else { setOwnMode(true); } }}
@@ -4234,7 +4237,7 @@ Let's start the self-listen session!`;
               left: pillStyle.left,
               width: pillStyle.width,
               top: 2, bottom: 2,
-              transition: 'left 0.48s cubic-bezier(0.34,1.56,0.64,1), width 0.48s cubic-bezier(0.34,1.56,0.64,1)',
+              transition: settingsToggles.minimalAnimations ? 'none' : 'left 0.48s cubic-bezier(0.34,1.56,0.64,1), width 0.48s cubic-bezier(0.34,1.56,0.64,1)',
               pointerEvents: 'none',
               zIndex: 0,
             }}>
@@ -4488,7 +4491,7 @@ Let's start the self-listen session!`;
         {/* Owl Mode star-field — always rendered when tab is ask; opacity transition handles enter/exit */}
         {activeTab === 'ask' && (
           <div className="absolute inset-0  overflow-hidden"
-               style={{zIndex:0, opacity: ownMode ? 1 : 0, transition:'opacity 0.45s cubic-bezier(0.4,0,0.2,1)'}}>
+               style={{zIndex:0, opacity: ownMode ? 1 : 0, transition: settingsToggles.minimalAnimations ? 'none' : 'opacity 0.45s cubic-bezier(0.4,0,0.2,1)'}}>
             {OWL_BG_DATA.map((o, i) => (
               <img key={i} src={resolvedTheme === 'dark' ? '/owl-dark.png' : '/owl-light.png'} alt=""
                 style={{position:'absolute',left:o.l,top:o.t,width:o.sz,height:o.sz,
@@ -4686,7 +4689,7 @@ Let's start the self-listen session!`;
                   // Document-mode messages never mount TypingText, so they'd never fire
                   // onAnimationComplete — treat them as done immediately once the network call finishes.
                   const isDone = !isBeingStreamed;
-                  const ab = "h-7 w-7 flex items-center justify-center rounded-xl transition-all duration-200 text-zinc-800 dark:text-zinc-300 hover:text-foreground hover:bg-accent active:scale-90";
+                  const ab = "h-7 w-7 flex items-center justify-center rounded-xl transition-all duration-200 text-zinc-800 dark:text-zinc-300 hover:text-foreground hover:bg-accent ";
                   return (
                     <div className="group flex space-x-3 max-w-4xl">
                       {(settingsToggles.showBlingaLogo ?? true) && (
@@ -4725,7 +4728,7 @@ Let's start the self-listen session!`;
                                   .slice(0, 5)
                                   .map((src, i) => (
                                     <a key={i} href={src.url} target="_blank" rel="noopener noreferrer" title={src.title}
-                                      className="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all hover:scale-110 flex items-center justify-center shadow-sm">
+                                      className="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all  flex items-center justify-center shadow-sm">
                                       <img src={`https://www.google.com/s2/favicons?sz=32&domain_url=${encodeURIComponent(src.url)}`} alt={src.title}
                                         className="w-5 h-5 rounded-sm"
                                         onError={e => { (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='2' y1='12' x2='22' y2='12'/%3E%3Cpath d='M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10z'/%3E%3C/svg%3E"; }} />
@@ -4743,7 +4746,7 @@ Let's start the self-listen session!`;
                               <DropdownMenuTrigger asChild>
                                 <button
                                   disabled={docPdfExportingId === message.id || exportingMsgId === message.id + '-doc' || exportingMsgId === message.id + '-ppt'}
-                                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold transition-all active:scale-95 disabled:opacity-60"
+                                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-semibold transition-all  disabled:opacity-60"
                                   data-testid={`button-download-${message.id}`}
                                 >
                                   {(docPdfExportingId === message.id || exportingMsgId === message.id + '-doc' || exportingMsgId === message.id + '-ppt')
@@ -4975,10 +4978,11 @@ Let's start the self-listen session!`;
                   <div className="relative flex items-center bg-secondary border border-border rounded-full p-1">
                     {/* Sliding pill — tracks whichever button is active */}
                     <div
-                      className="absolute top-1 bottom-1 rounded-full transition-all duration-500"
+                      className={`absolute top-1 bottom-1 rounded-full ${settingsToggles.minimalAnimations ? "transition-none duration-0" : "transition-all duration-500"}`}
                       style={{
                         background: resolvedTheme === 'dark' ? 'rgba(255,255,255,0.92)' : 'rgba(0,0,0,0.09)',
-                        transitionTimingFunction: 'cubic-bezier(0.34,1.56,0.64,1)',
+                        transitionTimingFunction: settingsToggles.minimalAnimations ? 'none' : 'cubic-bezier(0.34,1.56,0.64,1)',
+                          transition: settingsToggles.minimalAnimations ? 'none' : 'all 0.5s cubic-bezier(0.34,1.56,0.64,1)',
                         width: 'calc(50% - 4px)',
                         left: nomadMode === 'multi' ? '4px' : 'calc(50%)',
                       }}
@@ -5022,7 +5026,7 @@ Let's start the self-listen session!`;
                           key={m.id}
                           onClick={() => setNomadSoloModel(m.id)}
                           title={cfg.name}
-                          className="w-8 h-8 rounded-full border-2 flex items-center justify-center bg-card hover:scale-110 transition-all overflow-hidden p-1"
+                          className="w-8 h-8 rounded-full border-2 flex items-center justify-center bg-card  transition-all overflow-hidden p-1"
                           style={{ borderColor: cfg.color }}
                         >
                           <img
@@ -5075,7 +5079,7 @@ Let's start the self-listen session!`;
                   )}
                   <div className="space-y-6 max-w-3xl mx-auto">
                     {(() => {
-                      const nab = "h-7 w-7 flex items-center justify-center rounded-xl transition-all duration-200 text-zinc-800 dark:text-zinc-300 hover:text-foreground hover:bg-accent active:scale-90";
+                      const nab = "h-7 w-7 flex items-center justify-center rounded-xl transition-all duration-200 text-zinc-800 dark:text-zinc-300 hover:text-foreground hover:bg-accent ";
                       const lastAutoAiId = [...nomadAutoMessages].reverse().find(m => m.role === 'assistant')?.id;
                       return nomadAutoMessages.map(msg => (
                       <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -5343,7 +5347,7 @@ Let's start the self-listen session!`;
                             style={{ minHeight: 60 }}
                           >
                             {(() => {
-                              const mcab = "h-7 w-7 flex items-center justify-center rounded-xl transition-all duration-200 text-zinc-800 dark:text-zinc-300 hover:text-foreground hover:bg-accent active:scale-90";
+                              const mcab = "h-7 w-7 flex items-center justify-center rounded-xl transition-all duration-200 text-zinc-800 dark:text-zinc-300 hover:text-foreground hover:bg-accent ";
                               const lastColAiId = [...msgs].reverse().find(m => m.role === 'assistant')?.id;
                               return msgs.map(message => (
                               <div key={message.id} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -5452,7 +5456,7 @@ Let's start the self-listen session!`;
                     {/* Messages — same layout as Ask tab */}
                     <div className="flex-1 space-y-6 max-w-4xl mx-auto w-full">
                       {(() => {
-                        const sab = "h-7 w-7 flex items-center justify-center rounded-xl transition-all duration-200 text-zinc-800 dark:text-zinc-300 hover:text-foreground hover:bg-accent active:scale-90";
+                        const sab = "h-7 w-7 flex items-center justify-center rounded-xl transition-all duration-200 text-zinc-800 dark:text-zinc-300 hover:text-foreground hover:bg-accent ";
                         const lastSoloAiId = [...msgs].reverse().find(m => m.role === 'assistant')?.id;
                         return msgs.map(message => (
                         <div key={message.id} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -5578,7 +5582,7 @@ Let's start the self-listen session!`;
                   <button onClick={() => setWorkspaceView('inner')} className="group relative flex flex-col items-center text-center p-8 sm:p-10 rounded-[2rem] bg-white dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700/80 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all duration-300 hover:shadow-2xl hover:shadow-zinc-200/50 dark:hover:shadow-black/50 hover:-translate-y-2 overflow-hidden cursor-pointer">
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-zinc-50/80 dark:to-zinc-800/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     
-                    <div className="relative z-10 w-20 h-20 sm:w-24 sm:h-24 mb-6 sm:mb-8 rounded-3xl bg-zinc-50 dark:bg-zinc-700 shadow-sm flex items-center justify-center border border-zinc-100 dark:border-zinc-600/50 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                    <div className="relative z-10 w-20 h-20 sm:w-24 sm:h-24 mb-6 sm:mb-8 rounded-3xl bg-zinc-50 dark:bg-zinc-700 shadow-sm flex items-center justify-center border border-zinc-100 dark:border-zinc-600/50 group- group-hover:rotate-3 transition-all duration-300">
                       <Terminal className="w-10 h-10 sm:w-12 sm:h-12 text-zinc-800 dark:text-zinc-200" strokeWidth={1.5} />
                     </div>
                     
@@ -5592,7 +5596,7 @@ Let's start the self-listen session!`;
                   <button onClick={() => setWorkspaceView('inner')} className="group relative flex flex-col items-center text-center p-8 sm:p-10 rounded-[2rem] bg-white dark:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-700/80 hover:border-zinc-300 dark:hover:border-zinc-600 transition-all duration-300 hover:shadow-2xl hover:shadow-zinc-200/50 dark:hover:shadow-black/50 hover:-translate-y-2 overflow-hidden cursor-pointer">
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-zinc-50/80 dark:to-zinc-800/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     
-                    <div className="relative z-10 w-20 h-20 sm:w-24 sm:h-24 mb-6 sm:mb-8 rounded-3xl bg-zinc-50 dark:bg-zinc-700 shadow-sm flex items-center justify-center border border-zinc-100 dark:border-zinc-600/50 group-hover:scale-110 group-hover:-rotate-3 transition-all duration-300">
+                    <div className="relative z-10 w-20 h-20 sm:w-24 sm:h-24 mb-6 sm:mb-8 rounded-3xl bg-zinc-50 dark:bg-zinc-700 shadow-sm flex items-center justify-center border border-zinc-100 dark:border-zinc-600/50 group- group-hover:-rotate-3 transition-all duration-300">
                       <Paintbrush className="w-10 h-10 sm:w-12 sm:h-12 text-zinc-800 dark:text-zinc-200" strokeWidth={1.5} />
                     </div>
                     
@@ -5760,7 +5764,7 @@ Let's start the self-listen session!`;
                                         <DropdownMenuContent side="bottom" align="start" className="bg-white border-none text-black rounded-2xl shadow-2xl p-1.5 w-auto">
                                           <div className="relative flex flex-row items-center gap-0">
                                             <div className="absolute top-0 bottom-0 rounded-xl bg-zinc-200 "
-                                              style={{ width: `${100 / ORIENTS.length}%`, transform: `translateX(${activeIdx * 100}%)`, transition: 'transform 0.48s cubic-bezier(0.34,1.56,0.64,1)' }} />
+                                              style={{ width: `${100 / ORIENTS.length}%`, transform: `translateX(${activeIdx * 100}%)`, transition: settingsToggles.minimalAnimations ? 'none' : 'transform 0.48s cubic-bezier(0.34,1.56,0.64,1)' }} />
                                             {ORIENTS.map(o => {
                                               const isAct = imagineOrientation === o.id;
                                               return (
@@ -5838,7 +5842,7 @@ Let's start the self-listen session!`;
                                             <DropdownMenuContent side="bottom" align="start" className="bg-white border-none text-black rounded-2xl shadow-2xl p-1.5 w-auto">
                                               <div className="relative flex flex-row items-center gap-0">
                                                 <div className="absolute top-0 bottom-0 rounded-xl bg-zinc-200 "
-                                                  style={{ width: `${100 / ORIENTS.length}%`, transform: `translateX(${activeIdx * 100}%)`, transition: 'transform 0.48s cubic-bezier(0.34,1.56,0.64,1)' }} />
+                                                  style={{ width: `${100 / ORIENTS.length}%`, transform: `translateX(${activeIdx * 100}%)`, transition: settingsToggles.minimalAnimations ? 'none' : 'transform 0.48s cubic-bezier(0.34,1.56,0.64,1)' }} />
                                                 {ORIENTS.map(o => {
                                                   const isAct = imagineOrientation === o.id;
                                                   return (
@@ -5921,7 +5925,7 @@ Let's start the self-listen session!`;
                               <img
                                 src={resolvedTheme === 'dark' ? '/icon-editor-dark.png' : '/icon-editor-light.png'}
                                 alt="Editor"
-                                className="relative shrink-0 w-10 h-10 object-contain transition-transform duration-300 group-hover:scale-110"
+                                className="relative shrink-0 w-10 h-10 object-contain transition-transform duration-300 group-"
                               />
                               <span className="relative">
                                 <span className="block text-sm font-bold" style={{ color: resolvedTheme === 'dark' ? '#ffffff' : '#111111' }}>Editor</span>
@@ -5934,7 +5938,7 @@ Let's start the self-listen session!`;
                               <img
                                 src={resolvedTheme === 'dark' ? '/icon-templates-dark.png' : '/icon-templates-light.png'}
                                 alt="Templates"
-                                className="relative shrink-0 w-10 h-10 object-contain transition-transform duration-300 group-hover:scale-110"
+                                className="relative shrink-0 w-10 h-10 object-contain transition-transform duration-300 group-"
                               />
                               <span className="relative">
                                 <span className="block text-sm font-bold" style={{ color: resolvedTheme === 'dark' ? '#ffffff' : '#111111' }}>Templates</span>
@@ -5976,11 +5980,11 @@ Let's start the self-listen session!`;
                                     key={`${t.id}-r1-${i}`}
                                     onClick={() => { setImagineTemplateModal({ label: t.name, color: '#111', img: t.thumb, prompt: t.prompt }); setTemplateUploadPhoto(null); }}
                                     className="group relative shrink-0 overflow-hidden text-left"
-                                    style={{ width: 195, height: 265, borderRadius: 20, background: '#ffffff', boxShadow: '0 6px 24px rgba(0,0,0,0.1)', transformOrigin: 'center center', transition: 'transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s cubic-bezier(0.34,1.56,0.64,1)' }}
+                                    style={{ width: 195, height: 265, borderRadius: 20, background: '#ffffff', boxShadow: '0 6px 24px rgba(0,0,0,0.1)', transformOrigin: 'center center', transition: settingsToggles.minimalAnimations ? 'none' : 'transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s cubic-bezier(0.34,1.56,0.64,1)' }}
                                     onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1.06)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 22px 50px rgba(0,0,0,0.22)'; }}
                                     onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 24px rgba(0,0,0,0.1)'; }}
                                   >
-                                    <img src={t.thumb} alt={t.name} className="h-full w-full object-cover transition duration-500 group-hover:scale-110" loading="lazy" />
+                                    <img src={t.thumb} alt={t.name} className="h-full w-full object-cover transition duration-500 group-" loading="lazy" />
                                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300" style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(2px)' }}>
                                       <div className="rounded-full px-4 py-2 text-[11px] font-bold text-white" style={{ background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.35)', backdropFilter: 'blur(10px)' }}>Try this look</div>
                                     </div>
@@ -6002,11 +6006,11 @@ Let's start the self-listen session!`;
                                     key={`${t.id}-r2-${i}`}
                                     onClick={() => { setImagineTemplateModal({ label: t.name, color: '#111', img: t.thumb, prompt: t.prompt }); setTemplateUploadPhoto(null); }}
                                     className="group relative shrink-0 overflow-hidden text-left"
-                                    style={{ width: 195, height: 265, borderRadius: 20, background: '#ffffff', boxShadow: '0 6px 24px rgba(0,0,0,0.1)', transformOrigin: 'center center', transition: 'transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s cubic-bezier(0.34,1.56,0.64,1)' }}
+                                    style={{ width: 195, height: 265, borderRadius: 20, background: '#ffffff', boxShadow: '0 6px 24px rgba(0,0,0,0.1)', transformOrigin: 'center center', transition: settingsToggles.minimalAnimations ? 'none' : 'transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s cubic-bezier(0.34,1.56,0.64,1)' }}
                                     onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1.06)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 22px 50px rgba(0,0,0,0.22)'; }}
                                     onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 24px rgba(0,0,0,0.1)'; }}
                                   >
-                                    <img src={t.thumb} alt={t.name} className="h-full w-full object-cover transition duration-500 group-hover:scale-110" loading="lazy" />
+                                    <img src={t.thumb} alt={t.name} className="h-full w-full object-cover transition duration-500 group-" loading="lazy" />
                                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300" style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(2px)' }}>
                                       <div className="rounded-full px-4 py-2 text-[11px] font-bold text-white" style={{ background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.35)', backdropFilter: 'blur(10px)' }}>Try this look</div>
                                     </div>
@@ -6261,7 +6265,7 @@ Let's start the self-listen session!`;
                         left: catPillStyle.left,
                         width: catPillStyle.width,
                         top: 5, bottom: 5,
-                        transition: 'left 0.48s cubic-bezier(0.34,1.56,0.64,1), width 0.48s cubic-bezier(0.34,1.56,0.64,1)',
+                        transition: settingsToggles.minimalAnimations ? 'none' : 'left 0.48s cubic-bezier(0.34,1.56,0.64,1), width 0.48s cubic-bezier(0.34,1.56,0.64,1)',
                         pointerEvents: 'none',
                         zIndex: 0,
                       }}>
@@ -6364,7 +6368,7 @@ Let's start the self-listen session!`;
                   )}
                   {(() => {
                     const lastAiPhilosopherId = philosopherMessages.reduce<string | undefined>((acc, m) => m.role === 'assistant' ? m.id : acc, undefined);
-                    const ab = "h-7 w-7 flex items-center justify-center rounded-xl transition-all duration-200 text-zinc-800 dark:text-zinc-300 hover:text-foreground hover:bg-accent active:scale-90";
+                    const ab = "h-7 w-7 flex items-center justify-center rounded-xl transition-all duration-200 text-zinc-800 dark:text-zinc-300 hover:text-foreground hover:bg-accent ";
                     return philosopherMessages.map(msg => {
                       const isLatestAi = msg.id === lastAiPhilosopherId;
                       const isDone = isLatestAi ? !philosopherIsTyping : true;
@@ -6505,10 +6509,10 @@ Let's start the self-listen session!`;
                 data-fn-anim
                 data-testid={testId}
                 onClick={(e) => fireFnAnim(e, onClick)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-200 active:scale-95 crisp-outline ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-200  crisp-outline ${
                   activeStyle
                     ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400'
-                    : 'bg-white dark:bg-[#2e2e2e] border-zinc-200 dark:border-zinc-700 text-zinc-800 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-[#383838] hover:scale-[1.05] hover:-translate-y-0.5 hover:shadow-md'
+                    : `bg-white dark:bg-[#2e2e2e] border-zinc-200 dark:border-zinc-700 text-zinc-800 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-[#383838] hover:shadow-md ${settingsToggles.minimalAnimations ? '' : 'hover:scale-[1.05] hover:-translate-y-0.5'}`
                 }`}
               >
                 <span className="flex-shrink-0 w-[18px] h-[18px] flex items-center justify-center [&_img]:mix-blend-multiply dark:[&_img]:mix-blend-screen [&_img]:w-[18px] [&_img]:h-[18px] [&_img]:object-contain [&_img]:flex-shrink-0">{icon}</span>
@@ -6749,7 +6753,7 @@ Let's start the self-listen session!`;
                       <DropdownMenuContent side="top" align="start" className="bg-white dark:bg-[#383838] border-none text-black dark:text-white rounded-2xl shadow-2xl p-1.5 w-auto">
                         <div className="relative flex flex-row items-center gap-0">
                           <div className="absolute top-0 bottom-0 rounded-xl bg-zinc-200 dark:bg-white "
-                            style={{ width: `${100 / ORIENTS.length}%`, transform: `translateX(${activeIdx * 100}%)`, transition: 'transform 0.48s cubic-bezier(0.34,1.56,0.64,1)' }} />
+                            style={{ width: `${100 / ORIENTS.length}%`, transform: `translateX(${activeIdx * 100}%)`, transition: settingsToggles.minimalAnimations ? 'none' : 'transform 0.48s cubic-bezier(0.34,1.56,0.64,1)' }} />
                           {ORIENTS.map(o => {
                             const isAct = imagineOrientation === o.id;
                             return (
@@ -6831,7 +6835,7 @@ Let's start the self-listen session!`;
                           <DropdownMenuContent side="top" align="start" className="bg-white dark:bg-[#383838] border-none text-black dark:text-white rounded-2xl shadow-2xl p-1.5 w-auto">
                             <div className="relative flex flex-row items-center gap-0">
                               <div className="absolute top-0 bottom-0 rounded-xl bg-zinc-200 dark:bg-white "
-                                style={{ width: `${100 / ORIENTS.length}%`, transform: `translateX(${activeIdx * 100}%)`, transition: 'transform 0.48s cubic-bezier(0.34,1.56,0.64,1)' }} />
+                                style={{ width: `${100 / ORIENTS.length}%`, transform: `translateX(${activeIdx * 100}%)`, transition: settingsToggles.minimalAnimations ? 'none' : 'transform 0.48s cubic-bezier(0.34,1.56,0.64,1)' }} />
                               {ORIENTS.map(o => {
                                 const isAct = imagineOrientation === o.id;
                                 return (
@@ -7170,7 +7174,7 @@ Let's start the self-listen session!`;
                       <div className="relative flex flex-row items-center gap-0">
                         <div
                           className="absolute top-0 bottom-0 rounded-xl bg-zinc-200 dark:bg-white "
-                          style={{ width: `${100 / ORIENTS.length}%`, transform: `translateX(${activeIdx * 100}%)`, transition: 'transform 0.48s cubic-bezier(0.34,1.56,0.64,1)' }}
+                          style={{ width: `${100 / ORIENTS.length}%`, transform: `translateX(${activeIdx * 100}%)`, transition: settingsToggles.minimalAnimations ? 'none' : 'transform 0.48s cubic-bezier(0.34,1.56,0.64,1)' }}
                         />
                         {ORIENTS.map(o => {
                           const isActive = imagineOrientation === o.id;
@@ -7333,7 +7337,7 @@ Let's start the self-listen session!`;
                           <div className="relative flex flex-row items-center gap-0">
                             <div
                               className="absolute top-0 bottom-0 rounded-xl bg-zinc-200 dark:bg-white "
-                              style={{ width: `${100 / ORIENTS.length}%`, transform: `translateX(${activeIdx * 100}%)`, transition: 'transform 0.48s cubic-bezier(0.34,1.56,0.64,1)' }}
+                              style={{ width: `${100 / ORIENTS.length}%`, transform: `translateX(${activeIdx * 100}%)`, transition: settingsToggles.minimalAnimations ? 'none' : 'transform 0.48s cubic-bezier(0.34,1.56,0.64,1)' }}
                             />
                             {ORIENTS.map(o => {
                               const isActive = imagineOrientation === o.id;
@@ -7592,7 +7596,7 @@ Let's start the self-listen session!`;
               { label: 'Play Games',     light: '/quick-games-light.png', dark: '/quick-games-dark.png', action: () => changeTab('blinga-games') },
             ] as const).map(({ label, light, dark, action }) => (
               <button key={label} onClick={action}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[13px] font-medium transition-all hover:scale-[1.05] hover:-translate-y-0.5 hover:shadow-md active:scale-[0.97] bg-zinc-100 dark:bg-[#2e2e2e] text-zinc-700 dark:text-zinc-300 border border-zinc-200/80 dark:border-zinc-600/30 hover:bg-zinc-200 dark:hover:bg-[#3a3a3a]">
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[13px] font-medium transition-all  bg-zinc-100 dark:bg-[#2e2e2e] text-zinc-700 dark:text-zinc-300 border border-zinc-200/80 dark:border-zinc-600/30 hover:bg-zinc-200 dark:hover:bg-[#3a3a3a]">
                 <img src={resolvedTheme === 'dark' ? dark : light} alt="" className="w-4 h-4 object-contain flex-shrink-0" style={{ opacity: 1 }} />
                 {label}
               </button>
@@ -7605,7 +7609,7 @@ Let's start the self-listen session!`;
           <div className="flex items-center justify-center gap-2 mt-5 flex-wrap" style={{ transform: functionBarStyle === 'pill' ? 'translateX(-14px)' : undefined }}>
             <button
               onClick={() => setShowCreateBotsDialog(true)}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[13px] font-medium transition-all hover:scale-[1.05] hover:-translate-y-0.5 hover:shadow-md active:scale-[0.97] bg-zinc-100 dark:bg-[#2e2e2e] text-zinc-700 dark:text-zinc-300 border border-zinc-200/80 dark:border-zinc-600/30 hover:bg-zinc-200 dark:hover:bg-[#3a3a3a]">
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[13px] font-medium transition-all  bg-zinc-100 dark:bg-[#2e2e2e] text-zinc-700 dark:text-zinc-300 border border-zinc-200/80 dark:border-zinc-600/30 hover:bg-zinc-200 dark:hover:bg-[#3a3a3a]">
               <Terminal className="w-4 h-4 flex-shrink-0" />
               Create Bots with Tasks
             </button>
@@ -7689,7 +7693,7 @@ Let's start the self-listen session!`;
                       left: tplPillStyle.left,
                       width: tplPillStyle.width,
                       top: 5, bottom: 5,
-                      transition: 'left 0.48s cubic-bezier(0.34,1.56,0.64,1), width 0.48s cubic-bezier(0.34,1.56,0.64,1)',
+                      transition: settingsToggles.minimalAnimations ? 'none' : 'left 0.48s cubic-bezier(0.34,1.56,0.64,1), width 0.48s cubic-bezier(0.34,1.56,0.64,1)',
                       pointerEvents: 'none',
                       zIndex: 0,
                     }}>
@@ -7925,7 +7929,7 @@ Let's start the self-listen session!`;
                         <button
                           key={i}
                           onClick={() => setTemplateUploadPhoto(u)}
-                          className="relative w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 transition-all hover:scale-110 hover:shadow-lg"
+                          className="relative w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 transition-all  hover:shadow-lg"
                           style={{ outline: templateUploadPhoto?.preview === u.preview ? '2px solid #a855f7' : '2px solid rgba(255,255,255,0.12)', outlineOffset: 2 }}
                         >
                           <img src={u.preview} alt="" className="w-full h-full object-cover" />
@@ -8346,7 +8350,7 @@ Let's start the self-listen session!`;
             }
             setReplyBtnPos(null);
           }}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full shadow-xl active:scale-95 transition-transform
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full shadow-xl  transition-transform
             bg-zinc-900 text-white hover:bg-zinc-700
             dark:bg-zinc-600/90 dark:text-white dark:hover:bg-zinc-500/90
             backdrop-blur-sm border border-white/10"
@@ -8389,7 +8393,7 @@ Let's start the self-listen session!`;
                         setBotsConfig(newConfig);
                         localStorage.setItem('blinga_bots_config_v2', JSON.stringify(newConfig));
                       }}
-                      className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold transition-all hover:scale-110 ${bot.name ? 'bg-violet-500 text-white shadow-md ring-2 ring-violet-300 dark:ring-violet-700' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400 hover:bg-violet-100 dark:hover:bg-violet-900/30 hover:text-violet-500'}`}
+                      className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold transition-all  ${bot.name ? 'bg-violet-500 text-white shadow-md ring-2 ring-violet-300 dark:ring-violet-700' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400 hover:bg-violet-100 dark:hover:bg-violet-900/30 hover:text-violet-500'}`}
                       title={bot.name ? `${bot.name} (click to remove)` : `Click to add Bot ${i+1}`}
                     >
                       {i + 1}
@@ -8458,5 +8462,12 @@ Let's start the self-listen session!`;
 </TooltipProvider>
   );
 }
+
+
+
+
+
+
+
 
 

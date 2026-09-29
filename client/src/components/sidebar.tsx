@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+﻿import { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -56,7 +56,7 @@ function SidebarUsage({ compact = false, onOpenSettings }: { compact?: boolean; 
       <div className={`${compact ? 'px-4 pt-4 pb-3' : 'mx-3 mb-0 px-4 pt-4 pb-3'} flex flex-col items-center`}>
         {/* Plan icon + name */}
         <div className="flex items-center gap-2 mb-3">
-          <Tag className="w-[18px] h-[18px] text-zinc-600 dark:text-zinc-300" strokeWidth={1.5} />
+          <Tag className="w-[20px] h-[20px] text-zinc-600 dark:text-zinc-300" strokeWidth={1.5} />
           <span className="text-[14px] font-medium text-zinc-800 dark:text-zinc-100 tracking-tight">
             {planName}
           </span>
@@ -78,7 +78,7 @@ function SidebarUsage({ compact = false, onOpenSettings }: { compact?: boolean; 
             onClick={onOpenSettings}
             className="w-full py-2.5 rounded-xl bg-[#f0eee9] dark:bg-[#e4e2dd] text-zinc-900 text-[13px] font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2 border border-[#e5e3de] dark:border-[#d4d2cc] shadow-sm"
           >
-            <Crown className="w-[18px] h-[18px] text-zinc-800" strokeWidth={1.5} />
+            <Crown className="w-[20px] h-[20px] text-zinc-800" strokeWidth={1.5} />
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-cyan-700 font-semibold tracking-tight">Upgrade Now</span>
           </button>
         </div>
@@ -172,7 +172,7 @@ function SpotlightSearch({
         {/* ── Search Input Row ── */}
         <div style={{
           display: 'flex', alignItems: 'center', gap: 12,
-          padding: '14px 18px',
+          padding: '14px 20px',
         }}>
           <Search style={{ width: 18, height: 18, flexShrink: 0, color: subColor }} />
           <input
@@ -322,6 +322,7 @@ interface SidebarProps {
   nomadHistory?: Array<{ id: string; ts: number; mode: string; preview: string }>;
   onNomadHistorySelect?: (id?: string) => void;
   closeButtonPosition?: 'top' | 'bottom';
+  minimalAnimations?: boolean;
 }
 
 export function Sidebar({
@@ -354,6 +355,7 @@ export function Sidebar({
   profilePicture,
   onProfilePictureChange,
   closeButtonPosition = 'top',
+  minimalAnimations = false,
 }: SidebarProps) {
   const { theme } = useTheme();
   const [isMini, setIsMini] = useState(!forceFull);
@@ -618,10 +620,10 @@ export function Sidebar({
           }}
           className={`h-[32px] w-[48px] mx-auto flex items-center justify-center rounded-full transition-all duration-150 hover:scale-110 active:scale-95 ${active ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-white' : 'text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 rounded-full'}`}
         >
-          <img src={sidebarAsset(asset)} alt="" className="object-contain" style={{width: iconSize ?? '22px', height: iconSize ?? '22px', filter: isDarkTheme ? 'invert(1)' : undefined}} />
+          <img src={sidebarAsset(asset)} alt="" className="object-contain" style={{width: iconSize ?? '20px', height: iconSize ?? '20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} />
         </button>
       </TooltipTrigger>
-      <TooltipContent side="right">{label}</TooltipContent>
+      <TooltipContent side="right" avoidCollisions={false}>{label}</TooltipContent>
     </Tooltip>
   );
 
@@ -715,7 +717,7 @@ export function Sidebar({
                     onClick={(e) => { e.stopPropagation(); onToggleOwnMode?.(); }}
                     className={`h-[32px] w-[48px] mx-auto flex items-center justify-center rounded-full transition-all duration-150 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 active:scale-90 ${ownMode ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-white' : ''}`}
                   >
-                    <img src={sidebarAsset("ownMode")} alt="" className="object-contain" style={{width:'22px',height:'22px', filter: isDarkTheme ? 'invert(1)' : undefined}} />
+                    <img src={sidebarAsset("ownMode")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent side="right">{ownMode ? 'Exit Owl Mode' : 'Owl Mode'}</TooltipContent>
@@ -750,25 +752,25 @@ export function Sidebar({
                 onClick={openSpotlight}
                 className="w-full flex items-center gap-3 px-3 py-0.5 rounded-full text-zinc-700 dark:text-zinc-300 transition-colors duration-150 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 text-left"
               >
-                <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("search")} alt="" className="object-contain" style={{width:'22px',height:'22px'}} /></span>
+                <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("search")} alt="" className="object-contain" style={{width:'20px',height:'20px', }} /></span>
                 <span className="text-[14px] font-medium">Search Chats</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => onNewProject?.(false)}
-                className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 active:scale-[0.97] text-left ${tabsInSidebar && activeTab === 'ask' && !askHasMessages ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
+                className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${tabsInSidebar && activeTab === 'ask' && !askHasMessages ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
               >
-                <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("chat")} alt="" className="object-contain" style={{width:'22px',height:'22px', filter: isDarkTheme ? 'invert(1)' : undefined}} /></span>
+                <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("chat")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} /></span>
                 <span className="text-[14px] font-medium">New Chat</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => onImagineClick?.()}
-                className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 active:scale-[0.97] text-left ${activeTab === 'imagine' && tabsInSidebar ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
+                className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'imagine' && tabsInSidebar ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
               >
-                <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("imagine")} alt="" className="object-contain" style={{width:'22px',height:'22px', filter: isDarkTheme ? 'invert(1)' : undefined}} /></span>
+                <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("imagine")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} /></span>
                 <span className="text-[14px] font-medium">Imagine Studio</span>
                 <span className="ml-auto h-1.5 w-1.5 rounded-full bg-pink-500/80" />
               </button>
@@ -779,9 +781,9 @@ export function Sidebar({
                 <button
                   type="button"
                   onClick={() => onToggleOwnMode?.()}
-                  className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 active:scale-[0.97] text-left ${ownMode ? 'bg-zinc-900 dark:bg-zinc-700 text-white' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
+                  className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${ownMode ? 'bg-zinc-900 dark:bg-zinc-700 text-white' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
                 >
-                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("ownMode")} alt="" className="object-contain" style={{width:'22px',height:'22px', filter: isDarkTheme ? 'invert(1)' : undefined}} /></span>
+                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("ownMode")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} /></span>
                   <span className="text-[14px] font-medium">Owl Mode</span>
                   {ownMode && <span className="ml-auto text-[11px] font-medium opacity-70">ON</span>}
                 </button>
@@ -789,57 +791,57 @@ export function Sidebar({
                 <button
                   type="button"
                   onClick={() => { onTabChange?.('ask'); }}
-                  className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 active:scale-[0.97] text-left ${activeTab === 'ask' && askHasMessages ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
+                  className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'ask' && askHasMessages ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
                 >
-                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("ask")} alt="" className="object-contain" style={{width:'22px',height:'22px', filter: isDarkTheme ? 'invert(1)' : undefined}} /></span>
+                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("ask")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} /></span>
                   <span className="text-[14px] font-medium">Ask</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => { onTabChange?.('nomad'); }}
-                  className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 active:scale-[0.97] text-left ${activeTab === 'nomad' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
+                  className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'nomad' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
                 >
-                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("nomad")} alt="" className="object-contain" style={{width:'22px',height:'22px', filter: isDarkTheme ? 'invert(1)' : undefined}} /></span>
+                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("nomad")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} /></span>
                   <span className="text-[14px] font-medium">Nomad</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => { onTabChange?.('philosopher'); }}
-                  className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 active:scale-[0.97] text-left ${activeTab === 'philosopher' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
+                  className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'philosopher' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
                 >
-                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("minds")} alt="" className="object-contain" style={{width:'22px',height:'22px', filter: isDarkTheme ? 'invert(1)' : undefined}} /></span>
+                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("minds")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} /></span>
                   <span className="text-[14px] font-medium">Blinga Minds</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => { onTabChange?.('blinga-games'); }}
-                  className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 active:scale-[0.97] text-left ${activeTab === 'blinga-games' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
+                  className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'blinga-games' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
                 >
-                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("games")} alt="" className="object-contain" style={{width:'22px',height:'22px', filter: isDarkTheme ? 'invert(1)' : undefined}} /></span>
+                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("games")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} /></span>
                   <span className="text-[14px] font-medium">Blinga Games</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => { onTabChange?.('blinga-labs'); }}
-                  className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 active:scale-[0.97] text-left ${activeTab === 'blinga-labs' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
+                  className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'blinga-labs' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
                 >
-                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("labs")} alt="" className="object-contain" style={{width:'22px',height:'22px', filter: isDarkTheme ? 'invert(1)' : undefined}} /></span>
+                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("labs")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} /></span>
                   <span className="text-[14px] font-medium">Blinga Labs</span>
                 </button>
                   <button
                     type="button"
                     onClick={() => { onTabChange?.('presentations'); }}
-                    className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 active:scale-[0.97] text-left ${activeTab === 'presentations' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
+                    className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'presentations' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
                   >
-                    <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("presentations")} alt="" className="object-contain" style={{width:'22px',height:'22px', filter: isDarkTheme ? 'invert(1)' : undefined}} /></span>
+                    <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("presentations")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} /></span>
                     <span className="text-[14px] font-medium">Presentations</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => { onTabChange?.('motion-studio'); }}
-                    className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 active:scale-[0.97] text-left ${activeTab === 'motion-studio' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
+                    className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'motion-studio' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
                   >
-                    <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("motion")} alt="" className="object-contain" style={{width:'22px',height:'22px', filter: isDarkTheme ? 'invert(1)' : undefined}} /></span>
+                    <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("motion")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} /></span>
                     <span className="text-[14px] font-medium">Motion Studio</span>
                   </button>
               </>)}
@@ -872,8 +874,8 @@ export function Sidebar({
                           {chat.hasNomad && (
                             <span className="flex-shrink-0" style={{
                               display: 'inline-block', width: 14, height: 14,
-                              WebkitMaskImage: 'url(/creativity-icon.png)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat',
-                              maskImage: 'url(/creativity-icon.png)', maskSize: 'contain', maskRepeat: 'no-repeat',
+                              WebkitMaskImage: 'url(/creativity-icon.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat',
+                              maskImage: 'url(/creativity-icon.svg)', maskSize: 'contain', maskRepeat: 'no-repeat',
                               background: 'linear-gradient(135deg, #ffffff 0%, #374151 100%)',
                             }} />
                           )}
@@ -949,8 +951,8 @@ export function Sidebar({
                                 {chat.hasNomad && (
                                   <span className="flex-shrink-0" style={{
                                     display: 'inline-block', width: 14, height: 14,
-                                    WebkitMaskImage: 'url(/creativity-icon.png)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat',
-                                    maskImage: 'url(/creativity-icon.png)', maskSize: 'contain', maskRepeat: 'no-repeat',
+                                    WebkitMaskImage: 'url(/creativity-icon.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat',
+                                    maskImage: 'url(/creativity-icon.svg)', maskSize: 'contain', maskRepeat: 'no-repeat',
                                     background: 'linear-gradient(135deg, #ffffff 0%, #374151 100%)',
                                   }} />
                                 )}
@@ -1330,6 +1332,16 @@ export function Sidebar({
     </TooltipProvider>
   );
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
