@@ -6494,6 +6494,10 @@ Let's start the self-listen session!`;
         const isPill   = functionBarStyle === 'pill';
         const squareShadow = 'crisp-outline';
         const fireFnAnim = (e: React.MouseEvent, fn: () => void) => {
+          if (settingsToggles.minimalAnimations) {
+            fn();
+            return;
+          }
           const animEl = (e.currentTarget as HTMLElement).querySelector<HTMLElement>('[data-fn-anim]') ?? (e.currentTarget as HTMLElement);
           animEl.classList.remove('btn-click-pop');
           void animEl.offsetWidth;

@@ -272,6 +272,7 @@ function SlidingPillSelector({
   isDark,
   tall = false,
   withSound = false,
+  minimalAnimations = false,
 }: {
   value: string;
   onChange: (v: string) => void;
@@ -279,6 +280,7 @@ function SlidingPillSelector({
   isDark: boolean;
   tall?: boolean;
   withSound?: boolean;
+  minimalAnimations?: boolean;
 }) {
   const activeIdx = Math.max(0, options.findIndex(o => o.value === value));
   const n = options.length;
@@ -327,10 +329,12 @@ function ThemeSegmentedTab({
   value,
   onChange,
   isDark,
+  minimalAnimations,
 }: {
   value: string;
   onChange: (v: string) => void;
   isDark: boolean;
+  minimalAnimations?: boolean;
 }) {
   const options = [
     { value: 'light',  label: 'Light',  iconBlack: '/icon-sun-black.png',    iconGray: '/icon-sun-gray.png'    },
@@ -341,7 +345,7 @@ function ThemeSegmentedTab({
     <div>
       <span className="text-sm font-medium text-zinc-700 dark:text-zinc-200">Theme</span>
       <div className="mt-3 rounded-full bg-[#fcfcfd] dark:bg-[#1e1e1e]">
-        <SlidingPillSelector value={value} onChange={onChange} options={options} isDark={isDark} withSound />
+        <SlidingPillSelector value={value} onChange={onChange} options={options} isDark={isDark} withSound minimalAnimations={minimalAnimations} />
       </div>
     </div>
   );
@@ -784,9 +788,9 @@ export function CustomizeModal({
                 // Suppress transition on first placement so pill snaps to the
                 // correct position; enable it after the first measurement so
                 // subsequent tab clicks slide smoothly.
-                transition: pillMeasured
+                transition: localToggles.minimalAnimations ? 'none' : (pillMeasured
                   ? 'top 0.32s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.22s cubic-bezier(0.4, 0, 0.2, 1)'
-                  : 'none',
+                  : 'none'),
                 pointerEvents: 'none',
                 zIndex: 0,
                 background: theme === 'dark' ? 'rgba(255,255,255,0.85)' : '#e3e3e8',
@@ -853,6 +857,7 @@ export function CustomizeModal({
                 value={localTheme}
                 onChange={(v) => { setLocalTheme(v); setTheme(v as any); setIsDirty(true); }}
                 isDark={theme === 'dark'}
+                minimalAnimations={localToggles?.minimalAnimations}
               />
 
               <div className="border-t border-zinc-200 dark:border-zinc-800 pt-6 space-y-3">
@@ -1152,6 +1157,7 @@ export function CustomizeModal({
                   <p className="text-xs text-zinc-500 mt-0.5">Choose the height and layout of the message input area</p>
                 </div>
                 <SlidingPillSelector
+                  minimalAnimations={localToggles?.minimalAnimations}
                   value={messageBarStyle}
                   onChange={handleMessageBarStyleChange}
                   isDark={theme === 'dark'}
