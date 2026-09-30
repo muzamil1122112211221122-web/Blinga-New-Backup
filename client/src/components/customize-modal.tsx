@@ -1,4 +1,4 @@
-import { useState, useEffect, useLayoutEffect, useRef } from "react";
+﻿import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { BlingaLogo, Logo } from "./logo";
 import { getVibrantColor } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -744,13 +744,13 @@ export function CustomizeModal({
     { id: 'general', label: 'General', icon: '/custom-icons/general.svg' },
     { id: 'subscription', label: 'Subscription', icon: '/custom-icons/subscription.svg' },
     { id: 'memory', label: 'Memory', icon: '/custom-icons/memory.svg' },
-    { id: 'ai-preferences', label: 'Preferences', icon: '/custom-icons/prefrences.svg' },
+    { id: 'ai-preferences', label: 'Sequences', icon: '/custom-icons/prefrences.svg' },
   ];
 
   // Save button label & visibility per section
   const saveLabel: Record<SettingsSection, string | null> = {
     general: 'Save General',
-    'ai-preferences': 'Save Preferences',
+    'ai-preferences': 'Save Sequences',
     memory: 'Save Memory',
     subscription: null,
     profile: 'Save Profile',
@@ -855,7 +855,7 @@ export function CustomizeModal({
           <div className="flex-shrink-0 px-8 pt-8 pb-4 bg-[#f1f1f4] dark:bg-[#151515] transition-colors duration-300 z-[66] relative">
             <h2 className="text-[22px] font-semibold text-zinc-900 dark:text-white tracking-tight">
               {activeSection === 'general' ? 'General' :
-               activeSection === 'ai-preferences' ? 'Preferences' :
+               activeSection === 'ai-preferences' ? 'Sequences' :
                activeSection === 'memory' ? 'Memory' :
                activeSection === 'profile' ? 'Profile' :
                'Subscription'}
@@ -1668,6 +1668,7 @@ export function CustomizeModal({
   </>
   );
 }
+
 
 
 
