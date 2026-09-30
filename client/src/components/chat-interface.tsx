@@ -162,26 +162,26 @@ const ROTATING_PLACEHOLDERS = [
 // ── Blinga Ultimatum suggestion card pool ──────────────────────────────────────
 type UltimatumCard = { Icon: React.ElementType; label: string; prompt: string; modelName: string; modelLogo: string; color: string };
 const ULTIMATUM_CARD_POOL: UltimatumCard[] = [
-  { Icon: Brain,          label: 'Deep Reasoning',  prompt: 'Break down a complex problem step by step',    modelName: 'DeepSeek R1',     modelLogo: '/deepseek-logo.png',    color: '#6366f1' },
-  { Icon: Search,         label: 'Live Search',      prompt: 'Find the latest news and real-time info',      modelName: 'Perplexity',      modelLogo: '/perplexity-logo.png',  color: '#0ea5e9' },
-  { Icon: PenLine,        label: 'Creative Writing', prompt: 'Write a compelling story or article',          modelName: 'Claude',          modelLogo: '/claude-logo.png',      color: '#ec4899' },
-  { Icon: Code,           label: 'Coding',           prompt: 'Debug, explain or write code for me',          modelName: 'GPT-5',           modelLogo: '/chatgpt-logo.png',     color: '#10b981' },
-  { Icon: BarChart3,      label: 'Data Analysis',    prompt: 'Analyse data and uncover hidden insights',     modelName: 'Gemini',          modelLogo: '/gemini-logo.png',      color: '#f59e0b' },
-  { Icon: Palette,        label: 'Design Ideas',     prompt: 'Generate UI/UX or visual concepts',            modelName: 'Claude',          modelLogo: '/claude-logo.png',      color: '#8b5cf6' },
-  { Icon: TestTube2,      label: 'Science & Math',   prompt: 'Explain complex concepts in simple terms',     modelName: 'Gemini',          modelLogo: '/gemini-logo.png',      color: '#06b6d4' },
-  { Icon: AlignLeft,      label: 'Summarise',        prompt: 'Condense a long text into key points',         modelName: 'GPT-5',           modelLogo: '/chatgpt-logo.png',     color: '#64748b' },
-  { Icon: Lightbulb,      label: 'Brainstorm',       prompt: 'Generate a flood of creative ideas',           modelName: 'Claude',          modelLogo: '/claude-logo.png',      color: '#eab308' },
-  { Icon: Cpu,            label: 'AI Strategy',      prompt: 'How to automate and scale using AI',           modelName: 'GPT-5',           modelLogo: '/chatgpt-logo.png',     color: '#a855f7' },
-  { Icon: TrendingUp,     label: 'Business Plan',    prompt: 'Build a go-to-market or growth strategy',      modelName: 'Grok 4',          modelLogo: '/grok-logo.png',        color: '#ef4444' },
-  { Icon: BookOpenCheck,  label: 'Research',         prompt: 'Deep-dive research with cited sources',        modelName: 'Perplexity',      modelLogo: '/perplexity-logo.png',  color: '#3b82f6' },
-  { Icon: Globe,          label: 'Translation',      prompt: 'Translate with cultural nuance intact',        modelName: 'DeepSeek',        modelLogo: '/deepseek-logo.png',    color: '#f97316' },
+  { Icon: Brain,          label: 'Deep Reasoning',  prompt: 'Break down a complex problem step by step',    modelName: 'DeepSeek R1',     modelLogo: '/deepseek-logo.svg',    color: '#6366f1' },
+  { Icon: Search,         label: 'Live Search',      prompt: 'Find the latest news and real-time info',      modelName: 'Perplexity',      modelLogo: '/perplexity-logo.svg',  color: '#0ea5e9' },
+  { Icon: PenLine,        label: 'Creative Writing', prompt: 'Write a compelling story or article',          modelName: 'Claude',          modelLogo: '/claude-logo.svg',      color: '#ec4899' },
+  { Icon: Code,           label: 'Coding',           prompt: 'Debug, explain or write code for me',          modelName: 'GPT-5',           modelLogo: '/chatgpt-logo.svg',     color: '#10b981' },
+  { Icon: BarChart3,      label: 'Data Analysis',    prompt: 'Analyse data and uncover hidden insights',     modelName: 'Gemini',          modelLogo: '/gemini-logo.svg',      color: '#f59e0b' },
+  { Icon: Palette,        label: 'Design Ideas',     prompt: 'Generate UI/UX or visual concepts',            modelName: 'Claude',          modelLogo: '/claude-logo.svg',      color: '#8b5cf6' },
+  { Icon: TestTube2,      label: 'Science & Math',   prompt: 'Explain complex concepts in simple terms',     modelName: 'Gemini',          modelLogo: '/gemini-logo.svg',      color: '#06b6d4' },
+  { Icon: AlignLeft,      label: 'Summarise',        prompt: 'Condense a long text into key points',         modelName: 'GPT-5',           modelLogo: '/chatgpt-logo.svg',     color: '#64748b' },
+  { Icon: Lightbulb,      label: 'Brainstorm',       prompt: 'Generate a flood of creative ideas',           modelName: 'Claude',          modelLogo: '/claude-logo.svg',      color: '#eab308' },
+  { Icon: Cpu,            label: 'AI Strategy',      prompt: 'How to automate and scale using AI',           modelName: 'GPT-5',           modelLogo: '/chatgpt-logo.svg',     color: '#a855f7' },
+  { Icon: TrendingUp,     label: 'Business Plan',    prompt: 'Build a go-to-market or growth strategy',      modelName: 'Grok 4',          modelLogo: '/grok-logo.svg',        color: '#ef4444' },
+  { Icon: BookOpenCheck,  label: 'Research',         prompt: 'Deep-dive research with cited sources',        modelName: 'Perplexity',      modelLogo: '/perplexity-logo.svg',  color: '#3b82f6' },
+  { Icon: Globe,          label: 'Translation',      prompt: 'Translate with cultural nuance intact',        modelName: 'DeepSeek',        modelLogo: '/deepseek-logo.svg',    color: '#f97316' },
   { Icon: Zap,            label: 'Quick Answer',     prompt: 'Fast, precise answer to any question',         modelName: 'Blinga',            modelLogo: '/blinga-logo.png',        color: '#fbbf24' },
-  { Icon: Target,         label: 'Problem Solving',  prompt: 'Find the best path through any challenge',     modelName: 'DeepSeek R1',     modelLogo: '/deepseek-logo.png',    color: '#f43f5e' },
-  { Icon: GraduationCap,  label: 'Learning',         prompt: 'Teach me something new from scratch',          modelName: 'Gemini',          modelLogo: '/gemini-logo.png',      color: '#0891b2' },
-  { Icon: MessageSquare,  label: 'Debate & Argue',   prompt: 'Build the strongest case for a position',      modelName: 'Claude',          modelLogo: '/claude-logo.png',      color: '#d946ef' },
-  { Icon: Shield,         label: 'Security',         prompt: 'Audit or explain security vulnerabilities',    modelName: 'GPT-5',           modelLogo: '/chatgpt-logo.png',     color: '#475569' },
-  { Icon: Leaf,           label: 'Life Advice',      prompt: 'Help me think through a life decision',        modelName: 'Claude',          modelLogo: '/claude-logo.png',      color: '#16a34a' },
-  { Icon: Rocket,         label: 'Startup Ideas',    prompt: 'Validate or refine my startup concept',        modelName: 'Grok 4',          modelLogo: '/grok-logo.png',        color: '#7c3aed' },
+  { Icon: Target,         label: 'Problem Solving',  prompt: 'Find the best path through any challenge',     modelName: 'DeepSeek R1',     modelLogo: '/deepseek-logo.svg',    color: '#f43f5e' },
+  { Icon: GraduationCap,  label: 'Learning',         prompt: 'Teach me something new from scratch',          modelName: 'Gemini',          modelLogo: '/gemini-logo.svg',      color: '#0891b2' },
+  { Icon: MessageSquare,  label: 'Debate & Argue',   prompt: 'Build the strongest case for a position',      modelName: 'Claude',          modelLogo: '/claude-logo.svg',      color: '#d946ef' },
+  { Icon: Shield,         label: 'Security',         prompt: 'Audit or explain security vulnerabilities',    modelName: 'GPT-5',           modelLogo: '/chatgpt-logo.svg',     color: '#475569' },
+  { Icon: Leaf,           label: 'Life Advice',      prompt: 'Help me think through a life decision',        modelName: 'Claude',          modelLogo: '/claude-logo.svg',      color: '#16a34a' },
+  { Icon: Rocket,         label: 'Startup Ideas',    prompt: 'Validate or refine my startup concept',        modelName: 'Grok 4',          modelLogo: '/grok-logo.svg',        color: '#7c3aed' },
 ];
 // Own Mode owl background positions (used when Own Mode is active — mirrors the star-bg pattern)
 const OWL_BG_DATA = [
@@ -994,9 +994,9 @@ const STUDIO_ROW2 = STUDIO_VISUAL_TEMPLATES.slice(40);
 
 const STUDIO_COLS = [
   { id: 'blinga-imagine-super', name: 'Blinga Imagine Super', sub: 'Ultra quality',  logo: '/blinga-logo.png',       gradient: 'from-violet-500 to-fuchsia-500', letter: '✦', color: '#8b5cf6' },
-  { id: 'seedream-4.5',        name: 'Seedream 4.5',       sub: 'Dreamlike art',  logo: '/bytedance-logo.png',  gradient: 'from-emerald-400 to-teal-500',   letter: '❋', color: '#10b981' },
-  { id: 'nano-banana-pro',     name: 'Nano Banana Pro',    sub: 'Fast & crisp',   logo: '/gemini-logo.png',     gradient: 'from-yellow-400 to-orange-400',  letter: '⚡', color: '#f59e0b' },
-  { id: 'gpt-5.5-pro',         name: 'GPT 5.5 pro',        sub: 'Precision AI',   logo: '/chatgpt-logo.png',    gradient: 'from-sky-400 to-blue-500',       letter: 'G',  color: '#0ea5e9' },
+  { id: 'seedream-4.5',        name: 'Seedream 4.5',       sub: 'Dreamlike art',  logo: '/bytedance-logo.svg',  gradient: 'from-emerald-400 to-teal-500',   letter: '❋', color: '#10b981' },
+  { id: 'nano-banana-pro',     name: 'Nano Banana Pro',    sub: 'Fast & crisp',   logo: '/gemini-logo.svg',     gradient: 'from-yellow-400 to-orange-400',  letter: '⚡', color: '#f59e0b' },
+  { id: 'gpt-5.5-pro',         name: 'GPT 5.5 pro',        sub: 'Precision AI',   logo: '/chatgpt-logo.svg',    gradient: 'from-sky-400 to-blue-500',       letter: 'G',  color: '#0ea5e9' },
 ];
 
 const WELCOME_GREETINGS: ((name: string) => string)[] = [
@@ -2144,16 +2144,16 @@ export function ChatInterface({ onShowAuth }: ChatInterfaceProps) {
   function pickBestAIForPrompt(prompt: string): {model: string, modelName: string, logo: string, color: string} {
     const p = prompt.toLowerCase();
     if (/code|program|function|debug|bug|script|python|javascript|typescript|react|css|html|algorithm|compile|error|fix.*code|write.*code|class|loop|array|sort|api/.test(p))
-      return { model: 'deepseek-r1', modelName: 'DeepSeek-V4-Pro', logo: '/deepseek-logo.png', color: '#3b82f6' };
+      return { model: 'deepseek-r1', modelName: 'DeepSeek-V4-Pro', logo: '/deepseek-logo.svg', color: '#3b82f6' };
     if (/search|news|today|latest|current|what.*happening|recent|2024|2025|2026|fact|who.*is|where.*is|when.*was|stock|price|weather/.test(p))
-      return { model: 'perplexity', modelName: 'Perplexity Sonar Pro', logo: '/kimi-logo.png', color: '#38bdf8' };
+      return { model: 'perplexity', modelName: 'Perplexity Sonar Pro', logo: '/kimi-logo.svg', color: '#38bdf8' };
     if (/write|story|essay|poem|creative|novel|blog|article|letter|email|caption|describe|explain.*deeply|paragraph|narrative/.test(p))
-      return { model: 'claude-3.5-sonnet', modelName: 'Claude Fable 5', logo: '/claude-logo.png', color: '#f97316' };
+      return { model: 'claude-3.5-sonnet', modelName: 'Claude Fable 5', logo: '/claude-logo.svg', color: '#f97316' };
     if (/math|calcul|equation|graph|chart|data|statistic|analyz|percent|probability|formula|number|solve|integral|derivative/.test(p))
-      return { model: 'gemini-pro', modelName: 'Gemini 3.1 Pro', logo: '/gemini-logo.png', color: '#14b8a6' };
+      return { model: 'gemini-pro', modelName: 'Gemini 3.1 Pro', logo: '/gemini-logo.svg', color: '#14b8a6' };
     if (/urdu|hindi|arabic|chinese|translate|pakistan|india|desi|aap|kya|hai|karo|bato/.test(p))
-      return { model: 'qwen', modelName: 'Qwen 3.7 Max', logo: '/mistral-logo.png', color: '#6366f1' };
-    return { model: 'gpt-4o', modelName: 'GPT-5.5 Pro', logo: '/chatgpt-logo.png', color: '#10a37f' };
+      return { model: 'qwen', modelName: 'Qwen 3.7 Max', logo: '/mistral-logo.svg', color: '#6366f1' };
+    return { model: 'gpt-4o', modelName: 'GPT-5.5 Pro', logo: '/chatgpt-logo.svg', color: '#10a37f' };
   }
 
   const handleNomadAutoSend = async (content: string) => {
@@ -4943,18 +4943,18 @@ Let's start the self-listen session!`;
           (() => {
             const getNomadName = (id: string, fallback: string) => nomadSelectedSubModels[id] || NOMAD_SUB_MODELS[id]?.default || fallback;
             const nomadConfigMap: {[key: string]: {name: string, logo: string, color: string, description: string}} = {
-              'gpt-4o':           { name: getNomadName('gpt-4o', 'GPT-5 mini'),                  logo: '/chatgpt-logo.png',   color: '#10a37f', description: 'Advanced reasoning & multimodal AI by OpenAI' },
-              'claude-3.5-sonnet':{ name: getNomadName('claude-3.5-sonnet', 'Claude Haiku 4.5'), logo: '/claude-logo.png',    color: '#f97316', description: 'Nuanced writing, analysis & coding by Anthropic' },
-              'gemini-pro':       { name: getNomadName('gemini-pro', 'Gemini 3.5 Flash-Lite'),   logo: '/gemini-logo.png',    color: '#14b8a6', description: 'Google\'s multimodal reasoning model' },
-              'perplexity':       { name: getNomadName('perplexity', 'Perplexity Sonar'),        logo: '/kimi-logo.png',      color: '#38bdf8', description: 'Real-time web search & cited answers' },
-              'grok-4':           { name: getNomadName('grok-4', 'Grok Build 0.1'),              logo: '/grok-logo.png',      color: '#6b7280', description: 'xAI\'s witty, curious & unfiltered model' },
-              'deepseek-r1':      { name: getNomadName('deepseek-r1', 'DeepSeek V4 Flash'),      logo: '/deepseek-logo.png',  color: '#3b82f6', description: 'Open-source reasoning & coding powerhouse' },
-              'doubao':           { name: getNomadName('doubao', 'Doubao Seed 2.0 Mini'),        logo: '/bytedance-logo.png', color: '#f59e0b', description: 'ByteDance\'s multilingual smart assistant' },
-              'kimi':             { name: getNomadName('kimi', 'Kimi K2.6'),                     logo: '/perplexity-logo.png',color: '#06b6d4', description: 'Moonshot\'s long-context language model' },
-              'qwen':             { name: getNomadName('qwen', 'Qwen Flash'),                    logo: '/mistral-logo.png',   color: '#6366f1', description: 'Alibaba\'s multilingual language expert' },
-              'llama-4':          { name: getNomadName('llama-4', 'Llama 4 Scout'),              logo: '/meta-ai-logo.png',   color: '#3b82f6', description: 'Meta\'s open-source frontier AI model' },
-              'mistral':          { name: getNomadName('mistral', 'Ministral 3'),                logo: '/doubao-logo.png',    color: '#7c3aed', description: 'Fast & efficient European open AI' },
-              'copilot':          { name: getNomadName('copilot', 'GPT-5 mini'),                 logo: '/copilot-logo.png',   color: '#0078d4', description: 'Microsoft\'s AI powered by OpenAI models' },
+              'gpt-4o':           { name: getNomadName('gpt-4o', 'GPT-5 mini'),                  logo: '/chatgpt-logo.svg',   color: '#10a37f', description: 'Advanced reasoning & multimodal AI by OpenAI' },
+              'claude-3.5-sonnet':{ name: getNomadName('claude-3.5-sonnet', 'Claude Haiku 4.5'), logo: '/claude-logo.svg',    color: '#f97316', description: 'Nuanced writing, analysis & coding by Anthropic' },
+              'gemini-pro':       { name: getNomadName('gemini-pro', 'Gemini 3.5 Flash-Lite'),   logo: '/gemini-logo.svg',    color: '#14b8a6', description: 'Google\'s multimodal reasoning model' },
+              'perplexity':       { name: getNomadName('perplexity', 'Perplexity Sonar'),        logo: '/kimi-logo.svg',      color: '#38bdf8', description: 'Real-time web search & cited answers' },
+              'grok-4':           { name: getNomadName('grok-4', 'Grok Build 0.1'),              logo: '/grok-logo.svg',      color: '#6b7280', description: 'xAI\'s witty, curious & unfiltered model' },
+              'deepseek-r1':      { name: getNomadName('deepseek-r1', 'DeepSeek V4 Flash'),      logo: '/deepseek-logo.svg',  color: '#3b82f6', description: 'Open-source reasoning & coding powerhouse' },
+              'doubao':           { name: getNomadName('doubao', 'Doubao Seed 2.0 Mini'),        logo: '/bytedance-logo.svg', color: '#f59e0b', description: 'ByteDance\'s multilingual smart assistant' },
+              'kimi':             { name: getNomadName('kimi', 'Kimi K2.6'),                     logo: '/perplexity-logo.svg',color: '#06b6d4', description: 'Moonshot\'s long-context language model' },
+              'qwen':             { name: getNomadName('qwen', 'Qwen Flash'),                    logo: '/mistral-logo.svg',   color: '#6366f1', description: 'Alibaba\'s multilingual language expert' },
+              'llama-4':          { name: getNomadName('llama-4', 'Llama 4 Scout'),              logo: '/meta-ai-logo.svg',   color: '#3b82f6', description: 'Meta\'s open-source frontier AI model' },
+              'mistral':          { name: getNomadName('mistral', 'Ministral 3'),                logo: '/doubao-logo.svg',    color: '#7c3aed', description: 'Fast & efficient European open AI' },
+              'copilot':          { name: getNomadName('copilot', 'GPT-5 mini'),                 logo: '/copilot-logo.svg',   color: '#0078d4', description: 'Microsoft\'s AI powered by OpenAI models' },
               'blinga-ai':          { name: getNomadName('blinga-ai', 'Blinga Lite'),                  logo: '/blinga-logo.png',      color: '#a855f7', description: 'Advanced reasoning, powered by Blinga.' },
             };
             const hasMessages = Object.keys(nomadMessages).some(k => (nomadMessages[k] || []).length > 0);
@@ -5061,7 +5061,7 @@ Let's start the self-listen session!`;
                       ← All Models
                     </button>
                     {nomadModels.filter(m => m.id !== nomadSoloModel && activeAIModels.has(m.id)).map(m => {
-                      const cfg = nomadConfigMap[m.id] || { name: m.name, logo: `/${m.id}-logo.png`, color: '#6b7280', description: '' };
+                      const cfg = nomadConfigMap[m.id] || { name: m.name, logo: `/${m.id}-logo.svg`, color: '#6b7280', description: '' };
                       return (
                         <button
                           key={m.id}
@@ -5225,7 +5225,7 @@ Let's start the self-listen session!`;
                 <motion.div layoutScroll ref={nomadColsRef} onScroll={updateNomadThumb} className="nomad-hscroll flex flex-nowrap flex-1 min-h-0 overflow-x-auto" style={{ alignItems: 'stretch' }}>
                   {[...nomadModels.filter(m => activeAIModels.has(m.id)), ...nomadModels.filter(m => !activeAIModels.has(m.id))].map((modelObj, idx, sortedArr) => {
                     const model = modelObj.id;
-                    const config = nomadConfigMap[model] || { name: model, logo: `/${model}-logo.png`, color: '#6b7280', description: '' };
+                    const config = nomadConfigMap[model] || { name: model, logo: `/${model}-logo.svg`, color: '#6b7280', description: '' };
                     const isActive = activeAIModels.has(model);
                     const msgs = nomadMessages[model] || [];
                     const isLast = idx === sortedArr.length - 1;
@@ -5490,7 +5490,7 @@ Let's start the self-listen session!`;
               {/* === SOLO MODE === */}
               {nomadMode === 'multi' && nomadSoloModel && (() => {
                 const model = nomadSoloModel;
-                const config = nomadConfigMap[model] || { name: model, logo: `/${model}-logo.png`, color: '#6b7280', description: '' };
+                const config = nomadConfigMap[model] || { name: model, logo: `/${model}-logo.svg`, color: '#6b7280', description: '' };
                 const msgs = nomadMessages[model] || [];
                 return (
                   <div className="flex-1 px-4 pb-4 flex flex-col">
