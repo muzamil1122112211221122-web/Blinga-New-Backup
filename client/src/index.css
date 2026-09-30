@@ -1792,3 +1792,15 @@ textarea, input[type="text"], input[type="search"], input[type="email"], input[t
 }
 
 /* Remove focus rings in Nomad from keyboard nav */.nomad-hscroll button:focus-visible,.nomad-hscroll [role='button']:focus-visible { outline: none !important; box-shadow: none !important; }
+
+@keyframes nomadDropDown {
+  from { opacity: 0; transform: translateY(-8px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+/* Suppress ALL focus outlines inside Nomad */
+.nomad-hscroll *:focus,
+.nomad-hscroll *:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}

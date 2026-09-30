@@ -5239,7 +5239,7 @@ Let's start the self-listen session!`;
                     const msgs = nomadMessages[model] || [];
                     const isLast = idx === sortedArr.length - 1;
                     return (
-                      <motion.div key={model} layout transition={{ type: 'tween', duration: 0.42, ease: [0.25, 0.46, 0.45, 0.94] }} className="flex-shrink-0 flex items-stretch" style={{ height: '100%', zIndex: openNomadModelDropdown === model ? 9999 : 'auto', position: 'relative' }}>
+                      <motion.div key={model} layout transition={{ type: 'tween', duration: 0.42, ease: [0.25, 0.46, 0.45, 0.94] }} className="flex-shrink-0 flex items-stretch" style={{ height: '100%', zIndex: openNomadModelDropdown === model ? 99999 : 1, position: 'relative' }}>
                         {/* Column */}
                         <div className="flex-shrink-0 flex flex-col" style={{ width: 390, height: '100%', paddingLeft: 10, paddingRight: 10, opacity: isActive ? 1 : 0.45, transform: isActive ? 'scale(1)' : 'scale(0.97)', transition: 'opacity 0.3s ease, transform 0.3s ease' }}>
                           {/* Toggle card — horizontal */}
@@ -5304,7 +5304,7 @@ Let's start the self-listen session!`;
                             };
 
                             const modelDropdown = subModels && isDropdownOpen ? (
-                              <div className="absolute left-0 top-full mt-1 z-50 bg-white dark:bg-[#383838] rounded-xl shadow-2xl overflow-hidden py-1" style={{ border: 'none', minWidth: 160, width: 'max-content', maxWidth: 220 }}>
+                              <div className="absolute left-0 top-full mt-1 bg-white dark:bg-[#383838] rounded-xl shadow-2xl overflow-hidden py-1" style={{ border: "none", minWidth: 160, width: "max-content", maxWidth: 220, zIndex: 99999, animation: "nomadDropDown 0.15s cubic-bezier(0.34,1.56,0.64,1) forwards" }}>
                                 {/* Normal Models */}
                                 <div className="px-3 pt-2 pb-0.5">
                                   <span className="text-[9px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Normal Models</span>
@@ -5355,7 +5355,7 @@ Let's start the self-listen session!`;
                                     {subModels && subModels.flagship.includes(selSubModel || '') && (
                                       <Tooltip><TooltipTrigger asChild>
                                         <span className="cursor-help flex-shrink-0" style={{ display:'inline-block', width:16, height:16, WebkitMaskImage:'url(/creativity-icon.png)', WebkitMaskSize:'contain', WebkitMaskRepeat:'no-repeat', maskImage:'url(/creativity-icon.png)', maskSize:'contain', maskRepeat:'no-repeat', background: model === 'blinga-ai' ? 'linear-gradient(135deg, #ffffff, #374151)' : config.color }} />
-                                      </TooltipTrigger><TooltipContent side="bottom" align="center" className="z-[9999]">Flagship Model</TooltipContent></Tooltip>
+                                      </TooltipTrigger><TooltipContent side="bottom" align="center" className="z-[99999]">Flagship Model</TooltipContent></Tooltip>
                                     )}
                                   </div>
                                   <span className="text-[9px] text-muted-foreground leading-tight mt-0.5">{config.description}</span>
@@ -5367,14 +5367,14 @@ Let's start the self-listen session!`;
                                     <button onClick={() => setNomadSoloModel(model)} className="w-5 h-5 flex items-center justify-center rounded-full hover:bg-accent transition-all focus:outline-none focus-visible:outline-none" style={{ color: config.color }}>
                                       <Target className="w-3.5 h-3.5" />
                                     </button>
-                                  </TooltipTrigger><TooltipContent className="z-[9999]"><p>Chat only with {config.name}</p></TooltipContent></Tooltip>
+                                  </TooltipTrigger><TooltipContent className="z-[99999] relative"><p>Chat only with {config.name}</p></TooltipContent></Tooltip>
                                 </div>
                               </div>
                             );
 
                             return model === 'blinga-ai' ? (
                               <div className="relative mx-3 mt-2 mb-2">
-                                <div className="p-[2px] rounded-full transition-all duration-300" style={{ background: 'linear-gradient(135deg, #fef08a 0%, #e9d5ff 50%, #bae6fd 100%)' }}>
+                                <div className="p-[2px] rounded-full transition-all duration-300 outline-none" style={{ background: 'linear-gradient(135deg, #fef08a 0%, #e9d5ff 50%, #bae6fd 100%)' }}>
                                   <div className="rounded-full bg-card">
                                     {cardInner(
                                       <div className="flex items-center justify-center flex-shrink-0">
@@ -5387,7 +5387,7 @@ Let's start the self-listen session!`;
                               </div>
                             ) : (
                               <div className="relative mx-3 mt-2 mb-2">
-                                <div className="rounded-full border-2 transition-all duration-300 bg-card" style={{ borderColor: isActive ? config.color : 'rgba(128,128,128,0.25)' }}>
+                                <div className="rounded-full border-2 transition-all duration-300 bg-card outline-none" style={{ borderColor: isActive ? config.color : "rgba(128,128,128,0.25)" }}>
                                   {cardInner(
                                     <div className="w-10 h-10 flex items-center justify-center flex-shrink-0">
                                       <img src={config.logo} alt={config.name} className={`w-10 h-10 object-contain ${iconFilter(model)}`} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
