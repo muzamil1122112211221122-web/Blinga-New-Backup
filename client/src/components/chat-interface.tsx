@@ -4958,8 +4958,6 @@ Let's start the self-listen session!`;
               'qwen':             { name: getNomadName('qwen', 'Qwen 3.5 Flash'),                    logo: '/qwen-logo.svg',   color: '#6366f1', description: 'Alibaba\'s multilingual language expert' },
               'llama-4':          { name: getNomadName('llama-4', 'Llama 4 Scout'),              logo: '/meta-ai-logo.svg',   color: '#3b82f6', description: 'Meta\'s open-source frontier AI model' },
               'mistral':          { name: getNomadName('mistral', 'Ministral 3'),                logo: '/mistral-logo.svg',    color: '#7c3aed', description: 'Fast & efficient European open AI' },
-              'cohere':           { normal: ['Command R', 'Command R7B'],                                                        flagship: ['Command A 💎'],                                               default: 'Command R' },
-  'amazon':           { normal: ['Nova Pro', 'Nova Lite', 'Nova Micro'],                                             flagship: ['Nova Premier 1.0 💎'],                                        default: 'Nova Pro' },
   'cohere':           { name: getNomadName('cohere', 'Command R'),                   logo: '/cohere-logo.svg',    color: '#39594d', description: 'Cohere\'s enterprise-focused AI models' },
                 'amazon':           { name: getNomadName('amazon', 'Nova Pro'),                    logo: '/amazon-logo.svg',    color: '#ff9900', description: 'Amazon\'s powerful multimodal Nova models' },
                 'copilot':          { name: getNomadName('copilot', 'GPT-5 mini'),                 logo: '/copilot-logo.svg',   color: '#0078d4', description: 'Microsoft\'s AI powered by OpenAI models' },
