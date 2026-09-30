@@ -761,7 +761,7 @@ export function CustomizeModal({
     <Dialog open={isOpen} onOpenChange={(open) => {
       if (!open) handleCloseAttempt();
     }}>
-      <DialogContent className="macos-dialog-content bg-[#f1f1f4] dark:bg-[#151515] border-zinc-200 dark:border-zinc-800/50 max-w-4xl h-[680px] shadow-2xl [&>button]:hidden p-0 overflow-hidden flex flex-row z-[50]" style={{ borderRadius: "48px", left: `calc(50% + ${sidebarOffset}px)` }}>
+      <DialogContent className="macos-dialog-content bg-[#f1f1f4] dark:bg-[#151515] border-zinc-200 dark:border-zinc-800/50 max-w-4xl h-[680px] shadow-2xl [&>button]:hidden p-0 overflow-hidden flex flex-row z-[50] transition-colors duration-300" style={{ borderRadius: "48px", left: `calc(50% + ${sidebarOffset}px)` }}>
         {/* Close button — absolute top-right of whole modal */}
         <div className="absolute top-4 right-4 z-[70]">
           <Button
@@ -791,11 +791,12 @@ export function CustomizeModal({
                 // correct position; enable it after the first measurement so
                 // subsequent tab clicks slide smoothly.
                 transition: localToggles.minimalAnimations ? 'none' : (pillMeasured
-                  ? 'top 0.32s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.22s cubic-bezier(0.4, 0, 0.2, 1)'
+                  ? 'top 0.32s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.22s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease'
                   : 'none'),
                 pointerEvents: 'none',
                 zIndex: 0,
                 background: theme === 'dark' ? 'rgba(255,255,255,0.85)' : '#e3e3e8',
+                
                 borderRadius: 10,
               }}
             />
