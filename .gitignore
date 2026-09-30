@@ -8,3 +8,8 @@ vite.config.ts.*
 # Temp fix scripts
 *.py
 lost_diff.patch
+
+# Env files with secrets
+.env
+.env.*
+!.env.example
