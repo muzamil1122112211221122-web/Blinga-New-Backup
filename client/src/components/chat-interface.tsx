@@ -5377,7 +5377,7 @@ Let's start the self-listen session!`;
                                 <div className="p-[2px] rounded-full transition-all duration-300 outline-none" style={{ background: 'linear-gradient(135deg, #fef08a 0%, #e9d5ff 50%, #bae6fd 100%)' }}>
                                   <div className="rounded-full bg-card">
                                     {cardInner(
-                                      <div className="flex items-center justify-center flex-shrink-0">
+                                      <div className="flex items-center justify-center flex-shrink-0" style={{ marginLeft: "10px" }}>
                                         <BlingaLogo size="sm" scaleWhenCurrent="scale(1.55) translateY(3px)" className={`${resolvedTheme === 'dark' ? 'text-white' : 'text-black'} !hover:scale-100 pointer-events-none`} />
                                       </div>
                                     )}
