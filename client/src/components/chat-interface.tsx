@@ -5345,7 +5345,7 @@ Let's start the self-listen session!`;
                                       {{
                                         'gpt-4o': 'ChatGPT', 'claude-3.5-sonnet': 'Claude', 'gemini-pro': 'Gemini', 
                                         'perplexity': 'Perplexity', 'grok-4': 'Grok', 'deepseek-r1': 'DeepSeek', 
-                                        'doubao': 'Doubao', 'kimi': 'Kimi', 'alibaba': 'Alibaba', 'qwen': 'Qwen', 
+                                        'doubao': 'SeedDance', 'kimi': 'Moonshot', 'alibaba': 'Alibaba', 'qwen': 'Qwen', 
                                         'llama-4': 'Meta', 'mistral': 'Mistral', 'cohere': 'Cohere', 'amazon': 'Amazon', 
                                         'copilot': 'Copilot', 'blinga-ai': 'Blinga'
                                       }[model] || model}
