@@ -29,7 +29,7 @@ import { queryClient, authFetch, endGuestSession } from "@/lib/queryClient";
 import { BlingaGames } from "./blinga-games";
 import { BlingaLabs } from "./blinga-labs";
 import { useUsage } from "@/hooks/use-usage";
-import { Lock, Settings } from "lucide-react";
+import { Lock, Settings , Filter} from "lucide-react";
 import { Bot, Paintbrush, Terminal } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { getStoredGlowAccent, getGlowGradient, applyAppFont, getActiveUiAccent, applyUiAccent, playTabClick, assignLogoStyleToConversation } from "@/lib/appearance-settings";
@@ -1460,6 +1460,7 @@ export function ChatInterface({ onShowAuth }: ChatInterfaceProps) {
   const [nomadMessages, setNomadMessages] = useState<{[model: string]: ChatMessage[]}>({});
   const [activeAIModels, setActiveAIModels] = useState<Set<string>>(new Set(['gpt-4o', 'claude-3.5-sonnet', 'gemini-pro', 'perplexity', 'grok-4', 'deepseek-r1', 'doubao', 'kimi', 'qwen', 'llama-4', 'mistral', 'copilot', 'blinga-ai']));
   const [nomadIsTyping, setNomadIsTyping] = useState<{[model: string]: boolean}>({});
+  const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
   const [nomadMode, setNomadMode] = useState<'multi' | 'auto'>('multi');
   // Auto Mode state — full chat conversation tab
   const [nomadAutoMessages, setNomadAutoMessages] = useState<{id: string, role: 'user' | 'assistant', content: string, pickedModel?: {model: string, modelName: string, logo: string, color: string}}[]>([]);
@@ -5229,7 +5230,7 @@ Let's start the self-listen session!`;
               )}
 
               {/* === MULTI-MODEL COLUMN LAYOUT === */}
-              {nomadMode === 'multi' && !nomadSoloModel && (
+              {nomadMode === 'multi' && !nomadSoloModel && nomadHasAIMessages && (
                 <>
                 <motion.div layoutScroll ref={nomadColsRef} onScroll={updateNomadThumb} className="nomad-hscroll flex flex-nowrap flex-1 min-h-0 overflow-x-auto" style={{ alignItems: 'stretch' }}>
                   {[...nomadModels.filter(m => activeAIModels.has(m.id)), ...nomadModels.filter(m => !activeAIModels.has(m.id))].map((modelObj, idx, sortedArr) => {
@@ -5613,7 +5614,7 @@ Let's start the self-listen session!`;
               })()}
 
               {/* ── Custom always-visible horizontal scrollbar (absolute, never clipped) ── */}
-              {nomadMode === 'multi' && !nomadSoloModel && (
+              {nomadMode === 'multi' && !nomadSoloModel && nomadHasAIMessages && (
                 <div style={{ position: 'absolute', bottom: 8, left: 20, right: 20, height: 6, zIndex: 30, pointerEvents: 'none' }}>
                   <div style={{ position: 'absolute', inset: 0, borderRadius: 999, background: resolvedTheme === 'dark' ? '#1c1c1c' : '#dcdcdc' }} />
                   <div ref={nomadThumbRef} style={{
@@ -6625,7 +6626,7 @@ Let's start the self-listen session!`;
 
         const askFnBarCentered = (activeTab === 'ask' && messages.length === 0) || (activeTab === 'workspace' && workspaceView === 'inner' && imagineMessages.length === 0);
         return (
-          <div className={`macos-function-bar ${!askFnBarCentered ? 'macos-function-bar-with-messages' : ''} rounded-3xl mx-3 sm:mx-4 mb-1 max-w-[50rem] mx-auto w-full !border-none !shadow-none ${activeTab === 'philosopher' || activeTab === 'blinga-games' || activeTab === 'blinga-labs' || ['imagine', 'presentations', 'motion-studio'].includes(activeTab) || activeTab === 'nomad' || functionBarStyle === 'message-bar' || isVoiceModeModalOpen || isVoiceModeOpen ? 'hidden' : ''}`} style={askFnBarCentered ? {width: 'fit-content', position: 'fixed', top: (activeTab === 'workspace' && workspaceView === 'inner') ? (isPill ? 'calc(50% - 40px)' : 'calc(50% - 55px)') : (activeTab === 'workspace' ? (isPill ? 'calc(50% - 22px)' : 'calc(50% - 38px)') : (isPill ? 'calc(50% - 48px)' : 'calc(50% - 68px)')), left: (isSidebarOpen && sidebarOpenMode === 'mini') ? 'calc(50vw + 38px)' : '50vw', transform: isPill ? 'translateX(calc(-50% - 14px))' : 'translateX(-50%)', zIndex: 20, marginBottom: '10px'} : {width: 'fit-content', marginLeft: 'auto', marginRight: 'auto', marginTop: isPill ? '43px' : '11px', marginBottom: '14px', transform: isPill ? 'translateX(-14px)' : undefined, position: 'relative', zIndex: 30}}>
+          <div className={`macos-function-bar ${!askFnBarCentered ? 'macos-function-bar-with-messages' : ''} rounded-3xl mx-3 sm:mx-4 mb-1 max-w-[50rem] mx-auto w-full !border-none !shadow-none ${activeTab === 'philosopher' || activeTab === 'blinga-games' || activeTab === 'blinga-labs' || ['imagine', 'presentations', 'motion-studio'].includes(activeTab) || activeTab === 'nomad' || (activeTab === 'workspace' && workspaceView === 'cards') || functionBarStyle === 'message-bar' || isVoiceModeModalOpen || isVoiceModeOpen ? 'hidden' : ''}`} style={askFnBarCentered ? {width: 'fit-content', position: 'fixed', top: (activeTab === 'workspace' && workspaceView === 'inner') ? (isPill ? 'calc(50% - 40px)' : 'calc(50% - 55px)') : (activeTab === 'workspace' ? (isPill ? 'calc(50% - 22px)' : 'calc(50% - 38px)') : (isPill ? 'calc(50% - 48px)' : 'calc(50% - 68px)')), left: (isSidebarOpen && sidebarOpenMode === 'mini') ? 'calc(50vw + 38px)' : '50vw', transform: isPill ? 'translateX(calc(-50% - 14px))' : 'translateX(-50%)', zIndex: 20, marginBottom: '10px'} : {width: 'fit-content', marginLeft: 'auto', marginRight: 'auto', marginTop: isPill ? '43px' : '11px', marginBottom: '14px', transform: isPill ? 'translateX(-14px)' : undefined, position: 'relative', zIndex: 30}}>
             <div className={`flex flex-wrap justify-center p-3 bg-transparent !border-none ${isPill ? 'gap-2' : 'gap-4'}`}>
               {!(activeTab === 'workspace') && renderFunctionBtn(
                 <img src={resolvedTheme === 'dark' ? '/fn-voice-gray.png' : '/fn-voice-black.png'} alt="Long Answer" className="btn-icon" style={{ opacity: 1, width:'26px',height:'26px' }} />,
@@ -6988,7 +6989,7 @@ Let's start the self-listen session!`;
 
 
       {/* New Unified Message Bar */}
-      <div data-message-bar className={`max-w-[48rem] w-full px-4 ${((activeTab === 'ask' && messages.length > 0) || (activeTab === 'nomad' && Object.values(nomadMessages).some(msgs => msgs.length > 0)) || (activeTab === 'philosopher' && philosopherMessages.length > 0)) ? 'message-composer-with-messages' : ''} ${(activeTab === 'ask' && messages.length === 0) || (activeTab === 'workspace' && workspaceView === 'inner' && imagineMessages.length === 0) || (activeTab === 'nomad' && nomadMode === 'multi' && Object.values(nomadMessages).every(msgs => msgs.length === 0)) ? 'absolute lg:fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20' : (activeTab === 'philosopher' && selectedPersonality && philosopherMessages.length === 0) ? 'absolute lg:fixed left-1/2 -translate-x-1/2 -translate-y-1/2 z-20' : 'flex-shrink-0 mx-auto mb-4 sm:mb-8'} ${activeTab === 'blinga-games' || activeTab === 'blinga-labs' || ['imagine', 'presentations', 'motion-studio'].includes(activeTab) || (activeTab === 'philosopher' && !selectedPersonality) || isVoiceModeModalOpen || isVoiceModeOpen ? 'hidden' : ''}`} style={
+      <div data-message-bar className={`max-w-[48rem] w-full px-4 ${((activeTab === 'ask' && messages.length > 0) || (activeTab === 'nomad' && Object.values(nomadMessages).some(msgs => msgs.length > 0)) || (activeTab === 'philosopher' && philosopherMessages.length > 0)) ? 'message-composer-with-messages' : ''} ${(activeTab === 'ask' && messages.length === 0) || (activeTab === 'workspace' && workspaceView === 'inner' && imagineMessages.length === 0) || (activeTab === 'nomad' && nomadMode === 'multi' && Object.values(nomadMessages).every(msgs => msgs.length === 0)) ? 'absolute lg:fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20' : (activeTab === 'philosopher' && selectedPersonality && philosopherMessages.length === 0) ? 'absolute lg:fixed left-1/2 -translate-x-1/2 -translate-y-1/2 z-20' : 'flex-shrink-0 mx-auto mb-4 sm:mb-8'} ${activeTab === 'blinga-games' || activeTab === 'blinga-labs' || ['imagine', 'presentations', 'motion-studio'].includes(activeTab) || (activeTab === 'philosopher' && !selectedPersonality) || (activeTab === 'workspace' && workspaceView === 'cards') || isVoiceModeModalOpen || isVoiceModeOpen ? 'hidden' : ''}`} style={
         (activeTab === 'ask' && messages.length === 0)
           ? { top: 'calc(50% + 85px)', position: 'fixed', left: (isSidebarOpen && sidebarOpenMode === 'mini') ? 'calc(50vw + 53px)' : 'calc(50vw + 15px)', width: 'min(48rem, calc(100vw - 2rem))', maxWidth: '48rem' }
           : (activeTab === 'workspace' && workspaceView === 'inner' && imagineMessages.length === 0)
@@ -7867,608 +7868,104 @@ Let's start the self-listen session!`;
                   <X className="w-4 h-4" />
                 </button>
               </div>
-              {/* Grid */}
-              <div className="flex-1 overflow-y-auto p-5" style={{ scrollbarWidth: 'thin' }}>
-                {imagineMyPhotos.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-20 text-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12 text-zinc-700 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m21 15-5-5L5 21"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>
-                    <p className="text-zinc-400 font-semibold text-base mb-1">No photos yet</p>
-                    <p className="text-zinc-600 text-sm">Images you generate in Imagine Studio will appear here.</p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                    {[...imagineMyPhotos].reverse().map((photo, i) => (
-                      <div key={i} className="group relative aspect-square rounded-2xl overflow-hidden bg-zinc-900 border border-white/5 cursor-pointer hover:border-violet-500/50 transition-all"
-                        onClick={() => setFullscreenImg(photo.url)}>
-                        <img src={photo.url} alt={photo.prompt || `Photo ${i + 1}`} className="w-full h-full object-cover" />
-                        {photo.prompt && (
-                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex items-end p-3">
-                            <p className="text-white text-[11px] leading-snug line-clamp-3">{photo.prompt}</p>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ── Template Upload Modal ───────────────────────────────────────── */}
-        {imagineTemplateModal && (
-          <div
-            className="fixed inset-0 z-[999] flex items-center justify-center p-4"
-            style={{ background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(12px)' }}
-            onClick={(e) => { if (e.target === e.currentTarget) { setImagineTemplateModal(null); setTemplateUploadPhoto(null); } }}
-          >
-            <div className="relative w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl" style={{ background: '#18181b' }}>
-              {/* Hero image */}
-              <div className="relative h-44 overflow-hidden">
-                <img
-                  src={imagineTemplateModal.img}
-                  alt={imagineTemplateModal.label}
-                  className="absolute inset-0 w-full h-full object-cover"
-                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
-                />
-                <div className="absolute inset-0" style={{ background: imagineTemplateModal.color, opacity: 0.4 }} />
-                <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, #18181b 0%, transparent 60%)' }} />
-                {/* Close */}
-                <button
-                  onClick={() => { setImagineTemplateModal(null); setTemplateUploadPhoto(null); }}
-                  className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 flex items-center justify-center text-white hover:bg-black/70 transition-colors"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Content */}
-              <div className="px-5 pb-5 -mt-1">
-                <h3 className="text-xl font-bold text-white mb-1">{imagineTemplateModal.label}</h3>
-                <p className="text-[12px] text-zinc-400 mb-4 leading-relaxed line-clamp-2">{imagineTemplateModal.prompt.split(',')[0]}.</p>
-
-                {/* Upload area — drag & drop */}
-                {!templateUploadPhoto ? (
-                  <div
-                    onDragOver={(e) => { e.preventDefault(); e.currentTarget.setAttribute('data-drag','1'); e.currentTarget.style.borderColor = 'rgba(255,255,255,0.5)'; }}
-                    onDragLeave={(e) => { e.currentTarget.style.borderColor = ''; }}
-                    onDrop={(e) => {
-                      e.preventDefault(); e.currentTarget.style.borderColor = '';
-                      const file = e.dataTransfer.files?.[0];
-                      if (file && file.type.startsWith('image/')) {
-                        const reader = new FileReader();
-                        reader.onload = (ev) => {
-                          const dataUrl = ev.target?.result as string;
-                          const base64 = dataUrl.split(',')[1];
-                          const photo = { preview: dataUrl, base64 };
-                          setTemplateUploadPhoto(photo);
-                          setRecentUploads(prev => {
-                            const updated = [photo, ...prev.filter(p => p.preview !== dataUrl)].slice(0, 6);
-                            try { localStorage.setItem('blinga_recent_template_uploads', JSON.stringify(updated)); } catch {}
-                            return updated;
-                          });
-                        };
-                        reader.readAsDataURL(file);
-                      }
-                    }}
-                    className="relative rounded-2xl border-2 border-dashed border-zinc-600 hover:border-zinc-500 transition-colors flex flex-col items-center justify-center gap-2 py-5"
-                    style={{ background: 'rgba(255,255,255,0.04)' }}
-                  >
-                    <div className="w-11 h-11 rounded-2xl bg-white/10 flex items-center justify-center">
-                      <Upload className="w-5 h-5 text-zinc-300" />
-                    </div>
-                    <div className="text-center">
-                      <p className="text-[13px] font-semibold text-white">Drag & drop your photo here</p>
-                      <p className="text-[11px] text-zinc-500 mt-0.5">JPG, PNG, WEBP supported</p>
-                    </div>
-                    <button
-                      onClick={() => templatePhotoInputRef.current?.click()}
-                      className="mt-1 px-4 py-1.5 rounded-lg text-[12px] font-semibold text-white/80 hover:text-white transition-all hover:bg-white/15"
-                      style={{ background: 'rgba(255,255,255,0.10)' }}
-                    >Browse files</button>
-                  </div>
-                ) : (
-                  /* Preview */
-                  <div className="relative rounded-2xl overflow-hidden" style={{ height: 130 }}>
-                    <img src={templateUploadPhoto.preview} alt="Uploaded" className="absolute inset-0 w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-black/30 flex items-end p-3">
-                      <div className="flex items-center gap-2 w-full">
-                        <span className="text-[11px] text-white font-medium flex-1">✓ Photo ready</span>
-                        <button
-                          onClick={() => { setTemplateUploadPhoto(null); templatePhotoInputRef.current?.click(); }}
-                          className="text-[11px] text-white/70 hover:text-white underline transition-colors"
-                        >Change</button>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Recently Uploaded */}
-                {recentUploads.length > 0 && (
-                  <div className="mt-3">
-                    <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-2">Recently Uploaded</p>
-                    <div className="flex gap-2 flex-wrap">
-                      {recentUploads.map((u, i) => (
-                        <button
-                          key={i}
-                          onClick={() => setTemplateUploadPhoto(u)}
-                          className="relative w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 transition-all  hover:shadow-lg"
-                          style={{ outline: templateUploadPhoto?.preview === u.preview ? '2px solid #a855f7' : '2px solid rgba(255,255,255,0.12)', outlineOffset: 2 }}
-                        >
-                          <img src={u.preview} alt="" className="w-full h-full object-cover" />
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Action buttons */}
-                <div className="flex flex-col gap-2 mt-4">
-                  <button
-                    onClick={() => {
-                      if (!imagineTemplateModal) return;
-                      const t = imagineTemplateModal;
-                      setImagineTemplateModal(null);
-                      setTemplateUploadPhoto(null);
-                      triggerImagineTemplate(t.prompt, null);
-                    }}
-                    className="w-full py-2.5 rounded-xl text-[13px] font-bold text-white transition-all hover:opacity-90"
-                    style={{ background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)' }}
-                  >✦ Generate directly</button>
-                  <div className="flex gap-2.5">
-                    <button
-                      onClick={() => { setImagineTemplateModal(null); setTemplateUploadPhoto(null); }}
-                      className="flex-1 py-2.5 rounded-xl text-[13px] font-semibold text-zinc-400 hover:text-white transition-colors"
-                      style={{ background: 'rgba(255,255,255,0.07)' }}
-                    >Cancel</button>
-                    <button
-                      disabled={!templateUploadPhoto}
+              
+          {/* Grid */}
+          <div className="flex-1 overflow-y-auto px-6 pb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {nomadMode === 'multi' ? (
+                // MultiChat: Show only providers
+                ALL_MODEL_IDS.map(modelId => {
+                  const config = nomadConfigMap[modelId] || { name: modelId, logo: `/${modelId}-logo.svg`, color: '#6b7280' };
+                  const isSelected = activeAIModels.has(modelId);
+                  return (
+                    <div 
+                      key={modelId}
                       onClick={() => {
-                        if (!templateUploadPhoto || !imagineTemplateModal) return;
-                        const t = imagineTemplateModal;
-                        const p = templateUploadPhoto;
-                        setImagineTemplateModal(null);
-                        setTemplateUploadPhoto(null);
-                        triggerImagineTemplate(t.prompt, p);
+                        const newActive = new Set(activeAIModels);
+                        if (newActive.has(modelId)) newActive.delete(modelId);
+                        else newActive.add(modelId);
+                        setActiveAIModels(newActive);
                       }}
-                      className="flex-1 py-2.5 rounded-xl text-[13px] font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-                      style={{ background: 'rgba(255,255,255,0.12)', color: templateUploadPhoto ? 'white' : '#666' }}
-                    >Apply to Photo</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-
-      {/* Attachment Dialog */}
-      <Dialog open={isAttachmentDialogOpen} onOpenChange={setIsAttachmentDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Add Attachment</DialogTitle>
-          </DialogHeader>
-          <div className="grid grid-cols-2 gap-4 py-4">
-            <Button
-              variant="outline"
-              className="h-20 flex flex-col items-center justify-center space-y-2"
-              onClick={() => {
-                setIsAttachmentDialogOpen(false);
-                setTimeout(() => fileInputRef.current?.click(), 100);
-              }}
-              data-testid="attachment-upload-file"
-            >
-              <FileText className="h-6 w-6" />
-              <span className="text-sm">Upload File</span>
-            </Button>
-            
-            <Button
-              variant="outline"
-              className="h-20 flex flex-col items-center justify-center space-y-2"
-              onClick={() => {
-                setIsAttachmentDialogOpen(false);
-                setTimeout(() => imageInputRef.current?.click(), 100);
-              }}
-              data-testid="attachment-upload-image"
-            >
-              <Image className="h-6 w-6" />
-              <span className="text-sm">Upload Image</span>
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Customize Modal */}
-      <CustomizeModal
-        isOpen={isCustomizeModalOpen}
-        onClose={() => setIsCustomizeModalOpen(false)}
-        currentPreset={currentPreset}
-        customInstructions={customInstructions}
-        onSave={handleCustomizeSave}
-        toggles={settingsToggles}
-        aiOrder={aiOrder}
-        user={user}
-        profilePicture={profilePicture || undefined}
-        onUserRename={(newName) => setUser(prev => prev ? { ...prev, username: newName, displayName: newName } : prev)}
-        onProfilePictureChange={(dataUrl) => { setProfilePicture(dataUrl); localStorage.setItem('profilePicture', dataUrl); }}
-      />
-
-      {/* Image Generation Dialog */}
-      <ImageGenerationDialog
-        open={isImageGenerationDialogOpen}
-        onOpenChange={setIsImageGenerationDialogOpen}
-      />
-
-      {/* Education Modal */}
-      <EducationModal
-        isOpen={isEducationModalOpen}
-        onClose={() => setIsEducationModalOpen(false)}
-        onStartExamination={handleStartExamination}
-        onStartSelfListen={handleStartSelfListen}
-      />
-
-      {/* Quiz Modal */}
-      <QuizModal
-        isOpen={isQuizOpen}
-        onClose={() => setIsQuizOpen(false)}
-        questions={quizQuestions}
-        isLoading={quizLoading}
-        title={quizTitle}
-      />
-
-      {/* Voice Mode Modal */}
-      <VoiceModeModal
-        isOpen={isVoiceModeModalOpen}
-        onClose={() => setIsVoiceModeModalOpen(false)}
-        isListening={isListening}
-        onToggleListening={toggleListening}
-        isPlaying={false}
-        onTogglePlaying={() => {}}
-      />
-
-      {/* Imagine Modal — Image Generation GUI */}
-      <ImagineModal isOpen={isImagineOpen} onClose={() => setIsImagineOpen(false)} />
-
-      {/* Video Call / Screen Share Modal */}
-      <VideoCallModal isOpen={isVideoCallOpen} onClose={() => setIsVideoCallOpen(false)} />
-
-      {/* Nomad Notification - recurring, respects settings toggle, rotates between enabled variants */}
-      {showNomadNotification && (settingsToggles.nomadNotification ?? true) && (
-        <NomadNotification
-          enabledVariants={[
-            "nomad",
-            ...(settingsToggles.philosopherNotification ?? true ? ["philosopher"] : []),
-            ...(settingsToggles.blingaGamesNotification ?? true ? ["blinga-games"] : []),
-          ]}
-          onClose={handleNomadNotifClose}
-        />
-      )}
-
-      {/* Hidden file input elements */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*,.pdf,.doc,.docx,.txt"
-        multiple
-        onChange={handleFileUpload}
-        style={{ display: 'none' }}
-      />
-      <input
-        ref={imageInputRef}
-        type="file"
-        accept="image/*"
-        multiple
-        onChange={handleImageUpload}
-        style={{ display: 'none' }}
-      />
-      <input
-        ref={imagineUploadRef}
-        type="file"
-        accept="image/*"
-        onChange={(e) => {
-          const file = e.target.files?.[0];
-          if (!file) return;
-          const reader = new FileReader();
-          reader.onload = (ev) => {
-            const base64 = (ev.target?.result as string)?.split(',')[1] ?? '';
-            const preview = ev.target?.result as string;
-            setImagineRefImage({ preview, base64 });
-          };
-          reader.readAsDataURL(file);
-          e.target.value = '';
-        }}
-        style={{ display: 'none' }}
-      />
-
-      {/* ── Feedback Dialog ── */}
-      <Dialog open={feedbackOpen} onOpenChange={setFeedbackOpen}>
-        <DialogContent className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-0 max-w-sm w-full shadow-2xl">
-          <DialogHeader className="px-5 pt-5 pb-3 border-b border-zinc-100 dark:border-zinc-800">
-            <DialogTitle className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
-              {feedbackType === 'like' ? 'What did you like?' : 'What went wrong?'}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="px-5 py-4 space-y-4">
-            <div className="flex flex-wrap gap-2">
-              {(feedbackType === 'like'
-                ? ['Accurate', 'Helpful', 'Well written', 'Clear & concise', 'Creative', 'Other']
-                : ['Inaccurate', 'Not helpful', 'Harmful content', 'Off-topic', 'Too long', 'Too short', 'Other']
-              ).map(opt => (
-                <button
-                  key={opt}
-                  onClick={() => setFeedbackSelected(prev => {
-                    const s = new Set(prev);
-                    if (s.has(opt)) s.delete(opt); else s.add(opt);
-                    return new Set(s);
-                  })}
-                  className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
-                    feedbackSelected.has(opt)
-                      ? feedbackType === 'like'
-                        ? 'bg-green-50 border-green-300 text-green-700 dark:bg-green-900/30 dark:border-green-600 dark:text-green-300'
-                        : 'bg-red-50 border-red-300 text-red-700 dark:bg-red-900/30 dark:border-red-600 dark:text-red-300'
-                      : 'bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700'
-                  }`}
-                >{opt}</button>
-              ))}
-            </div>
-            <textarea
-              value={feedbackText}
-              onChange={e => setFeedbackText(e.target.value)}
-              placeholder="Add more details (optional)"
-              rows={3}
-              className="w-full px-3 py-2 text-sm rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 resize-none outline-none focus:border-zinc-400 dark:focus:border-zinc-500 transition-colors"
-            />
-            <div className="flex gap-2 justify-end">
-              <button
-                onClick={() => setFeedbackOpen(false)}
-                className="px-4 py-2 text-sm text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
-              >Cancel</button>
-              <button
-                onClick={submitFeedback}
-                className={`px-4 py-2 text-sm font-medium rounded-xl text-white transition-all ${
-                  feedbackType === 'like'
-                    ? 'bg-green-500 hover:bg-green-600'
-                    : 'bg-zinc-800 hover:bg-zinc-700 dark:bg-zinc-700 dark:hover:bg-zinc-600'
-                }`}
-              >Submit</button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* ── Fullscreen prompt editor (Gemini-style) ── */}
-      {promptFullscreen && (
-        <div className="fixed inset-0 z-[9998] bg-background flex flex-col" style={{ animation: "sheetEnter 0.32s cubic-bezier(0.23,1,0.32,1) both" }}>
-          {/* Header */}
-          <div className="flex items-center justify-between px-5 py-3.5 flex-shrink-0">
-            <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Type your message</span>
-            <button
-              onClick={() => { setPromptFullscreen(false); setLongPromptMode(false); setTimeout(() => textareaRef.current?.focus(), 100); }}
-              className="p-1.5 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
-            >
-              <Minimize2 className="w-4 h-4 text-zinc-500" />
-            </button>
-          </div>
-          {/* Textarea */}
-          <div className="flex-1 overflow-hidden p-5">
-            <textarea
-              autoFocus
-              value={inputValue}
-              onChange={e => setInputValue(e.target.value)}
-              onKeyDown={e => {
-                if (e.key === 'Escape') { setPromptFullscreen(false); setLongPromptMode(false); }
-              }}
-              placeholder="Type a detailed prompt here…"
-              className="w-full h-full text-[15px] bg-transparent text-zinc-900 dark:text-zinc-100 resize-none focus:outline-none placeholder:text-zinc-400 leading-relaxed"
-            />
-          </div>
-          {/* Bottom bar */}
-          <div className="flex items-center gap-2 px-4 py-3 flex-shrink-0">
-            {/* Mic */}
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    onClick={toggleListening}
-                    disabled={!speechSupported}
-                    className={`w-9 h-9 rounded-full flex items-center justify-center transition-all flex-shrink-0 ${isListening ? "bg-emerald-500/15 text-emerald-400" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"} disabled:opacity-30`}
-                  >
-                    <Mic className="w-4 h-4" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>{isListening ? "Stop listening" : "Voice input"}</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            {/* Enhance */}
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    onClick={handleEnhancePrompt}
-                    disabled={!inputValue.trim() || isEnhancing}
-                    className="w-9 h-9 rounded-full flex items-center justify-center bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all flex-shrink-0 disabled:opacity-30"
-                  >
-                    {isEnhancing
-                      ? <div className="w-4 h-4 border-2 border-zinc-400 border-t-transparent rounded-full animate-spin" />
-                      : <Sparkles className="w-4 h-4" />}
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>Enhance prompt</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            {/* Long Answer toggle */}
-            <button
-              onClick={() => setLongPromptMode(v => !v)}
-              className={`h-9 px-3 rounded-full flex items-center gap-1.5 transition-all flex-shrink-0 text-[11px] font-semibold ${longPromptMode ? "bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"}`}
-            >
-              <AlignLeft className="w-3.5 h-3.5 flex-shrink-0" />
-              Long
-            </button>
-            {/* Char count */}
-            <span className="text-xs text-zinc-400 flex-1 text-right tabular-nums">
-              {inputValue.length > 0 ? inputValue.length : ""}
-            </span>
-            {/* Cancel */}
-            <button
-              onClick={() => { setPromptFullscreen(false); setLongPromptMode(false); }}
-              className="h-9 px-4 rounded-full text-sm font-medium text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex-shrink-0"
-            >
-              Cancel
-            </button>
-            {/* Done / Send */}
-            <button
-              onClick={() => {
-                if (longPromptMode && inputValue.trim()) {
-                  setInputValue(inputValue.trim() + "\n\nPlease provide a very detailed and thorough answer.");
-                  setLongPromptMode(false);
-                }
-                setPromptFullscreen(false);
-                setTimeout(() => textareaRef.current?.focus(), 50);
-              }}
-              disabled={!inputValue.trim()}
-              className="h-9 px-5 rounded-full flex items-center gap-1.5 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-sm font-semibold disabled:opacity-30 transition-all hover:opacity-90 flex-shrink-0"
-            >
-              Done
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* ── Fullscreen image lightbox ── */}
-      {fullscreenImg && (
-        <div
-          className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center"
-          onClick={() => setFullscreenImg(null)}
-        >
-          <button
-            className="absolute top-4 right-4 w-9 h-9 bg-white/10 hover:bg-white/25 text-white rounded-full flex items-center justify-center transition-all text-lg"
-            onClick={() => setFullscreenImg(null)}
-          >
-            <X className="w-5 h-5" />
-          </button>
-          <img
-            src={fullscreenImg}
-            alt="Full screen"
-            className="max-w-[95vw] max-h-[95vh] object-contain rounded-lg shadow-2xl"
-            onClick={e => e.stopPropagation()}
-          />
-        </div>
-      )}
-    </div>
-
-    {/* ── Nomad disabled model notification ── */}
-    <AnimatePresence>
-      {nomadDisabledNotif && (
-        <motion.div
-          key="nomad-notif"
-          initial={{ opacity: 0, x: 60, y: -8 }}
-          animate={{ opacity: 1, x: 0, y: 0 }}
-          exit={{ opacity: 0, x: 60, y: -8 }}
-          transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-          style={{
-            position: 'fixed',
-            top: 18,
-            right: 18,
-            zIndex: 9999,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 10,
-            background: resolvedTheme === 'dark' ? 'rgba(24,24,28,0.96)' : 'rgba(255,255,255,0.97)',
-            border: `1.5px solid ${nomadDisabledNotif.color}44`,
-            borderRadius: 999,
-            padding: '9px 18px 9px 14px',
-            boxShadow: '0 4px 24px rgba(0,0,0,0.18)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            minWidth: 0,
-            pointerEvents: 'none',
-          }}
-        >
-          <div style={{ width: 8, height: 8, borderRadius: '50%', background: nomadDisabledNotif.color, flexShrink: 0, opacity: 0.85 }} />
-          <span style={{ fontSize: 12, fontWeight: 600, color: resolvedTheme === 'dark' ? '#e4e4e7' : '#18181b', whiteSpace: 'nowrap' }}>
-            {nomadDisabledNotif.label}
-          </span>
-          <span style={{ fontSize: 11, color: resolvedTheme === 'dark' ? 'rgba(200,200,210,0.55)' : 'rgba(80,80,100,0.55)', whiteSpace: 'nowrap' }}>
-            disabled · gone to end
-          </span>
-        </motion.div>
-      )}
-    </AnimatePresence>
-
-    {/* ── Floating text-selection Reply button ── */}
-    {replyBtnPos && (
-      <div
-        data-reply-btn="true"
-        className="fixed z-[9999] pointer-events-auto reply-btn-pop"
-        style={{ left: replyBtnPos.x, top: replyBtnPos.y }}
-      >
-        <button
-          onMouseDown={(e) => {
-            e.preventDefault();
-            const sel = window.getSelection();
-            const text = sel?.toString().trim();
-            if (text) {
-              setReplyQuote(text);
-              sel?.removeAllRanges();
-            }
-            setReplyBtnPos(null);
-          }}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full shadow-xl  transition-transform
-            bg-zinc-900 text-white hover:bg-zinc-700
-            dark:bg-zinc-600/90 dark:text-white dark:hover:bg-zinc-500/90
-            backdrop-blur-sm border border-white/10"
-        >
-          <CornerDownLeft className="w-3 h-3 opacity-80" />
-          Reply
-        </button>
-      </div>
-    )}
-
-    </div>
-    
-      {/* Create Bots Dialog */}
-      {showCreateBotsDialog && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-          <div className="bg-background rounded-2xl w-full max-w-md shadow-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden relative">
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-bold flex items-center gap-2">
-                  <Terminal className="w-5 h-5 text-violet-500" />
-                  Deploy Agent Bots
-                </h3>
-                <button onClick={() => setShowCreateBotsDialog(false)} className="text-zinc-400 hover:text-foreground transition-colors p-1 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800">
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-              <div className="space-y-6">
-                <div className="grid grid-cols-10 gap-1.5 max-h-[150px] overflow-y-auto custom-scrollbar p-1">
-                  {botsConfig.map((bot, i) => (
-                    <button
-                      key={bot.id}
-                      onClick={() => {
-                        const newConfig = [...botsConfig];
-                        if (bot.name) {
-                          // toggle off
-                          newConfig[i] = { ...bot, name: '', task: '' };
-                        } else {
-                          newConfig[i] = { ...bot, name: `Bot ${i+1}`, task: 'Idle (Waiting for user prompt)' };
-                        }
-                        setBotsConfig(newConfig);
-                        localStorage.setItem('blinga_bots_config_v2', JSON.stringify(newConfig));
-                      }}
-                      className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold transition-all  ${bot.name ? 'bg-violet-500 text-white shadow-md ring-2 ring-violet-300 dark:ring-violet-700' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400 hover:bg-violet-100 dark:hover:bg-violet-900/30 hover:text-violet-500'}`}
-                      title={bot.name ? `${bot.name} (click to remove)` : `Click to add Bot ${i+1}`}
+                      className={`flex items-center justify-between p-3 rounded-2xl border-2 transition-all cursor-pointer ${isSelected ? 'border-orange-500 bg-orange-50/50 dark:bg-orange-500/10' : 'border-border/60 hover:border-border bg-white dark:bg-[#252525]'}`}
                     >
-                      {i + 1}
-                    </button>
-                  ))}
-                </div>
-                {/* Quick name/task editor for selected bots */}
-                {botsConfig.some((b: any) => b.name) && (
-                  <div className="space-y-2 max-h-[140px] overflow-y-auto custom-scrollbar">
-                    {botsConfig.filter((b: any) => b.name).map((bot: any, idx: number) => {
-                      const realIdx = botsConfig.findIndex((b: any) => b.id === bot.id);
-                      return (
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-white dark:bg-zinc-800 border border-border/50">
+                          {modelId === 'blinga-ai' ? <BlingaLogo size="sm" scaleWhenCurrent="scale(1.2)" /> : <img src={config.logo} alt="" className="w-5 h-5 object-contain" />}
+                        </div>
+                        <span className="text-sm font-medium text-foreground">{config.name}</span>
+                      </div>
+                      {isSelected ? (
+                        <div className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center text-white">
+                          <Check className="w-3 h-3" strokeWidth={3} />
+                        </div>
+                      ) : (
+                        <div className="w-5 h-5 rounded-full border-2 border-zinc-300 dark:border-zinc-600" />
+                      )}
+                    </div>
+                  );
+                })
+              ) : (
+                // Ultimatum: Show all submodels
+                ALL_MODEL_IDS.flatMap(providerId => {
+                  const subData = NOMAD_SUB_MODELS[providerId];
+                  const config = nomadConfigMap[providerId] || { name: providerId, logo: `/${providerId}-logo.svg`, color: '#6b7280' };
+                  if (!subData) return [];
+                  
+                  return [...subData.normal, ...subData.flagship].map(subModelName => {
+                    const isSelected = nomadSoloModel === providerId && (nomadSelectedSubModels[providerId] || subData.default) === subModelName;
+                    const isFlagship = subData.flagship.includes(subModelName);
+                    
+                    return (
+                      <div 
+                        key={`${providerId}-${subModelName}`}
+                        onClick={() => {
+                          setNomadSoloModel(providerId);
+                          setNomadSelectedSubModels(prev => ({ ...prev, [providerId]: subModelName }));
+                        }}
+                        className={`flex items-center justify-between p-3 rounded-2xl border-2 transition-all cursor-pointer ${isSelected ? 'border-orange-500 bg-orange-50/50 dark:bg-orange-500/10' : 'border-border/60 hover:border-border bg-white dark:bg-[#252525]'}`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-white dark:bg-zinc-800 border border-border/50">
+                            {providerId === 'blinga-ai' ? <BlingaLogo size="sm" scaleWhenCurrent="scale(1.2)" /> : <img src={config.logo} alt="" className="w-5 h-5 object-contain" />}
+                          </div>
+                          <span className="text-sm font-medium text-foreground">{subModelName}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {isFlagship && (
+                            <span className="text-[10px] font-bold text-amber-500 bg-amber-50 dark:bg-amber-500/10 px-2 py-0.5 rounded-full flex items-center gap-1">
+                              <Sparkles className="w-3 h-3" /> Flagship
+                            </span>
+                          )}
+                          {isSelected ? (
+                            <div className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center text-white">
+                              <Check className="w-3 h-3" strokeWidth={3} />
+                            </div>
+                          ) : (
+                            <div className="w-5 h-5 rounded-full border-2 border-zinc-300 dark:border-zinc-600" />
+                          )}
+                        </div>
+                      </div>
+                    );
+                  });
+                })
+              )}
+            </div>
+          </div>
+{/* Footer */}
+          <div className="p-4 px-6 border-t border-border/50 bg-zinc-50/50 dark:bg-zinc-900/20 flex justify-between items-center">
+            <button onClick={() => { if(nomadMode === 'auto') setNomadSoloModel('blinga-ai'); else setActiveAIModels(new Set(['blinga-ai', 'gpt-4o', 'claude-3.5-sonnet'])); }} className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+              <RefreshCw className="w-4 h-4 text-zinc-500" />
+            </button>
+            <button onClick={() => setModelSelectorOpen(false)} className="bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 dark:text-black text-white px-6 py-2.5 rounded-full font-semibold text-sm transition-colors">
+              Apply for this chat
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
                         <div key={bot.id} className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-100 dark:border-zinc-800">
                           <div className="w-6 h-6 rounded-full bg-violet-500 flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">{realIdx+1}</div>
                           <input
