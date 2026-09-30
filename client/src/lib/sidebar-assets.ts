@@ -1,13 +1,13 @@
-import galleryLight from "@assets/gallery_1784832046472.png";
-import galleryDark from "@assets/gallery_2_1784832046466.png";
-import searchLight from "@assets/search-interface-symbol_1784832046471.png";
-import searchDark from "@assets/search-interface-symbol_2_1784832046467.png";
-import editLight from "@assets/edit_1784832046470.png";
-import editDark from "@assets/edit_2_1784832046467.png";
-import voiceLight from "@assets/voice-note_1784832046470.png";
-import voiceDark from "@assets/voice-note_2_1784832046468.png";
-import historyLight from "@assets/search_1784832046469.png";
-import historyDark from "@assets/search_2_1784832046468.png";
+import galleryLight from "@assets/gallery_1784832046472.svg";
+import galleryDark from "@assets/gallery_2_1784832046466.svg";
+import searchLight from "@assets/search-interface-symbol_1784832046471.svg";
+import searchDark from "@assets/search-interface-symbol_2_1784832046467.svg";
+import editLight from "@assets/edit_1784832046470.svg";
+import editDark from "@assets/edit_2_1784832046467.svg";
+import voiceLight from "@assets/voice-note_1784832046470.svg";
+import voiceDark from "@assets/voice-note_2_1784832046468.svg";
+import historyLight from "@assets/search_1784832046469.svg";
+import historyDark from "@assets/search_2_1784832046468.svg";
 export const SIDEBAR_ASSETS = {
   search: { light: '/custom-icons/search-interface-symbol.png', dark: '/custom-icons/search-interface-symbol.png' },
   chat: { light: '/custom-icons/new chat.png', dark: '/custom-icons/new chat.png' },

@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { useTheme } from "./theme-provider";
-import ringLogoLight from "@assets/blinga_rings_light.png";
-import ringLogoDark from "@assets/blinga_rings_dark.png";
+import ringLogoLight from "@assets/blinga_rings_light.svg";
+import ringLogoDark from "@assets/blinga_rings_dark.svg";
 import { useState, useEffect } from "react";
 
 export interface LogoProps {

@@ -4,20 +4,20 @@ import { playTabClick } from "@/lib/appearance-settings";
 import { Button } from "@/components/ui/button";
 import { Brain, Calculator, BookOpen, Gamepad2, ChevronRight, ChevronLeft, Star, Layers, Zap, Car, HelpCircle, Shuffle, X } from "lucide-react";
 // Game logos — new high-quality versions
-const memoryBanner = '/game-memory-banner.png';
-const memoryLogo   = '/game-memory-logo.png';
-const mathsBanner  = '/game-maths-banner.png';
-const logoMaths    = '/game-maths-logo.png';
-const wordBanner   = '/game-word-banner.png';
-const logoWord     = '/game-word-logo.png';
-const quizBanner   = '/game-quiz-banner.png';
-const logoQuiz     = '/game-quiz-logo.png';
-const carBanner    = '/game-car-banner.png';
-const logoCar      = '/game-car-logo.png';
-const oddwordBanner = '/game-oddword-banner.png';
-const logoOddword  = '/game-oddword-logo.png';
-const logoRPS     = '/game-rps.png';
-const logoTTT     = '/game-tictactoe.png';
+const memoryBanner = '/game-memory-banner.svg';
+const memoryLogo   = '/game-memory-logo.svg';
+const mathsBanner  = '/game-maths-banner.svg';
+const logoMaths    = '/game-maths-logo.svg';
+const wordBanner   = '/game-word-banner.svg';
+const logoWord     = '/game-word-logo.svg';
+const quizBanner   = '/game-quiz-banner.svg';
+const logoQuiz     = '/game-quiz-logo.svg';
+const carBanner    = '/game-car-banner.svg';
+const logoCar      = '/game-car-logo.svg';
+const oddwordBanner = '/game-oddword-banner.svg';
+const logoOddword  = '/game-oddword-logo.svg';
+const logoRPS     = '/game-rps.svg';
+const logoTTT     = '/game-tictactoe.svg';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type GameId = 'maths' | 'word' | 'memory' | 'quiz' | 'car' | 'oddword'
@@ -2860,7 +2860,7 @@ export function BlingaGames({ playerName, userId }: BlingaGamesProps) {
                       <div style={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)', width: 200, height: 200, pointerEvents: 'none',
                         background: 'radial-gradient(ellipse at 50% 90%, rgba(251,191,36,0.22) 0%, transparent 65%)', filter: 'blur(18px)' }} />
                       <div style={{ position: 'relative', width: '100%' }}>
-                        <img src="/podium-bars.png" alt="podium"
+                        <img src="/podium-bars.svg" alt="podium"
                           style={{ width: '100%', display: 'block', userSelect: 'none', pointerEvents: 'none', marginBottom: 0, verticalAlign: 'bottom' }}
                         />
                         {podSlots.map((slot, si) => {

@@ -6,7 +6,7 @@ import animeBoy3 from "@assets/cool-anime-cartoon-dp_1780491124349.jpeg";
 import animeBoy4 from "@assets/Vwmyh9_1780491124350.jpg";
 import animeBoy5 from "@assets/HD-wallpaper-handsome-anime-boy-handsome-boy-anime_1780491124350.jpg";
 import animeBoy6 from "@assets/HD-wallpaper-handsome-anime-boy-hōtarō-oreki-handsome-boy-anim_1780491124351.jpg";
-import studioHero from "@assets/Gemini_Generated_Image_rdsaverdsaverdsa_1784927084436.png";
+import studioHero from "@assets/Gemini_Generated_Image_rdsaverdsaverdsa_1784927084436.svg";
 
 const ANIME_BOY_IMAGES = [animeBoy1, animeBoy2, animeBoy3, animeBoy4, animeBoy5, animeBoy6];
 

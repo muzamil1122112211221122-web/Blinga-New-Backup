@@ -135,14 +135,14 @@ function AppNotification({ image, title, description, dotColor = "bg-green-400",
 const NOTIFICATION_VARIANTS = [
   {
     id: "nomad",
-    image: "/nomad-avatar.png",
+    image: "/nomad-avatar.svg",
     title: "Meet Nomad",
     description: "Your new multi-AI companion is ready to help",
     dotColor: "bg-green-400",
   },
   {
     id: "philosopher",
-    image: "/philosopher-avatar.png",
+    image: "/philosopher-avatar.svg",
     title: "Meet Blinga Minds...",
     description: "Dive deep into ideas with AI-powered historical figures",
     dotColor: "bg-purple-400",

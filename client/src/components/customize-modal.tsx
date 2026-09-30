@@ -737,12 +737,12 @@ export function CustomizeModal({
   };
 
   // Icon paths: gray = dark theme, black = light theme (as specified)
-  const menuItems: { id: SettingsSection; label: string; icon: any }[] = [
-    { id: 'general', label: 'General', icon: Settings },
-    { id: 'ai-preferences', label: 'AI Preferences', icon: Sliders },
-    { id: 'memory', label: 'Memory', icon: Brain },
-    { id: 'subscription', label: 'Subscription', icon: Crown },
-    { id: 'profile', label: 'Profile', icon: User },
+  const menuItems: { id: SettingsSection; label: string; icon: string }[] = [
+    { id: 'general', label: 'General', icon: '/custom-icons/general.svg' },
+    { id: 'ai-preferences', label: 'AI Preferences', icon: '/custom-icons/prefrences.svg' },
+    { id: 'memory', label: 'Memory', icon: '/custom-icons/memory.svg' },
+    { id: 'subscription', label: 'Subscription', icon: '/custom-icons/subscription.svg' },
+    { id: 'profile', label: 'Profile', icon: '/custom-icons/profile.svg' },
   ];
 
   // Save button label & visibility per section
@@ -759,7 +759,7 @@ export function CustomizeModal({
     <Dialog open={isOpen} onOpenChange={(open) => {
       if (!open) handleCloseAttempt();
     }}>
-      <DialogContent className="macos-dialog-content bg-[#f1f1f4] dark:bg-[#151515] border-zinc-200 dark:border-zinc-800/50 max-w-4xl h-[680px] shadow-2xl [&>button]:hidden p-0 overflow-hidden flex flex-row z-[50]" style={{ borderRadius: "48px" }}>
+      <DialogContent className="macos-dialog-content bg-[#f1f1f4] dark:bg-[#151515] border-zinc-200 dark:border-zinc-800/50 max-w-4xl h-[680px] shadow-2xl [&>button]:hidden p-0 overflow-hidden flex flex-row z-[50]" style={{ borderRadius: "48px", left: `calc(50% + ${sidebarOffset}px)` }}>
         {/* Close button — absolute top-right of whole modal */}
         <div className="absolute top-4 right-4 z-[70]">
           <Button

@@ -1613,6 +1613,31 @@ export function ChatInterface({ onShowAuth }: ChatInterfaceProps) {
   const tplBtnRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const [tplPillStyle, setTplPillStyle] = useState({ left: 0, width: 0, ready: false });
   const tplPillAnimateRef = useRef(false);
+  const topNavRef = useRef<HTMLDivElement>(null);
+  const topBtnRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [topPillStyle, setTopPillStyle] = useState({ left: 0, width: 0, ready: false });
+  const measureTopPill = useCallback(() => {
+    if (!topNavRef.current) return;
+    const idx = activeTab === 'ask' ? 0 : activeTab === 'workspace' ? 1 : -1;
+    if (idx === -1) {
+       setTopPillStyle(p => ({ ...p, ready: false }));
+       return;
+    }
+    const btn = topBtnRefs.current[idx];
+    if (!btn) return;
+    const btnRect = btn.getBoundingClientRect();
+    const containerRect = topNavRef.current.getBoundingClientRect();
+    const left = btnRect.left - containerRect.left;
+    if (btn.offsetWidth > 0) setTopPillStyle({ left, width: btn.offsetWidth, ready: true });
+  }, [activeTab]);
+  useEffect(() => {
+    measureTopPill();
+    const id1 = requestAnimationFrame(measureTopPill);
+    const id2 = requestAnimationFrame(() => requestAnimationFrame(measureTopPill));
+    window.addEventListener('resize', measureTopPill);
+    return () => { cancelAnimationFrame(id1); cancelAnimationFrame(id2); window.removeEventListener('resize', measureTopPill); };
+  }, [measureTopPill]);
+
   const TPL_FILTER_CATS = ['All', 'Spaces', 'Nature', 'Portraits', 'Fantasy', 'Fashion', 'Traditional', 'Travel', 'Products'];
 
   const measureTplPill = useCallback(() => {
@@ -4118,17 +4143,33 @@ Let's start the self-listen session!`;
     >
 
       {/* Top Mini Navigation Pill */}
-      <div className="w-full flex justify-center pt-4 z-[100] relative flex-shrink-0 pointer-events-none" style={{ transform: 'translateX(15px)' }}>
-        <div className="flex items-center bg-zinc-100/90 dark:bg-zinc-800/90 backdrop-blur-md p-1 rounded-full border border-zinc-200/50 dark:border-zinc-700/50 shadow-sm pointer-events-auto">
+      <div className="w-full flex justify-center pt-4 z-40 relative flex-shrink-0 pointer-events-none" style={{ transform: 'translateX(15px)' }}>
+        <div ref={topNavRef} className="relative flex items-center bg-zinc-100/90 dark:bg-zinc-800/90 backdrop-blur-md p-1 rounded-full border border-zinc-200/50 dark:border-zinc-700/50 shadow-sm pointer-events-auto">
+          
+          {/* Sliding Pill Background */}
+          <div aria-hidden className={settingsToggles.minimalAnimations ? "" : "transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"} style={{
+            position: 'absolute',
+            left: topPillStyle.left || 4,
+            width: topPillStyle.width || 0,
+            top: 4, bottom: 4,
+            opacity: topPillStyle.ready ? 1 : 0,
+            pointerEvents: 'none',
+            zIndex: 0,
+          }}>
+            <div className="w-full h-full bg-white dark:bg-zinc-700 shadow-sm rounded-full" />
+          </div>
+
           <button 
-            onClick={() => setActiveTab('ask')}
-            className={`px-5 py-1.5 rounded-full text-[13px] font-medium transition-all duration-200 ${activeTab === 'ask' ? 'bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}
+            ref={el => { topBtnRefs.current[0] = el; }}
+            onClick={() => { setActiveTab('ask'); playTabClick(); }}
+            className={`relative z-10 px-5 py-1.5 rounded-full text-[13px] font-medium transition-colors ${activeTab === 'ask' && topPillStyle.ready ? 'text-zinc-900 dark:text-white' : activeTab === 'ask' && !topPillStyle.ready ? 'bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}
           >
             Ask
           </button>
           <button 
-            onClick={() => { setActiveTab('workspace'); setWorkspaceView('cards'); }}
-            className={`px-5 py-1.5 rounded-full text-[13px] font-medium transition-all duration-200 ${activeTab === 'workspace' ? 'bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}
+            ref={el => { topBtnRefs.current[1] = el; }}
+            onClick={() => { setActiveTab('workspace'); setWorkspaceView('cards'); playTabClick(); }}
+            className={`relative z-10 px-5 py-1.5 rounded-full text-[13px] font-medium transition-colors ${activeTab === 'workspace' && topPillStyle.ready ? 'text-zinc-900 dark:text-white' : activeTab === 'workspace' && !topPillStyle.ready ? 'bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}
           >
             Workspace
           </button>

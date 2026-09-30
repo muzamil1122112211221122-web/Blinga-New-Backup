@@ -4,26 +4,26 @@ import { motion } from "framer-motion";
 // ── Blinga Ultimatum card pool (mirrors desktop) ────────────────────────────────
 type UltimatumCardM = { Icon: React.ElementType; label: string; prompt: string; modelName: string; modelLogo: string; color: string };
 const ULTIMATUM_CARD_POOL_M: UltimatumCardM[] = [
-  { Icon: Brain,         label: 'Deep Reasoning',  prompt: 'Break down a complex problem step by step',    modelName: 'DeepSeek R1', modelLogo: '/deepseek-logo.png',   color: '#6366f1' },
-  { Icon: Search,        label: 'Live Search',      prompt: 'Find the latest news and real-time info',      modelName: 'Perplexity',  modelLogo: '/perplexity-logo.png', color: '#0ea5e9' },
-  { Icon: PenLine,       label: 'Creative Writing', prompt: 'Write a compelling story or article',          modelName: 'Claude',      modelLogo: '/claude-logo.png',     color: '#ec4899' },
-  { Icon: Code,          label: 'Coding',           prompt: 'Debug, explain or write code for me',          modelName: 'GPT-5',       modelLogo: '/chatgpt-logo.png',    color: '#10b981' },
-  { Icon: BarChart3,     label: 'Data Analysis',    prompt: 'Analyse data and uncover hidden insights',     modelName: 'Gemini',      modelLogo: '/gemini-logo.png',     color: '#f59e0b' },
-  { Icon: Palette,       label: 'Design Ideas',     prompt: 'Generate UI/UX or visual concepts',            modelName: 'Claude',      modelLogo: '/claude-logo.png',     color: '#8b5cf6' },
-  { Icon: TestTube2,     label: 'Science & Math',   prompt: 'Explain complex concepts in simple terms',     modelName: 'Gemini',      modelLogo: '/gemini-logo.png',     color: '#06b6d4' },
-  { Icon: AlignLeft,     label: 'Summarise',        prompt: 'Condense a long text into key points',         modelName: 'GPT-5',       modelLogo: '/chatgpt-logo.png',    color: '#64748b' },
-  { Icon: Lightbulb,     label: 'Brainstorm',       prompt: 'Generate a flood of creative ideas',           modelName: 'Claude',      modelLogo: '/claude-logo.png',     color: '#eab308' },
-  { Icon: Cpu,           label: 'AI Strategy',      prompt: 'How to automate and scale using AI',           modelName: 'GPT-5',       modelLogo: '/chatgpt-logo.png',    color: '#a855f7' },
-  { Icon: TrendingUp,    label: 'Business Plan',    prompt: 'Build a go-to-market or growth strategy',      modelName: 'Grok 4',      modelLogo: '/grok-logo.png',       color: '#ef4444' },
-  { Icon: BookOpenCheck, label: 'Research',         prompt: 'Deep-dive research with cited sources',        modelName: 'Perplexity',  modelLogo: '/perplexity-logo.png', color: '#3b82f6' },
-  { Icon: Globe,         label: 'Translation',      prompt: 'Translate with cultural nuance intact',        modelName: 'DeepSeek',    modelLogo: '/deepseek-logo.png',   color: '#f97316' },
+  { Icon: Brain,         label: 'Deep Reasoning',  prompt: 'Break down a complex problem step by step',    modelName: 'DeepSeek R1', modelLogo: '/deepseek-logo.svg',   color: '#6366f1' },
+  { Icon: Search,        label: 'Live Search',      prompt: 'Find the latest news and real-time info',      modelName: 'Perplexity',  modelLogo: '/perplexity-logo.svg', color: '#0ea5e9' },
+  { Icon: PenLine,       label: 'Creative Writing', prompt: 'Write a compelling story or article',          modelName: 'Claude',      modelLogo: '/claude-logo.svg',     color: '#ec4899' },
+  { Icon: Code,          label: 'Coding',           prompt: 'Debug, explain or write code for me',          modelName: 'GPT-5',       modelLogo: '/chatgpt-logo.svg',    color: '#10b981' },
+  { Icon: BarChart3,     label: 'Data Analysis',    prompt: 'Analyse data and uncover hidden insights',     modelName: 'Gemini',      modelLogo: '/gemini-logo.svg',     color: '#f59e0b' },
+  { Icon: Palette,       label: 'Design Ideas',     prompt: 'Generate UI/UX or visual concepts',            modelName: 'Claude',      modelLogo: '/claude-logo.svg',     color: '#8b5cf6' },
+  { Icon: TestTube2,     label: 'Science & Math',   prompt: 'Explain complex concepts in simple terms',     modelName: 'Gemini',      modelLogo: '/gemini-logo.svg',     color: '#06b6d4' },
+  { Icon: AlignLeft,     label: 'Summarise',        prompt: 'Condense a long text into key points',         modelName: 'GPT-5',       modelLogo: '/chatgpt-logo.svg',    color: '#64748b' },
+  { Icon: Lightbulb,     label: 'Brainstorm',       prompt: 'Generate a flood of creative ideas',           modelName: 'Claude',      modelLogo: '/claude-logo.svg',     color: '#eab308' },
+  { Icon: Cpu,           label: 'AI Strategy',      prompt: 'How to automate and scale using AI',           modelName: 'GPT-5',       modelLogo: '/chatgpt-logo.svg',    color: '#a855f7' },
+  { Icon: TrendingUp,    label: 'Business Plan',    prompt: 'Build a go-to-market or growth strategy',      modelName: 'Grok 4',      modelLogo: '/grok-logo.svg',       color: '#ef4444' },
+  { Icon: BookOpenCheck, label: 'Research',         prompt: 'Deep-dive research with cited sources',        modelName: 'Perplexity',  modelLogo: '/perplexity-logo.svg', color: '#3b82f6' },
+  { Icon: Globe,         label: 'Translation',      prompt: 'Translate with cultural nuance intact',        modelName: 'DeepSeek',    modelLogo: '/deepseek-logo.svg',   color: '#f97316' },
   { Icon: Zap,           label: 'Quick Answer',     prompt: 'Fast, precise answer to any question',         modelName: 'Blinga',        modelLogo: '/blinga-logo.png',       color: '#fbbf24' },
-  { Icon: Target,        label: 'Problem Solving',  prompt: 'Find the best path through any challenge',     modelName: 'DeepSeek R1', modelLogo: '/deepseek-logo.png',   color: '#f43f5e' },
-  { Icon: GraduationCap, label: 'Learning',         prompt: 'Teach me something new from scratch',          modelName: 'Gemini',      modelLogo: '/gemini-logo.png',     color: '#0891b2' },
-  { Icon: MessageSquare, label: 'Debate & Argue',   prompt: 'Build the strongest case for a position',      modelName: 'Claude',      modelLogo: '/claude-logo.png',     color: '#d946ef' },
-  { Icon: Shield,        label: 'Security',         prompt: 'Audit or explain security vulnerabilities',    modelName: 'GPT-5',       modelLogo: '/chatgpt-logo.png',    color: '#475569' },
-  { Icon: Leaf,          label: 'Life Advice',      prompt: 'Help me think through a life decision',        modelName: 'Claude',      modelLogo: '/claude-logo.png',     color: '#16a34a' },
-  { Icon: Rocket,        label: 'Startup Ideas',    prompt: 'Validate or refine my startup concept',        modelName: 'Grok 4',      modelLogo: '/grok-logo.png',       color: '#7c3aed' },
+  { Icon: Target,        label: 'Problem Solving',  prompt: 'Find the best path through any challenge',     modelName: 'DeepSeek R1', modelLogo: '/deepseek-logo.svg',   color: '#f43f5e' },
+  { Icon: GraduationCap, label: 'Learning',         prompt: 'Teach me something new from scratch',          modelName: 'Gemini',      modelLogo: '/gemini-logo.svg',     color: '#0891b2' },
+  { Icon: MessageSquare, label: 'Debate & Argue',   prompt: 'Build the strongest case for a position',      modelName: 'Claude',      modelLogo: '/claude-logo.svg',     color: '#d946ef' },
+  { Icon: Shield,        label: 'Security',         prompt: 'Audit or explain security vulnerabilities',    modelName: 'GPT-5',       modelLogo: '/chatgpt-logo.svg',    color: '#475569' },
+  { Icon: Leaf,          label: 'Life Advice',      prompt: 'Help me think through a life decision',        modelName: 'Claude',      modelLogo: '/claude-logo.svg',     color: '#16a34a' },
+  { Icon: Rocket,        label: 'Startup Ideas',    prompt: 'Validate or refine my startup concept',        modelName: 'Grok 4',      modelLogo: '/grok-logo.svg',       color: '#7c3aed' },
 ];
 function shuffleUltimatumM<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -72,10 +72,10 @@ import { queryClient, apiRequest, authFetch, endGuestSession } from "@/lib/query
 import { getVibrantColor } from "@/lib/utils";
 import { flagUrl } from "@/lib/countries";
 import { COUNTRIES } from "@/lib/countries";
-import microphoneIcon from "@assets/microphone__1784996516975.png";
-import improvePromptIcon from "@assets/improve_promt__1784996516976.png";
-import plusButtonIcon from "@assets/plus_button__1784996516977.png";
-import studioHero from "@assets/Gemini_Generated_Image_rdsaverdsaverdsa_1784927084436.png";
+import microphoneIcon from "@assets/microphone__1784996516975.svg";
+import improvePromptIcon from "@assets/improve_promt__1784996516976.svg";
+import plusButtonIcon from "@assets/plus_button__1784996516977.svg";
+import studioHero from "@assets/Gemini_Generated_Image_rdsaverdsaverdsa_1784927084436.svg";
 
 // ─── Minimal Mode context — kept for compatibility, always false ──────────────
 const MinimalModeCtx = React.createContext(false);
@@ -118,7 +118,7 @@ const ASK_MODELS = [
 ];
 
 const IMAGINE_STYLES_LOCAL: Record<string, string> = {
-  Photorealistic: "/style-photo.jpg", Anime: "/style-anime.png", "Oil Painting": "/style-oil.jpg",
+  Photorealistic: "/style-photo.jpg", Anime: "/style-anime.svg", "Oil Painting": "/style-oil.jpg",
   "3D Render": "/style-3d.jpg", Watercolor: "/style-watercolor.jpg", Sketch: "/style-sketch.jpg",
   Cinematic: "/style-cinematic.jpg",
 };
@@ -164,17 +164,17 @@ const MOBILE_STUDIO_TEMPLATES = [
 ];
 
 const NOMAD_CONFIG: Record<string, { name: string; logo: string; color: string; description: string }> = {
-  "gpt-4o":          { name: "GPT-5.5 Pro",           logo: "/chatgpt-logo.png",    color: "#10a37f", description: "Advanced reasoning & multimodal AI by OpenAI" },
-  "claude-3.5-sonnet":{ name: "Claude Fable 5",       logo: "/claude-logo.png",     color: "#f97316", description: "Nuanced writing, analysis & coding" },
-  "gemini-pro":      { name: "Gemini 3.1 Pro",       logo: "/gemini-logo.png",     color: "#14b8a6", description: "Google's multimodal reasoning model" },
-  "perplexity":      { name: "Perplexity Sonar Pro",   logo: "/kimi-logo.png",       color: "#38bdf8", description: "Real-time web search & cited answers" },
-  "grok-4":          { name: "Grok 4.3",               logo: "/grok-logo.png",       color: "#6b7280", description: "xAI's witty, curious & unfiltered model" },
-  "deepseek-r1":     { name: "DeepSeek-V4-Pro",        logo: "/deepseek-logo.png",   color: "#3b82f6", description: "Open-source reasoning & coding" },
-  "doubao":          { name: "Doubao Seed 2.0 Pro",    logo: "/qwen-logo.png",       color: "#f59e0b", description: "ByteDance's multilingual smart assistant" },
-  "kimi":            { name: "Kimi K2.7 Code",         logo: "/perplexity-logo.png", color: "#06b6d4", description: "Moonshot's long-context language model" },
-  "qwen":            { name: "Qwen 3.7 Max",           logo: "/mistral-logo.png",    color: "#6366f1", description: "Alibaba's multilingual language expert" },
-  "llama-4":         { name: "Llama 4 Maverick",       logo: "/llama-logo.png",      color: "#3b82f6", description: "Meta's open-source frontier AI model" },
-  "mistral":         { name: "Mistral Medium 3.5",     logo: "/doubao-logo.png",     color: "#7c3aed", description: "Fast & efficient European open AI" },
+  "gpt-4o":          { name: "GPT-5.5 Pro",           logo: "/chatgpt-logo.svg",    color: "#10a37f", description: "Advanced reasoning & multimodal AI by OpenAI" },
+  "claude-3.5-sonnet":{ name: "Claude Fable 5",       logo: "/claude-logo.svg",     color: "#f97316", description: "Nuanced writing, analysis & coding" },
+  "gemini-pro":      { name: "Gemini 3.1 Pro",       logo: "/gemini-logo.svg",     color: "#14b8a6", description: "Google's multimodal reasoning model" },
+  "perplexity":      { name: "Perplexity Sonar Pro",   logo: "/kimi-logo.svg",       color: "#38bdf8", description: "Real-time web search & cited answers" },
+  "grok-4":          { name: "Grok 4.3",               logo: "/grok-logo.svg",       color: "#6b7280", description: "xAI's witty, curious & unfiltered model" },
+  "deepseek-r1":     { name: "DeepSeek-V4-Pro",        logo: "/deepseek-logo.svg",   color: "#3b82f6", description: "Open-source reasoning & coding" },
+  "doubao":          { name: "Doubao Seed 2.0 Pro",    logo: "/qwen-logo.svg",       color: "#f59e0b", description: "ByteDance's multilingual smart assistant" },
+  "kimi":            { name: "Kimi K2.7 Code",         logo: "/perplexity-logo.svg", color: "#06b6d4", description: "Moonshot's long-context language model" },
+  "qwen":            { name: "Qwen 3.7 Max",           logo: "/mistral-logo.svg",    color: "#6366f1", description: "Alibaba's multilingual language expert" },
+  "llama-4":         { name: "Llama 4 Maverick",       logo: "/llama-logo.svg",      color: "#3b82f6", description: "Meta's open-source frontier AI model" },
+  "mistral":         { name: "Mistral Medium 3.5",     logo: "/doubao-logo.svg",     color: "#7c3aed", description: "Fast & efficient European open AI" },
   "blinga-ai":         { name: "Blinga Pro",               logo: "/blinga-logo.png",       color: "#a855f7", description: "Specialized productivity AI by Muzamil Ali" },
 };
 
@@ -1573,13 +1573,13 @@ function MobileMessageBar({ value, onChange, onSend, onStop, isTyping, placehold
             {showFnBar && fnBarStyle === "message-bar" && (
               <div className="flex items-center gap-1.5 px-3 pt-2.5 pb-0">
                 <button onClick={onIntegration} className={`w-7 h-7 rounded-full flex items-center justify-center transition-all active:scale-90 ${blingaIntegrationMode ? "bg-blue-500/15" : "bg-zinc-100 dark:bg-zinc-700/80"}`}>
-                  <img src="/integration-icon.png" alt="" style={{ width: 14, height: 14 }} className={imgCls} />
+                  <img src="/integration-icon.svg" alt="" style={{ width: 14, height: 14 }} className={imgCls} />
                 </button>
                 <button onClick={onVoiceMode} className="w-7 h-7 rounded-full flex items-center justify-center bg-zinc-100 dark:bg-zinc-700/80 transition-all active:scale-90">
                   <AudioLines className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400" />
                 </button>
                 <button onClick={onSettings} className="w-7 h-7 rounded-full flex items-center justify-center bg-zinc-100 dark:bg-zinc-700/80 transition-all active:scale-90">
-                  <img src="/settings-icon.png" alt="" style={{ width: 14, height: 14 }} className={imgCls} />
+                  <img src="/settings-icon.svg" alt="" style={{ width: 14, height: 14 }} className={imgCls} />
                 </button>
               </div>
             )}
@@ -1654,13 +1654,13 @@ function MobileMessageBar({ value, onChange, onSend, onStop, isTyping, placehold
             {showFnBar && fnBarStyle === "message-bar" && (
               <div className="flex items-center gap-1.5 px-3 pt-2.5 pb-1">
                 <button onClick={onIntegration} className={`w-7 h-7 rounded-full flex items-center justify-center transition-all active:scale-90 ${blingaIntegrationMode ? "bg-blue-500/15" : "bg-zinc-100 dark:bg-zinc-700/80"}`}>
-                  <img src="/integration-icon.png" alt="" style={{ width: 14, height: 14 }} className={imgCls} />
+                  <img src="/integration-icon.svg" alt="" style={{ width: 14, height: 14 }} className={imgCls} />
                 </button>
                 <button onClick={onVoiceMode} className="w-7 h-7 rounded-full flex items-center justify-center bg-zinc-100 dark:bg-zinc-700/80 transition-all active:scale-90">
                   <AudioLines className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400" />
                 </button>
                 <button onClick={onSettings} className="w-7 h-7 rounded-full flex items-center justify-center bg-zinc-100 dark:bg-zinc-700/80 transition-all active:scale-90">
-                  <img src="/settings-icon.png" alt="" style={{ width: 14, height: 14 }} className={imgCls} />
+                  <img src="/settings-icon.svg" alt="" style={{ width: 14, height: 14 }} className={imgCls} />
                 </button>
                 {model === "blinga-education" && onEducation && (
                   <button onClick={onEducation} className="w-7 h-7 rounded-full flex items-center justify-center bg-amber-500/15 transition-all active:scale-90">
@@ -3022,14 +3022,14 @@ function NomadTab({ input, setInput, onSend, isTyping, nomadMessages, nomadTypin
   const pickBestAI = (text: string): {model: string, modelName: string, logo: string, color: string} => {
     const t = text.toLowerCase();
     if (/\b(code|function|debug|python|javascript|typescript|algorithm|sql|bug|error|program)\b/.test(t))
-      return { model: 'deepseek-r1', modelName: 'DeepSeek-V4-Pro', logo: '/deepseek-logo.png', color: '#3b82f6' };
+      return { model: 'deepseek-r1', modelName: 'DeepSeek-V4-Pro', logo: '/deepseek-logo.svg', color: '#3b82f6' };
     if (/\b(search|latest|news|current|today|2025|2026|who is|what is|when did|find me)\b/.test(t))
-      return { model: 'perplexity', modelName: 'Perplexity Sonar Pro', logo: '/perplexity-logo.png', color: '#20808d' };
+      return { model: 'perplexity', modelName: 'Perplexity Sonar Pro', logo: '/perplexity-logo.svg', color: '#20808d' };
     if (/\b(math|calculate|equation|formula|solve|proof|integral|derivative)\b/.test(t))
-      return { model: 'deepseek-r1', modelName: 'DeepSeek-V4-Pro', logo: '/deepseek-logo.png', color: '#3b82f6' };
+      return { model: 'deepseek-r1', modelName: 'DeepSeek-V4-Pro', logo: '/deepseek-logo.svg', color: '#3b82f6' };
     if (/\b(write|essay|story|poem|creative|draft|email|letter|blog)\b/.test(t))
-      return { model: 'claude-3.5-sonnet', modelName: 'Claude Fable 5', logo: '/claude-logo.png', color: '#d97706' };
-    return { model: 'gpt-4o', modelName: 'GPT-5.5 Pro', logo: '/chatgpt-logo.png', color: '#10a37f' };
+      return { model: 'claude-3.5-sonnet', modelName: 'Claude Fable 5', logo: '/claude-logo.svg', color: '#d97706' };
+    return { model: 'gpt-4o', modelName: 'GPT-5.5 Pro', logo: '/chatgpt-logo.svg', color: '#10a37f' };
   };
 
   const handleAutoSend = async () => {
@@ -3072,7 +3072,7 @@ function NomadTab({ input, setInput, onSend, isTyping, nomadMessages, nomadTypin
           </button>
           <button onClick={() => setNomadMode('auto')}
             className={`px-3 py-1 rounded-full text-xs font-semibold transition-all flex items-center gap-1 ${nomadMode === 'auto' ? 'bg-zinc-200 dark:bg-zinc-100 text-zinc-800 dark:text-zinc-900' : 'bg-secondary text-muted-foreground'}`}>
-            <img src="/nomad-auto-icon.png" alt="auto" className={`w-3 h-3 object-contain ${nomadMode !== 'auto' ? 'dark:invert' : ''}`} />
+            <img src="/nomad-auto-icon.svg" alt="auto" className={`w-3 h-3 object-contain ${nomadMode !== 'auto' ? 'dark:invert' : ''}`} />
             Blinga Ultimatum
           </button>
           {nomadMode === 'auto' && <span className="text-[10px] text-muted-foreground">Best AI per prompt</span>}
@@ -3104,7 +3104,7 @@ function NomadTab({ input, setInput, onSend, isTyping, nomadMessages, nomadTypin
           {autoMessages.length === 0 && !autoLoading && (
             <div className="flex flex-col items-center justify-center min-h-full gap-4 text-center py-12">
               <div className="w-14 h-14 rounded-2xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg,#000000,#ffffff)' }}>
-                <img src="/nomad-auto-icon.png" alt="auto" className="w-9 h-9 object-contain" style={{ filter: 'invert(1)' }} />
+                <img src="/nomad-auto-icon.svg" alt="auto" className="w-9 h-9 object-contain" style={{ filter: 'invert(1)' }} />
               </div>
               <div>
                 <h3 className="text-base font-semibold text-foreground mb-1">Blinga Ultimatum</h3>
@@ -3381,9 +3381,9 @@ function StudioTab({ messages, isTyping, input, setInput, onSend, onStop, onNewC
 
   const STUDIO_COLS = [
     { id: 'blinga-imagine-super', name: 'Blinga Imagine Super', abbr: 'Blinga',    sub: 'Ultra quality', logo: '/blinga-logo.png',      gradient: 'from-violet-500 to-fuchsia-500', letter: '✦', color: '#8b5cf6' },
-    { id: 'seedream-4.5',       name: 'Seedream 4.5',       abbr: 'Seedream', sub: 'Dreamlike art', logo: '/bytedance-logo.png', gradient: 'from-emerald-400 to-teal-500',   letter: '❋', color: '#10b981' },
-    { id: 'nano-banana-pro',    name: 'Nano Banana Pro',    abbr: 'Nano',     sub: 'Fast & crisp',  logo: '/gemini-logo.png',    gradient: 'from-yellow-400 to-orange-400',  letter: '⚡', color: '#f59e0b' },
-    { id: 'gpt-5.5-pro',        name: 'GPT 5.5 pro',        abbr: 'GPT 5.5',  sub: 'Precision AI',  logo: '/chatgpt-logo.png',   gradient: 'from-sky-400 to-blue-500',       letter: 'G',  color: '#0ea5e9' },
+    { id: 'seedream-4.5',       name: 'Seedream 4.5',       abbr: 'Seedream', sub: 'Dreamlike art', logo: '/bytedance-logo.svg', gradient: 'from-emerald-400 to-teal-500',   letter: '❋', color: '#10b981' },
+    { id: 'nano-banana-pro',    name: 'Nano Banana Pro',    abbr: 'Nano',     sub: 'Fast & crisp',  logo: '/gemini-logo.svg',    gradient: 'from-yellow-400 to-orange-400',  letter: '⚡', color: '#f59e0b' },
+    { id: 'gpt-5.5-pro',        name: 'GPT 5.5 pro',        abbr: 'GPT 5.5',  sub: 'Precision AI',  logo: '/chatgpt-logo.svg',   gradient: 'from-sky-400 to-blue-500',       letter: 'G',  color: '#0ea5e9' },
   ];
 
   const isEmpty = messages.length === 0 && !isTyping;

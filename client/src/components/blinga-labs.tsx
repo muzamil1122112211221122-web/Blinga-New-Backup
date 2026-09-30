@@ -3,18 +3,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { authFetch } from '@/lib/queryClient';
 import { useTheme } from './theme-provider';
 import { ArrowUp, ChevronRight, ChevronDown, FlaskConical, Zap, RotateCcw, Minus, Plus, Trash2, Maximize2, Pencil, FileDown, X, Filter as FilterIcon, Check } from 'lucide-react';
-import microphoneIcon from "@assets/microphone_1784996715112.png";
-import improvePromptIcon from "@assets/improve_promt__1784996516976.png";
-import plusButtonIcon from "@assets/add_1784996715112.png";
+import microphoneIcon from "@assets/microphone_1784996715112.svg";
+import improvePromptIcon from "@assets/improve_promt__1784996516976.svg";
+import plusButtonIcon from "@assets/add_1784996715112.svg";
 import { BlingaLogo } from './logo';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import normalLabWhiteIcon from '@assets/normal_lab_white_theme_1784982983175.png';
-import superLabWhiteIcon from '@assets/super_lab_white_theme_1784982983174.png';
-import normalLabDarkIcon from '@assets/normal_lab_dark_theme_1784983374592.png';
-import superLabDarkIcon from '@assets/super_lab_dark_theme_1784983374593.png';
-import blingaLabLogoWhite from '@assets/blinga_lab_logo_white_theme_1784984081369.png';
-import blingaLabLogoDark from '@assets/blinga_lab_logo_dark_theme_1784984081368.png';
+import normalLabWhiteIcon from '@assets/normal_lab_white_theme_1784982983175.svg';
+import superLabWhiteIcon from '@assets/super_lab_white_theme_1784982983174.svg';
+import normalLabDarkIcon from '@assets/normal_lab_dark_theme_1784983374592.svg';
+import superLabDarkIcon from '@assets/super_lab_dark_theme_1784983374593.svg';
+import blingaLabLogoWhite from '@assets/blinga_lab_logo_white_theme_1784984081369.svg';
+import blingaLabLogoDark from '@assets/blinga_lab_logo_dark_theme_1784984081368.svg';
 
 // ── Storage keys ────────────────────────────────────────────────────────────
 const STORAGE_KEY = 'blinga_labs_onboarded';
@@ -57,17 +57,17 @@ const NORMAL_DEFAULT_SLOTS: ModelDef[] = [
 const SUPER_MODELS: ModelDef[] = [
   { id: 'blinga-ai',           name: 'Blinga Lite',         description: 'Fast & efficient, powered by Blinga',            logo: '/blinga-logo.png',       color: '#a855f7', provider: 'blinga'       },
   { id: 'blinga-max',        name: 'Blinga Pro',          description: 'Most advanced general AI by Blinga',             logo: '/blinga-logo.png',       color: '#7c3aed', provider: 'blinga'       },
-  { id: 'gpt-4o',            name: 'GPT-5 mini',        description: 'Advanced reasoning & multimodal AI by OpenAI', logo: '/chatgpt-logo.png',    color: '#10a37f', provider: 'openai'     },
-  { id: 'claude-3.5-sonnet', name: 'Claude Haiku 4.5',  description: 'Nuanced writing, analysis & coding by Anthropic', logo: '/claude-logo.png',  color: '#f97316', provider: 'anthropic'  },
-  { id: 'gemini-pro',        name: 'Gemini Flash-Lite', description: "Google's multimodal reasoning model",          logo: '/gemini-logo.png',     color: '#14b8a6', provider: 'google'     },
-  { id: 'grok-4',            name: 'Grok Build 0.1',   description: "xAI's witty, curious & unfiltered model",      logo: '/grok-logo.png',       color: '#6b7280', provider: 'xai'        },
-  { id: 'deepseek-r1',       name: 'DeepSeek V4 Flash', description: 'Open-source reasoning & coding powerhouse',    logo: '/deepseek-logo.png',   color: '#3b82f6', provider: 'deepseek'   },
-  { id: 'doubao',            name: 'Doubao Seed 2.0',  description: "ByteDance's multilingual smart assistant",      logo: '/bytedance-logo.png',  color: '#f59e0b', provider: 'bytedance'  },
-  { id: 'kimi',              name: 'Kimi K2.6',        description: "Moonshot's long-context language model",        logo: '/perplexity-logo.png', color: '#06b6d4', provider: 'moonshot'   },
-  { id: 'qwen',              name: 'Qwen Flash',       description: "Alibaba's multilingual language expert",        logo: '/mistral-logo.png',    color: '#6366f1', provider: 'alibaba'    },
+  { id: 'gpt-4o',            name: 'GPT-5 mini',        description: 'Advanced reasoning & multimodal AI by OpenAI', logo: '/chatgpt-logo.svg',    color: '#10a37f', provider: 'openai'     },
+  { id: 'claude-3.5-sonnet', name: 'Claude Haiku 4.5',  description: 'Nuanced writing, analysis & coding by Anthropic', logo: '/claude-logo.svg',  color: '#f97316', provider: 'anthropic'  },
+  { id: 'gemini-pro',        name: 'Gemini Flash-Lite', description: "Google's multimodal reasoning model",          logo: '/gemini-logo.svg',     color: '#14b8a6', provider: 'google'     },
+  { id: 'grok-4',            name: 'Grok Build 0.1',   description: "xAI's witty, curious & unfiltered model",      logo: '/grok-logo.svg',       color: '#6b7280', provider: 'xai'        },
+  { id: 'deepseek-r1',       name: 'DeepSeek V4 Flash', description: 'Open-source reasoning & coding powerhouse',    logo: '/deepseek-logo.svg',   color: '#3b82f6', provider: 'deepseek'   },
+  { id: 'doubao',            name: 'Doubao Seed 2.0',  description: "ByteDance's multilingual smart assistant",      logo: '/bytedance-logo.svg',  color: '#f59e0b', provider: 'bytedance'  },
+  { id: 'kimi',              name: 'Kimi K2.6',        description: "Moonshot's long-context language model",        logo: '/perplexity-logo.svg', color: '#06b6d4', provider: 'moonshot'   },
+  { id: 'qwen',              name: 'Qwen Flash',       description: "Alibaba's multilingual language expert",        logo: '/mistral-logo.svg',    color: '#6366f1', provider: 'alibaba'    },
   { id: 'llama-4',           name: 'Llama 4 Scout',    description: "Meta's open-source frontier AI model",          logo: '/meta-ai-logo.png',    color: '#3b82f6', provider: 'meta'       },
-  { id: 'mistral',           name: 'Ministral 3',      description: 'Fast & efficient European open AI',             logo: '/doubao-logo.png',     color: '#7c3aed', provider: 'mistral'    },
-  { id: 'perplexity',        name: 'Perplexity Sonar', description: 'Real-time web search & cited answers',          logo: '/kimi-logo.png',       color: '#38bdf8', provider: 'perplexity' },
+  { id: 'mistral',           name: 'Ministral 3',      description: 'Fast & efficient European open AI',             logo: '/doubao-logo.svg',     color: '#7c3aed', provider: 'mistral'    },
+  { id: 'perplexity',        name: 'Perplexity Sonar', description: 'Real-time web search & cited answers',          logo: '/kimi-logo.svg',       color: '#38bdf8', provider: 'perplexity' },
   { id: 'copilot',           name: 'Copilot',          description: "Microsoft's AI powered by OpenAI models",       logo: '/copilot-logo.png',    color: '#0078d4', provider: 'microsoft'  },
 ];
 

@@ -74,14 +74,14 @@ function ModelCard({ logo, name, tag, desc }: {
 
 const AI_MODELS = {
   left: [
-    { logo: "/chatgpt-logo.png", name: "ChatGPT 5", tag: "All Rounder", desc: "OpenAI's flagship — perfect for questions, brainstorming & step-by-step explanations." },
-    { logo: "/claude-logo.png", name: "Claude Sonnet 4", tag: "Co-Writing Master", desc: "Refines polished essays, emails & scripts while preserving your exact tone." },
-    { logo: "/gemini-logo.png", name: "Gemini 3.1 Pro", tag: "Long-Context Champion", desc: "Handles massive docs and images while tracking full context without loss." },
+    { logo: "/chatgpt-logo.svg", name: "ChatGPT 5", tag: "All Rounder", desc: "OpenAI's flagship — perfect for questions, brainstorming & step-by-step explanations." },
+    { logo: "/claude-logo.svg", name: "Claude Sonnet 4", tag: "Co-Writing Master", desc: "Refines polished essays, emails & scripts while preserving your exact tone." },
+    { logo: "/gemini-logo.svg", name: "Gemini 3.1 Pro", tag: "Long-Context Champion", desc: "Handles massive docs and images while tracking full context without loss." },
   ],
   right: [
-    { logo: "/perplexity-logo.png", name: "Perplexity Sonar Pro", tag: "Live Researcher", desc: "Delivers real-time answers and news from credible, up-to-the-minute web sources." },
-    { logo: "/deepseek-logo.png", name: "DeepSeek v3", tag: "Reasoning Specialist", desc: "Excels at logic, math & coding with detailed, methodical solutions." },
-    { logo: "/grok-logo.png", name: "Grok 4", tag: "Creative Powerhouse", desc: "Bold, unconventional ideas and punchy copy — built for trend-forward content." },
+    { logo: "/perplexity-logo.svg", name: "Perplexity Sonar Pro", tag: "Live Researcher", desc: "Delivers real-time answers and news from credible, up-to-the-minute web sources." },
+    { logo: "/deepseek-logo.svg", name: "DeepSeek v3", tag: "Reasoning Specialist", desc: "Excels at logic, math & coding with detailed, methodical solutions." },
+    { logo: "/grok-logo.svg", name: "Grok 4", tag: "Creative Powerhouse", desc: "Bold, unconventional ideas and punchy copy — built for trend-forward content." },
   ],
 };
 
