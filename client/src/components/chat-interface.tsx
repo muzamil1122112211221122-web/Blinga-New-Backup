@@ -4143,6 +4143,150 @@ Let's start the self-listen session!`;
   // Check if any Nomad model is typing for thinking animation
   const isAnyNomadModelTyping = Object.values(nomadIsTyping).some(typing => typing);
 
+
+  // Render Nomad Model Selector Modal inline to access local constants
+  const renderNomadModelSelector = () => {
+    if (!modelSelectorOpen) return null;
+    return (
+      <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="bg-white dark:bg-[#1C1C1C] rounded-3xl w-full max-w-[700px] shadow-2xl border border-border/50 overflow-hidden flex flex-col h-[600px] max-h-[85vh]">
+          {/* Header */}
+          <div className="p-6 pb-4 flex justify-between items-start border-b border-border/50">
+            <div>
+              <h2 className="text-xl font-bold text-foreground">Choose a model</h2>
+              <p className="text-sm text-muted-foreground mt-1">picks the best model for your task</p>
+            </div>
+            <button onClick={() => setModelSelectorOpen(false)} className="text-muted-foreground hover:text-foreground p-1 transition-colors">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          
+          {/* Toolbar */}
+          <div className="px-6 py-4 flex items-center justify-between gap-4">
+            <div className="flex bg-zinc-100 dark:bg-zinc-800 rounded-full p-1 border border-border/50">
+              <button 
+                onClick={() => setNomadMode('auto')}
+                className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${nomadMode === 'auto' ? 'bg-zinc-900 text-white dark:bg-zinc-700 dark:text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
+              >
+                Ultimatum
+              </button>
+              <button 
+                onClick={() => setNomadMode('multi')}
+                className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${nomadMode === 'multi' ? 'bg-zinc-900 text-white dark:bg-zinc-700 dark:text-white shadow-sm' : 'text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200'}`}
+              >
+                MultiChat
+              </button>
+            </div>
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+              <input type="text" placeholder="Search models..." className="w-full bg-zinc-50 dark:bg-zinc-900/50 border border-border rounded-full py-2 pl-9 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-primary" />
+            </div>
+            <button className="flex items-center gap-2 px-4 py-2 border border-border rounded-full text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors">
+              <Filter className="w-4 h-4" /> Filter
+            </button>
+          </div>
+
+          {nomadMode === 'multi' && (
+            <div className="px-6 pb-2">
+              <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">{activeAIModels.size}/{ALL_MODEL_IDS.length} providers selected</span>
+            </div>
+          )}
+
+          {/* Grid */}
+          <div className="flex-1 overflow-y-auto px-6 pb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {nomadMode === 'multi' ? (
+                ALL_MODEL_IDS.map(modelId => {
+                  const config = nomadConfigMap[modelId] || { name: modelId, logo: `/${modelId}-logo.svg`, color: '#6b7280' };
+                  const isSelected = activeAIModels.has(modelId);
+                  return (
+                    <div 
+                      key={modelId}
+                      onClick={() => {
+                        const newActive = new Set(activeAIModels);
+                        if (newActive.has(modelId)) newActive.delete(modelId);
+                        else newActive.add(modelId);
+                        setActiveAIModels(newActive);
+                      }}
+                      className={`flex items-center justify-between p-3 rounded-2xl border-2 transition-all cursor-pointer ${isSelected ? 'border-orange-500 bg-orange-50/50 dark:bg-orange-500/10' : 'border-border/60 hover:border-border bg-white dark:bg-[#252525]'}`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-white dark:bg-zinc-800 border border-border/50">
+                          {modelId === 'blinga-ai' ? <BlingaLogo size="sm" scaleWhenCurrent="scale(1.2)" /> : <img src={config.logo} alt="" className="w-5 h-5 object-contain" />}
+                        </div>
+                        <span className="text-sm font-medium text-foreground">{config.name}</span>
+                      </div>
+                      {isSelected ? (
+                        <div className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center text-white">
+                          <Check className="w-3 h-3" strokeWidth={3} />
+                        </div>
+                      ) : (
+                        <div className="w-5 h-5 rounded-full border-2 border-zinc-300 dark:border-zinc-600" />
+                      )}
+                    </div>
+                  );
+                })
+              ) : (
+                ALL_MODEL_IDS.flatMap(providerId => {
+                  const subData = NOMAD_SUB_MODELS[providerId];
+                  const config = nomadConfigMap[providerId] || { name: providerId, logo: `/${providerId}-logo.svg`, color: '#6b7280' };
+                  if (!subData) return [];
+                  
+                  return [...subData.normal, ...subData.flagship].map(subModelName => {
+                    const isSelected = nomadSoloModel === providerId && (nomadSelectedSubModels[providerId] || subData.default) === subModelName;
+                    const isFlagship = subData.flagship.includes(subModelName);
+                    
+                    return (
+                      <div 
+                        key={`${providerId}-${subModelName}`}
+                        onClick={() => {
+                          setNomadSoloModel(providerId);
+                          setNomadSelectedSubModels(prev => ({ ...prev, [providerId]: subModelName }));
+                        }}
+                        className={`flex items-center justify-between p-3 rounded-2xl border-2 transition-all cursor-pointer ${isSelected ? 'border-orange-500 bg-orange-50/50 dark:bg-orange-500/10' : 'border-border/60 hover:border-border bg-white dark:bg-[#252525]'}`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-white dark:bg-zinc-800 border border-border/50">
+                            {providerId === 'blinga-ai' ? <BlingaLogo size="sm" scaleWhenCurrent="scale(1.2)" /> : <img src={config.logo} alt="" className="w-5 h-5 object-contain" />}
+                          </div>
+                          <span className="text-sm font-medium text-foreground">{subModelName}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {isFlagship && (
+                            <span className="text-[10px] font-bold text-amber-500 bg-amber-50 dark:bg-amber-500/10 px-2 py-0.5 rounded-full flex items-center gap-1">
+                              <Sparkles className="w-3 h-3" /> Flagship
+                            </span>
+                          )}
+                          {isSelected ? (
+                            <div className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center text-white">
+                              <Check className="w-3 h-3" strokeWidth={3} />
+                            </div>
+                          ) : (
+                            <div className="w-5 h-5 rounded-full border-2 border-zinc-300 dark:border-zinc-600" />
+                          )}
+                        </div>
+                      </div>
+                    );
+                  });
+                })
+              )}
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="p-4 px-6 border-t border-border/50 bg-zinc-50/50 dark:bg-zinc-900/20 flex justify-between items-center">
+            <button onClick={() => { if(nomadMode === 'auto') setNomadSoloModel('blinga-ai'); else setActiveAIModels(new Set(['blinga-ai', 'gpt-4o', 'claude-3.5-sonnet'])); }} className="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+              <RefreshCw className="w-4 h-4 text-zinc-500" />
+            </button>
+            <button onClick={() => setModelSelectorOpen(false)} className="bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 dark:text-black text-white px-6 py-2.5 rounded-full font-semibold text-sm transition-colors">
+              Apply for this chat
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <TooltipProvider delayDuration={400}>
     <div
@@ -8019,6 +8163,74 @@ Let's start the self-listen session!`;
         />
       )}
 
+</TooltipProvider>
+  );
+}
+
+
+
+
+
+
+
+
+
+  return (
+                        <div key={bot.id} className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-100 dark:border-zinc-800">
+                          <div className="w-6 h-6 rounded-full bg-violet-500 flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">{realIdx+1}</div>
+                          <input
+                            value={bot.name}
+                            onChange={(e) => { const c=[...botsConfig]; c[realIdx]={...c[realIdx],name:e.target.value}; setBotsConfig(c); localStorage.setItem('blinga_bots_config_v2',JSON.stringify(c)); }}
+                            placeholder="Name"
+                            className="flex-1 text-xs bg-transparent border-none outline-none text-foreground placeholder:text-muted-foreground min-w-0"
+                          />
+                          <span className="text-zinc-300 dark:text-zinc-600 text-xs">|</span>
+                          <input
+                            value={bot.task}
+                            onChange={(e) => { const c=[...botsConfig]; c[realIdx]={...c[realIdx],task:e.target.value}; setBotsConfig(c); localStorage.setItem('blinga_bots_config_v2',JSON.stringify(c)); }}
+                            placeholder="Task (optional)"
+                            className="flex-1 text-xs bg-transparent border-none outline-none text-muted-foreground placeholder:text-muted-foreground min-w-0"
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+                <div className="flex justify-between items-center bg-zinc-50 dark:bg-zinc-900/50 p-3 rounded-lg border border-zinc-100 dark:border-zinc-800">
+                  <span className="text-sm font-medium text-muted-foreground">Configured Agents</span>
+                  <span className="text-lg font-bold text-violet-500">{botsConfig.filter((b: any) => b.name).length} / 50</span>
+                </div>
+                <div className="flex gap-3">
+                  <Button variant="outline" className="flex-1" onClick={() => setShowCreateBotsDialog(false)}>Cancel</Button>
+                  <Button className="flex-1 bg-violet-500 hover:bg-violet-600 text-white" disabled={botsConfig.filter((b: any) => b.name).length === 0} onClick={() => {
+                    const active = botsConfig.filter((b: any) => b.name).map((b: any) => ({ ...b, task: b.task || 'Idle (Waiting for user prompt)' }));
+                    setDeployedBots(active);
+                    setShowCreateBotsDialog(false);
+                    if (active.length > 0) setActiveBotChatId(active[0].id);
+                  }}>
+                    Deploy Now
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Nano Agents Overlay */}
+      {deployedBots.length > 0 && activeTab === 'workspace' && workspaceView === 'inner' && (
+        <NanoAgentsOverlay
+          bots={deployedBots}
+          activeBotId={activeBotChatId}
+          filter={botChatFilter}
+          onClose={() => setDeployedBots([])}
+          onSelectBot={(id: any) => setActiveBotChatId(id)}
+          onFilterChange={(f: any) => setBotChatFilter(f)}
+        />
+      )}
+
+
+      {renderNomadModelSelector()}
 </TooltipProvider>
   );
 }
