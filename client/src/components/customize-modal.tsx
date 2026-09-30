@@ -740,11 +740,11 @@ export function CustomizeModal({
 
   // Icon paths: gray = dark theme, black = light theme (as specified)
   const menuItems: { id: SettingsSection; label: string; icon: string }[] = [
-    { id: 'general', label: 'General', icon: '/custom-icons/general.svg' },
-    { id: 'ai-preferences', label: 'AI Preferences', icon: '/custom-icons/prefrences.svg' },
-    { id: 'memory', label: 'Memory', icon: '/custom-icons/memory.svg' },
-    { id: 'subscription', label: 'Subscription', icon: '/custom-icons/subscription.svg' },
     { id: 'profile', label: 'Profile', icon: '/custom-icons/profile.svg' },
+    { id: 'general', label: 'General', icon: '/custom-icons/general.svg' },
+    { id: 'subscription', label: 'Subscription', icon: '/custom-icons/subscription.svg' },
+    { id: 'memory', label: 'Memory', icon: '/custom-icons/memory.svg' },
+    { id: 'ai-preferences', label: 'Preferences', icon: '/custom-icons/prefrences.svg' },
   ];
 
   // Save button label & visibility per section
@@ -818,7 +818,7 @@ export function CustomizeModal({
                   key={item.id}
                   ref={el => { tabButtonRefs.current[idx] = el; }}
                   onClick={() => { playTabClick(); setActiveSection(item.id as SettingsSection); }}
-                  className={`relative z-10 w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium flex-shrink-0 transition-none ${isActive ? 'text-zinc-900 dark:text-zinc-900' : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'}`}
+                  className={`relative z-10 w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold flex-shrink-0 transition-none ${isActive ? 'text-zinc-900 dark:text-zinc-900' : 'text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100'}`}
                 >
                   <img
                     src={item.icon}
@@ -855,9 +855,9 @@ export function CustomizeModal({
           <div className="flex-shrink-0 px-8 pt-8 pb-4 bg-[#f1f1f4] dark:bg-[#151515] transition-colors duration-300 z-[66] relative">
             <h2 className="text-[22px] font-semibold text-zinc-900 dark:text-white tracking-tight">
               {activeSection === 'general' ? 'General' :
-               activeSection === 'ai-preferences' ? 'AI model preferences' :
+               activeSection === 'ai-preferences' ? 'Preferences' :
                activeSection === 'memory' ? 'Memory' :
-               activeSection === 'profile' ? 'Profile information' :
+               activeSection === 'profile' ? 'Profile' :
                'Subscription'}
             </h2>
             <p className="text-zinc-500 dark:text-zinc-400 text-[15px] mt-1">
