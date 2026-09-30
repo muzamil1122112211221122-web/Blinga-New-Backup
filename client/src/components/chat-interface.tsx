@@ -4952,7 +4952,7 @@ Let's start the self-listen session!`;
               'gpt-4o':           { name: getNomadName('gpt-4o', 'GPT-5 mini'),                  logo: '/chatgpt-logo.svg',   color: '#10a37f', description: 'Advanced reasoning & multimodal AI by OpenAI' },
               'claude-3.5-sonnet':{ name: getNomadName('claude-3.5-sonnet', 'Claude Haiku 4.5'), logo: '/claude-logo.svg',    color: '#f97316', description: 'Nuanced writing, analysis & coding by Anthropic' },
               'gemini-pro':       { name: getNomadName('gemini-pro', 'Gemini 3.5 Flash-Lite'),   logo: '/gemini-logo.svg',    color: '#14b8a6', description: 'Google\'s multimodal reasoning model' },
-              'perplexity':       { name: getNomadName('perplexity', 'Perplexity Sonar'),        logo: '/perplexity-logo.svg',      color: '#38bdf8', description: 'Real-time web search & cited answers' },
+              'perplexity':       { name: getNomadName('perplexity', 'Perplexity Sonar'),        logo: '/perplexity-logo.png',      color: '#38bdf8', description: 'Real-time web search & cited answers' },
               'grok-4':           { name: getNomadName('grok-4', 'Grok Build 0.1'),              logo: '/grok-logo.svg',      color: '#6b7280', description: 'xAI\'s witty, curious & unfiltered model' },
               'deepseek-r1':      { name: getNomadName('deepseek-r1', 'DeepSeek V4 Flash'),      logo: '/deepseek-logo.svg',  color: '#3b82f6', description: 'Open-source reasoning & coding powerhouse' },
               'doubao':           { name: getNomadName('doubao', 'Doubao Seed 2.0 Mini'),        logo: '/bytedance-logo.svg', color: '#f59e0b', description: 'ByteDance\'s multilingual smart assistant' },
@@ -5340,9 +5340,18 @@ Let's start the self-listen session!`;
                             const cardInner = (logoEl: React.ReactNode) => (
                               <div className="flex flex-row items-center gap-3 px-3.5 py-3">
                                 {logoEl}
-                                <div className="flex flex-col flex-1 min-w-0">
-                                  <div className="flex items-center gap-1 min-w-0">
-                                    {nameTrigger}
+                                  <div className="flex flex-col flex-1 min-w-0 justify-center">
+                                    <span className="text-[10px] font-bold tracking-wide uppercase text-zinc-600 dark:text-zinc-300" style={{ marginBottom: '-3px' }}>
+                                      {{
+                                        'gpt-4o': 'ChatGPT', 'claude-3.5-sonnet': 'Claude', 'gemini-pro': 'Gemini', 
+                                        'perplexity': 'Perplexity', 'grok-4': 'Grok', 'deepseek-r1': 'DeepSeek', 
+                                        'doubao': 'Doubao', 'kimi': 'Kimi', 'alibaba': 'Alibaba', 'qwen': 'Qwen', 
+                                        'llama-4': 'Meta', 'mistral': 'Mistral', 'cohere': 'Cohere', 'amazon': 'Amazon', 
+                                        'copilot': 'Copilot', 'blinga-ai': 'Blinga'
+                                      }[model] || model}
+                                    </span>
+                                    <div className="flex items-center gap-1 min-w-0 -ml-1">
+                                      {nameTrigger}
                                     {subModels && subModels.flagship.includes(selSubModel || '') && (
                                       <Tooltip><TooltipTrigger asChild>
                                         <span className="cursor-help flex-shrink-0" style={{ display:'inline-block', width:16, height:16, WebkitMaskImage:'url(/creativity-icon.png)', WebkitMaskSize:'contain', WebkitMaskRepeat:'no-repeat', maskImage:'url(/creativity-icon.png)', maskSize:'contain', maskRepeat:'no-repeat', background: model === 'blinga-ai' ? 'linear-gradient(135deg, #ffffff, #374151)' : config.color }} />
