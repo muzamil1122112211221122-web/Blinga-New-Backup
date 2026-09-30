@@ -865,7 +865,7 @@ export function CustomizeModal({
                   <span className="text-sm font-medium text-zinc-700 dark:text-zinc-200">Message Bar Glow Color</span>
                   <p className="text-xs text-zinc-500 mt-0.5">Choose the soft glow behind the message bar on the Ask tab</p>
                 </div>
-                <div className="flex flex-row items-center justify-between bg-[#fcfcfd] dark:bg-[#1e1e1e] rounded-full px-6 py-2 w-full overflow-hidden">
+                <div className="flex flex-row items-center justify-between px-2 py-2 w-full mt-2">
                   {GLOW_ACCENT_OPTIONS.map(opt => {
                     const selected = glowAccentColor === opt.value;
                     return (
