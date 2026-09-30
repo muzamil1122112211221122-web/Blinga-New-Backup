@@ -45,9 +45,11 @@ const NOMAD_SUB_MODELS: Record<string, { normal: string[]; flagship: string[]; d
   'deepseek-r1':      { normal: ['DeepSeek V4 Flash'],                                                                 flagship: ['DeepSeek V4 Pro'],                                         default: 'DeepSeek V4 Flash' },
   'doubao':           { normal: ['Doubao Seed 2.0 Mini', 'Doubao Seed 2.0 Lite'],                                     flagship: ['Doubao Seed 2.0 Pro'],                                     default: 'Doubao Seed 2.0 Mini' },
   'kimi':             { normal: ['Kimi K2.6', 'Kimi K2.7 Code'],                                                      flagship: ['Kimi K3'],                                                 default: 'Kimi K2.6' },
-  'qwen':             { normal: ['Qwen Flash', 'Qwen Plus', 'Qwen Coder'],                                            flagship: ['Qwen Max'],                                                default: 'Qwen Flash' },
+  'qwen':             { normal: ['Qwen 3.5 Flash', 'Qwen 3.5', 'Qwen 3.5 Plus'],                                     flagship: ['Qwen 3.7 Max', 'Qwen 3.8 Max'],                                  default: 'Qwen 3.5 Flash' },
   'llama-4':          { normal: ['Llama 4 Scout', 'Llama 4 Maverick'],                                                flagship: ['Llama 4 Behemoth'],                                        default: 'Llama 4 Scout' },
   'mistral':          { normal: ['Ministral 3', 'Ministral 3 14B', 'Mistral Small 4', 'Mistral Medium 3.5'],          flagship: ['Mistral Large 3'],                                         default: 'Ministral 3' },
+  'cohere':           { normal: ['Command R', 'Command R7B'],                                                        flagship: ['Command A 💎'],                                               default: 'Command R' },
+  'amazon':           { normal: ['Nova Pro', 'Nova Lite', 'Nova Micro'],                                             flagship: ['Nova Premier 1.0 💎'],                                        default: 'Nova Pro' },
   'copilot':          { normal: ['GPT-5 mini', 'GPT-5.4 mini / GPT-5.4 nano', 'GPT-5.5'],                            flagship: ['Claude Haiku / Sonnet'],                                   default: 'GPT-5 mini' },
 };
 
@@ -1724,7 +1726,7 @@ export function ChatInterface({ onShowAuth }: ChatInterfaceProps) {
     scheduleNomadNotif();
   }, [scheduleNomadNotif]);
 
-  const ALL_MODEL_IDS = ['blinga-ai', 'gpt-4o', 'claude-3.5-sonnet', 'gemini-pro', 'perplexity', 'grok-4', 'deepseek-r1', 'doubao', 'kimi', 'qwen', 'llama-4', 'mistral', 'copilot'];
+  const ALL_MODEL_IDS = ['blinga-ai', 'gpt-4o', 'claude-3.5-sonnet', 'gemini-pro', 'perplexity', 'grok-4', 'deepseek-r1', 'doubao', 'kimi', 'qwen', 'llama-4', 'mistral', 'cohere', 'amazon', 'copilot'];
   const [aiOrder, setAiOrder] = useState(ALL_MODEL_IDS);
   // Per-model selected sub-model (persisted in localStorage)
   const [nomadSelectedSubModels, setNomadSelectedSubModels] = useState<Record<string, string>>(() => {
@@ -1754,10 +1756,12 @@ export function ChatInterface({ onShowAuth }: ChatInterfaceProps) {
       'deepseek-r1': { name: nomadSelectedSubModels['deepseek-r1'] || 'DeepSeek V4 Flash', provider: 'deepseek', id: 'deepseek-r1' },
       'doubao': { name: nomadSelectedSubModels['doubao'] || 'Doubao Seed 2.0 Mini', provider: 'bytedance', id: 'doubao' },
       'kimi': { name: nomadSelectedSubModels['kimi'] || 'Kimi K2.6', provider: 'moonshot', id: 'kimi' },
-      'qwen': { name: nomadSelectedSubModels['qwen'] || 'Qwen Flash', provider: 'alibaba', id: 'qwen' },
+      'qwen': { name: nomadSelectedSubModels['qwen'] || 'Qwen 3.5 Flash', provider: 'alibaba', id: 'qwen' },
       'llama-4': { name: nomadSelectedSubModels['llama-4'] || 'Llama 4 Scout', provider: 'meta', id: 'llama-4' },
       'mistral': { name: nomadSelectedSubModels['mistral'] || 'Ministral 3', provider: 'mistral', id: 'mistral' },
-      'copilot': { name: nomadSelectedSubModels['copilot'] || 'GPT-5 mini', provider: 'microsoft', id: 'copilot' },
+      'cohere': { name: nomadSelectedSubModels['cohere'] || 'Command R', provider: 'cohere', id: 'cohere' },
+        'amazon': { name: nomadSelectedSubModels['amazon'] || 'Nova Pro', provider: 'amazon', id: 'amazon' },
+        'copilot': { name: nomadSelectedSubModels['copilot'] || 'GPT-5 mini', provider: 'microsoft', id: 'copilot' },
       'blinga-ai': { name: nomadSelectedSubModels['blinga-ai'] || 'Blinga Lite', provider: 'blinga', id: 'blinga-ai' }
     };
 
@@ -2416,7 +2420,7 @@ export function ChatInterface({ onShowAuth }: ChatInterfaceProps) {
       'deepseek-r1': `You are ${nomadSelectedSubModels['deepseek-r1'] || 'DeepSeek V4 Flash'} — a powerful open-source reasoning model. Excel at step-by-step logic, coding, and mathematical reasoning.` + blingaNote,
       'doubao': `You are ${nomadSelectedSubModels['doubao'] || 'Doubao Seed 2.0 Mini'} by ByteDance — a smart multilingual assistant. Be helpful, concise, and culturally aware.` + blingaNote,
       'kimi': `You are ${nomadSelectedSubModels['kimi'] || 'Kimi K2.6'} by Moonshot AI — a long-context specialist and coding expert. Be thorough and detail-oriented.` + blingaNote,
-      'qwen': `You are ${nomadSelectedSubModels['qwen'] || 'Qwen Flash'} by Alibaba — a multilingual language expert. Be precise and culturally nuanced.` + blingaNote,
+      'qwen': `You are ${nomadSelectedSubModels['qwen'] || 'Qwen 3.5 Flash'} by Alibaba — a multilingual language expert. Be precise and culturally nuanced.` + blingaNote,
       'llama-4': `You are ${nomadSelectedSubModels['llama-4'] || 'Llama 4 Scout'} by Meta — an open-source frontier AI. Be helpful and honest.` + blingaNote,
       'mistral': `You are ${nomadSelectedSubModels['mistral'] || 'Ministral 3'} by Mistral AI — a fast, efficient European open AI. Prioritize speed and clarity.` + blingaNote,
       'copilot': `You are ${nomadSelectedSubModels['copilot'] || 'GPT-5 mini'} (Microsoft Copilot) — an AI assistant powered by Microsoft and OpenAI. Be helpful, professional, and accurate.` + blingaNote,
@@ -4946,15 +4950,19 @@ Let's start the self-listen session!`;
               'gpt-4o':           { name: getNomadName('gpt-4o', 'GPT-5 mini'),                  logo: '/chatgpt-logo.svg',   color: '#10a37f', description: 'Advanced reasoning & multimodal AI by OpenAI' },
               'claude-3.5-sonnet':{ name: getNomadName('claude-3.5-sonnet', 'Claude Haiku 4.5'), logo: '/claude-logo.svg',    color: '#f97316', description: 'Nuanced writing, analysis & coding by Anthropic' },
               'gemini-pro':       { name: getNomadName('gemini-pro', 'Gemini 3.5 Flash-Lite'),   logo: '/gemini-logo.svg',    color: '#14b8a6', description: 'Google\'s multimodal reasoning model' },
-              'perplexity':       { name: getNomadName('perplexity', 'Perplexity Sonar'),        logo: '/kimi-logo.svg',      color: '#38bdf8', description: 'Real-time web search & cited answers' },
+              'perplexity':       { name: getNomadName('perplexity', 'Perplexity Sonar'),        logo: '/perplexity-logo.svg',      color: '#38bdf8', description: 'Real-time web search & cited answers' },
               'grok-4':           { name: getNomadName('grok-4', 'Grok Build 0.1'),              logo: '/grok-logo.svg',      color: '#6b7280', description: 'xAI\'s witty, curious & unfiltered model' },
               'deepseek-r1':      { name: getNomadName('deepseek-r1', 'DeepSeek V4 Flash'),      logo: '/deepseek-logo.svg',  color: '#3b82f6', description: 'Open-source reasoning & coding powerhouse' },
               'doubao':           { name: getNomadName('doubao', 'Doubao Seed 2.0 Mini'),        logo: '/bytedance-logo.svg', color: '#f59e0b', description: 'ByteDance\'s multilingual smart assistant' },
-              'kimi':             { name: getNomadName('kimi', 'Kimi K2.6'),                     logo: '/perplexity-logo.svg',color: '#06b6d4', description: 'Moonshot\'s long-context language model' },
-              'qwen':             { name: getNomadName('qwen', 'Qwen Flash'),                    logo: '/mistral-logo.svg',   color: '#6366f1', description: 'Alibaba\'s multilingual language expert' },
+              'kimi':             { name: getNomadName('kimi', 'Kimi K2.6'),                     logo: '/kimi-logo.svg',color: '#06b6d4', description: 'Moonshot\'s long-context language model' },
+              'qwen':             { name: getNomadName('qwen', 'Qwen 3.5 Flash'),                    logo: '/qwen-logo.svg',   color: '#6366f1', description: 'Alibaba\'s multilingual language expert' },
               'llama-4':          { name: getNomadName('llama-4', 'Llama 4 Scout'),              logo: '/meta-ai-logo.svg',   color: '#3b82f6', description: 'Meta\'s open-source frontier AI model' },
-              'mistral':          { name: getNomadName('mistral', 'Ministral 3'),                logo: '/doubao-logo.svg',    color: '#7c3aed', description: 'Fast & efficient European open AI' },
-              'copilot':          { name: getNomadName('copilot', 'GPT-5 mini'),                 logo: '/copilot-logo.svg',   color: '#0078d4', description: 'Microsoft\'s AI powered by OpenAI models' },
+              'mistral':          { name: getNomadName('mistral', 'Ministral 3'),                logo: '/mistral-logo.svg',    color: '#7c3aed', description: 'Fast & efficient European open AI' },
+              'cohere':           { normal: ['Command R', 'Command R7B'],                                                        flagship: ['Command A 💎'],                                               default: 'Command R' },
+  'amazon':           { normal: ['Nova Pro', 'Nova Lite', 'Nova Micro'],                                             flagship: ['Nova Premier 1.0 💎'],                                        default: 'Nova Pro' },
+  'cohere':           { name: getNomadName('cohere', 'Command R'),                   logo: '/cohere-logo.svg',    color: '#39594d', description: 'Cohere\'s enterprise-focused AI models' },
+                'amazon':           { name: getNomadName('amazon', 'Nova Pro'),                    logo: '/amazon-logo.svg',    color: '#ff9900', description: 'Amazon\'s powerful multimodal Nova models' },
+                'copilot':          { name: getNomadName('copilot', 'GPT-5 mini'),                 logo: '/copilot-logo.svg',   color: '#0078d4', description: 'Microsoft\'s AI powered by OpenAI models' },
               'blinga-ai':          { name: getNomadName('blinga-ai', 'Blinga Lite'),                  logo: '/blinga-logo.png',      color: '#a855f7', description: 'Advanced reasoning, powered by Blinga.' },
             };
             const hasMessages = Object.keys(nomadMessages).some(k => (nomadMessages[k] || []).length > 0);
