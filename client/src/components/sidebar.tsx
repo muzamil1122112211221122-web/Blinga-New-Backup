@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -642,7 +642,7 @@ export function Sidebar({
         onMouseLeave={() => setIsLogoHovered(false)}
       >
           {/* Right edge fade for blending with background glow */}
-          <div className="absolute top-0 bottom-0 left-full w-12 pointer-events-none z-0" style={{ background: 'linear-gradient(to right, var(--background), transparent)' }} />
+          <div className="absolute top-0 bottom-0 left-full w-12 pointer-events-none z-[200]" style={{ background: 'linear-gradient(to right, var(--background), transparent)' }} />
           <div className={`p-3 flex items-center ${isMini ? 'justify-center' : 'justify-between'}`}>
 
           {isMini ? (
