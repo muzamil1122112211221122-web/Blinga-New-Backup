@@ -13,3 +13,5 @@ lost_diff.patch
 .env
 .env.*
 !.env.example
+
+.replit
