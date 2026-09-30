@@ -850,9 +850,9 @@ export function CustomizeModal({
         </div>
 
         {/* Content */}
-        <div ref={settingsContentRef} className="settings-content-scroll flex-1 p-8 overflow-y-auto relative bg-[#f1f1f4] dark:bg-[#151515] [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none' }}>
-          
-          <div className="mb-8">
+        <div className="flex-1 flex flex-col relative bg-[#f1f1f4] dark:bg-[#151515] transition-colors duration-300 overflow-hidden">
+          {/* Sticky header — sits above scrollable content, never fades */}
+          <div className="flex-shrink-0 px-8 pt-8 pb-4 bg-[#f1f1f4] dark:bg-[#151515] transition-colors duration-300 z-[10]">
             <h2 className="text-[22px] font-medium text-zinc-900 dark:text-white tracking-tight">
               {activeSection === 'general' ? 'General' :
                activeSection === 'ai-preferences' ? 'AI model preferences' :
@@ -867,6 +867,8 @@ export function CustomizeModal({
                'Manage your billing and plan details'}
             </p>
           </div>
+          {/* Scrollable content */}
+          <div ref={settingsContentRef} className="settings-content-scroll flex-1 px-8 pb-8 overflow-y-auto relative [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none' }}>
           {/* SettingsScrollButtons removed — max-up/max-down disabled */}
           {activeSection === 'general' && (
             <div className="space-y-8">
@@ -1632,7 +1634,8 @@ export function CustomizeModal({
               <PlanUsageSection />
             </div>
           )}
-        </div>
+          </div>{/* end scrollable content */}
+        </div>{/* end content wrapper */}
       </DialogContent>
     </Dialog>
     {showExitDialog && (
