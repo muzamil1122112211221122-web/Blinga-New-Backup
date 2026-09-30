@@ -636,7 +636,7 @@ export function Sidebar({
       />
 
       <div
-        className={`fixed top-0 left-0 h-full ${isMini ? 'w-[76px]' : 'w-72'} ${forceFull ? (isOpen ? 'mobile-sidebar-open' : 'mobile-sidebar-closed') : ''} bg-background text-zinc-900 dark:text-zinc-100 z-50 flex flex-col transition-[width,transform] duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed top-0 left-0 h-full ${isMini ? 'w-[76px]' : 'w-72'} ${forceFull ? (isOpen ? 'mobile-sidebar-open' : 'mobile-sidebar-closed') : ''} bg-background text-zinc-900 dark:text-zinc-100 z-[100] flex flex-col transition-[width,transform] duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
         style={{ pointerEvents: 'auto' }}
         onMouseEnter={() => isMini && setIsLogoHovered(true)}
         onMouseLeave={() => setIsLogoHovered(false)}
