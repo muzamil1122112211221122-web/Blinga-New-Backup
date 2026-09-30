@@ -27,6 +27,7 @@
   --destructive-foreground: hsl(0, 0%, 98%);
   --ring: hsl(240, 5%, 64.9%);
   --radius: 1.25rem;
+  --modal-fade-from: #f1f1f4;
 
   /* Custom Blinga colors */
   --light-primary: hsl(0, 0%, 100%);
@@ -64,6 +65,7 @@
   --destructive: hsl(0, 62.8%, 30.6%);
   --destructive-foreground: hsl(0, 0%, 98%);
   --ring: hsl(240, 4.9%, 83.9%);
+  --modal-fade-from: #151515;
 }
 
 @layer base {

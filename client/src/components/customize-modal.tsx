@@ -773,6 +773,17 @@ export function CustomizeModal({
             <X className="h-4 w-4" />
           </Button>
         </div>
+        {/* Top fade overlay — sits above content so scrolled cards/text fade out before hitting the close button */}
+        <div
+          aria-hidden
+          className="absolute top-0 right-0 z-[65] pointer-events-none transition-colors duration-300"
+          style={{
+            left: 224, /* width of sidebar (w-56 = 224px) */
+            height: 72,
+            borderTopRightRadius: 48,
+            background: 'linear-gradient(to bottom, var(--modal-fade-from) 0%, var(--modal-fade-from) 40%, transparent 100%)',
+          }}
+        />
         {/* Sidebar */}
         <div className="w-56 bg-[#fcfcfd] dark:bg-[#1e1e1e] p-4 flex flex-col border-r border-zinc-300 dark:border-zinc-700 flex-shrink-0 z-[60]">
           <div className="flex items-center mb-6 mt-2 px-3">
