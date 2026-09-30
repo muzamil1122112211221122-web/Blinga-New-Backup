@@ -774,7 +774,7 @@ export function CustomizeModal({
           </Button>
         </div>
         {/* Sidebar */}
-        <div className="w-56 bg-[#fcfcfd] dark:bg-[#1e1e1e] p-4 flex flex-col border-r border-zinc-300 dark:border-zinc-700 flex-shrink-0 z-[60] transition-colors duration-200">
+        <div className="w-56 bg-[#fcfcfd] dark:bg-[#1e1e1e] p-4 flex flex-col border-r border-zinc-300 dark:border-zinc-700 flex-shrink-0 z-[60]">
           <div className="flex items-center mb-6 mt-2 px-3">
             <h2 className="text-zinc-900 dark:text-white text-[22px] font-semibold tracking-tight">Settings</h2>
           </div>
@@ -838,7 +838,7 @@ export function CustomizeModal({
         </div>
 
         {/* Content */}
-        <div ref={settingsContentRef} className="settings-content-scroll flex-1 p-8 overflow-y-auto relative bg-[#f1f1f4] dark:bg-[#151515] transition-colors duration-200 [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none' }}>
+        <div ref={settingsContentRef} className="settings-content-scroll flex-1 p-8 overflow-y-auto relative bg-[#f1f1f4] dark:bg-[#151515] [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none' }}>
           
           <div className="mb-8">
             <h2 className="text-[22px] font-medium text-zinc-900 dark:text-white tracking-tight">

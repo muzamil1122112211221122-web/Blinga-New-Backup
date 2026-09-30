@@ -62,7 +62,13 @@ export function ThemeProvider({
   )
 
   useEffect(() => {
-    applyThemeClass(theme)
+    if (typeof document.startViewTransition === 'function') {
+      document.startViewTransition(() => {
+        applyThemeClass(theme)
+      });
+    } else {
+      applyThemeClass(theme)
+    }
   }, [theme])
 
   const value = {
