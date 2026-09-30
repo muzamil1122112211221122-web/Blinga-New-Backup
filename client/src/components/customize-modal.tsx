@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useLayoutEffect, useRef } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { BlingaLogo, Logo } from "./logo";
 import { getVibrantColor } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -818,12 +818,12 @@ export function CustomizeModal({
                   key={item.id}
                   ref={el => { tabButtonRefs.current[idx] = el; }}
                   onClick={() => { playTabClick(); setActiveSection(item.id as SettingsSection); }}
-                  className={`relative z-10 w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold flex-shrink-0 transition-none ${isActive ? 'text-zinc-900 dark:text-zinc-900' : 'text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100'}`}
+                  className="relative z-10 w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-semibold flex-shrink-0 transition-none text-zinc-900 dark:text-white"
                 >
                   <img
                     src={item.icon}
                     alt=""
-                    className={`flex-shrink-0 w-5 h-5 object-contain ${theme === 'dark' ? 'invert' : 'brightness-0'} ${isActive ? 'opacity-100' : 'opacity-50'}`}
+                    className={`flex-shrink-0 w-[22px] h-[22px] object-contain ${theme === 'dark' ? 'invert' : 'brightness-0'} ${isActive ? 'opacity-100' : 'opacity-65'}`}
                   />
                   <span>{item.label}</span>
                 </button>
@@ -1668,6 +1668,7 @@ export function CustomizeModal({
   </>
   );
 }
+
 
 
 
