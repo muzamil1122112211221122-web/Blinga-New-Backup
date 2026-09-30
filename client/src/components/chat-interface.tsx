@@ -1,4 +1,4 @@
-﻿import { NanoAgentsOverlay } from './NanoAgentsOverlay';
+import { NanoAgentsOverlay } from './NanoAgentsOverlay';
 import React, { useState, useRef, useEffect, useLayoutEffect, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -4147,7 +4147,7 @@ Let's start the self-listen session!`;
         <div ref={topNavRef} className="relative flex items-center bg-zinc-100/90 dark:bg-zinc-800/90 backdrop-blur-md p-1 rounded-full border border-zinc-200/50 dark:border-zinc-700/50 shadow-sm pointer-events-auto">
           
           {/* Sliding Pill Background */}
-          <div aria-hidden className={settingsToggles.minimalAnimations ? "" : "transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"} style={{
+          <div aria-hidden className={settingsToggles.minimalAnimations ? "" : "transition-all duration-[180ms] ease-[cubic-bezier(0.25,1,0.5,1)]"} style={{
             position: 'absolute',
             left: topPillStyle.left || 4,
             width: topPillStyle.width || 0,
