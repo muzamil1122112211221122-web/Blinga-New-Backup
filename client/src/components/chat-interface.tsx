@@ -5269,7 +5269,7 @@ Let's start the self-listen session!`;
                                   setActiveAIModels(newActive);
                                   // Order stays fixed — no reordering on toggle
                                 }}
-                                className="relative rounded-full transition-all duration-300 flex-shrink-0"
+                                className="relative rounded-full transition-all duration-300 flex-shrink-0 focus:outline-none focus-visible:outline-none"
                                 style={isActive ? { background: model === 'blinga-ai' ? 'linear-gradient(135deg, #fef08a 0%, #e9d5ff 50%, #bae6fd 100%)' : config.color, width: 36, height: 18 } : { width: 36, height: 18, background: 'rgb(209 213 219)' }}
                               >
                                 <div className={`w-3.5 h-3.5 bg-white rounded-full shadow transition-all duration-300 absolute top-[2px] ${isActive ? 'translate-x-[20px]' : 'translate-x-[2px]'}`} />
@@ -5284,7 +5284,7 @@ Let's start the self-listen session!`;
                             const nameTrigger = subModels ? (
                               <button
                                 onClick={(e) => { e.stopPropagation(); setOpenNomadModelDropdown(isDropdownOpen ? null : model); }}
-                                className="flex items-center gap-0.5 hover:bg-black/5 dark:hover:bg-white/5 transition-all rounded-full px-1.5 py-0.5 text-left min-w-0"
+                                className="flex items-center gap-0.5 hover:bg-black/5 dark:hover:bg-white/5 transition-all rounded-full px-1.5 py-0.5 text-left min-w-0 focus:outline-none focus-visible:outline-none"
                               >
                                 <span className="font-bold text-foreground leading-tight truncate" style={{ fontSize: subNameFs }}>{displayName}</span>
                                 <ChevronDown className={`w-3 h-3 flex-shrink-0 text-muted-foreground transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
@@ -5364,10 +5364,10 @@ Let's start the self-listen session!`;
                                   {toggleSwitch}
                                   {!isActive && isNomadModelLocked(model) && <Lock className="w-3 h-3 text-amber-500 flex-shrink-0" />}
                                   <Tooltip><TooltipTrigger asChild>
-                                    <button onClick={() => setNomadSoloModel(model)} className="w-5 h-5 flex items-center justify-center rounded-full hover:bg-accent transition-all" style={{ color: config.color }}>
+                                    <button onClick={() => setNomadSoloModel(model)} className="w-5 h-5 flex items-center justify-center rounded-full hover:bg-accent transition-all focus:outline-none focus-visible:outline-none" style={{ color: config.color }}>
                                       <Target className="w-3.5 h-3.5" />
                                     </button>
-                                  </TooltipTrigger><TooltipContent><p>Chat only with {config.name}</p></TooltipContent></Tooltip>
+                                  </TooltipTrigger><TooltipContent className="z-[9999]"><p>Chat only with {config.name}</p></TooltipContent></Tooltip>
                                 </div>
                               </div>
                             );
@@ -5378,7 +5378,7 @@ Let's start the self-listen session!`;
                                   <div className="rounded-full bg-card">
                                     {cardInner(
                                       <div className="flex items-center justify-center flex-shrink-0">
-                                        <BlingaLogo size="sm" scaleWhenCurrent="scale(1.55) translateY(3px)" className={resolvedTheme === 'dark' ? 'text-white' : 'text-black'} />
+                                        <BlingaLogo size="sm" scaleWhenCurrent="scale(1.55) translateY(3px)" className={`${resolvedTheme === 'dark' ? 'text-white' : 'text-black'} !hover:scale-100 pointer-events-none`} />
                                       </div>
                                     )}
                                   </div>
@@ -6157,7 +6157,7 @@ Let's start the self-listen session!`;
                           <div className="flex items-center gap-1.5 flex-shrink-0">
                             <button
                               onClick={() => toggleImagineModel(m.id)}
-                              className="relative rounded-full transition-all duration-300 flex-shrink-0"
+                              className="relative rounded-full transition-all duration-300 flex-shrink-0 focus:outline-none focus-visible:outline-none"
                               style={{ width: 36, height: 18 }}
                             >
                               <div className={`absolute inset-0 rounded-full transition-all duration-300 ${active ? '' : 'bg-gray-300 dark:bg-gray-600'}`} style={active ? { backgroundColor: m.color } : {}} />
