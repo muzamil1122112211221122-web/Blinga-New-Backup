@@ -5340,7 +5340,7 @@ Let's start the self-listen session!`;
                             const cardInner = (logoEl: React.ReactNode) => (
                               <div className="flex flex-row items-center gap-3 px-3.5 py-3">
                                 {logoEl}
-                                  <div className="flex flex-col flex-1 min-w-0 justify-center">
+                                  <div className="flex flex-col flex-1 min-w-0 justify-center items-center text-center">
                                     <span className="text-[10px] font-bold tracking-wide uppercase text-zinc-600 dark:text-zinc-300" style={{ marginBottom: '-3px' }}>
                                       {{
                                         'gpt-4o': 'ChatGPT', 'claude-3.5-sonnet': 'Claude', 'gemini-pro': 'Gemini', 
@@ -5350,7 +5350,7 @@ Let's start the self-listen session!`;
                                         'copilot': 'Copilot', 'blinga-ai': 'Blinga'
                                       }[model] || model}
                                     </span>
-                                    <div className="flex items-center gap-1 min-w-0 -ml-1">
+                                    <div className="flex items-center justify-center gap-1 min-w-0">
                                       {nameTrigger}
                                     {subModels && subModels.flagship.includes(selSubModel || '') && (
                                       <Tooltip><TooltipTrigger asChild>
@@ -5358,7 +5358,7 @@ Let's start the self-listen session!`;
                                       </TooltipTrigger><TooltipContent side="bottom" align="center" className="z-[9999]">Flagship Model</TooltipContent></Tooltip>
                                     )}
                                   </div>
-                                  <span className="text-[9px] text-muted-foreground leading-tight">{config.description}</span>
+                                  <span className="text-[9px] text-muted-foreground leading-tight mt-0.5">{config.description}</span>
                                 </div>
                                 <div className="flex items-center gap-1.5 flex-shrink-0">
                                   {toggleSwitch}
