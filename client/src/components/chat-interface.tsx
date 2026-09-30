@@ -5261,7 +5261,7 @@ Let's start the self-listen session!`;
                                     setNomadMessages(prev => { const updated = { ...prev }; delete updated[model]; return updated; });
                                     // Show top-right notification
                                     const notifLabel = config.name;
-                                    const notifColor = model === 'blinga-ai' ? '#374151' : config.color;
+                                    const notifColor = config.color;
                                     if (nomadNotifTimer.current) clearTimeout(nomadNotifTimer.current);
                                     setNomadDisabledNotif({ label: notifLabel, color: notifColor });
                                     nomadNotifTimer.current = setTimeout(() => setNomadDisabledNotif(null), 1500);
@@ -5270,7 +5270,7 @@ Let's start the self-listen session!`;
                                   // Order stays fixed — no reordering on toggle
                                 }}
                                 className="relative rounded-full transition-all duration-300 flex-shrink-0"
-                                style={isActive ? { background: model === 'blinga-ai' ? 'linear-gradient(135deg, #ffffff, #374151)' : config.color, width: 36, height: 18 } : { width: 36, height: 18, background: 'rgb(209 213 219)' }}
+                                style={isActive ? { background: model === 'blinga-ai' ? 'linear-gradient(135deg, #fef08a 0%, #e9d5ff 50%, #bae6fd 100%)' : config.color, width: 36, height: 18 } : { width: 36, height: 18, background: 'rgb(209 213 219)' }}
                               >
                                 <div className={`w-3.5 h-3.5 bg-white rounded-full shadow transition-all duration-300 absolute top-[2px] ${isActive ? 'translate-x-[20px]' : 'translate-x-[2px]'}`} />
                               </button>
@@ -5364,7 +5364,7 @@ Let's start the self-listen session!`;
                                   {toggleSwitch}
                                   {!isActive && isNomadModelLocked(model) && <Lock className="w-3 h-3 text-amber-500 flex-shrink-0" />}
                                   <Tooltip><TooltipTrigger asChild>
-                                    <button onClick={() => setNomadSoloModel(model)} className="w-5 h-5 flex items-center justify-center rounded-full hover:bg-accent transition-all" style={{ color: model === 'blinga-ai' ? '#374151' : config.color }}>
+                                    <button onClick={() => setNomadSoloModel(model)} className="w-5 h-5 flex items-center justify-center rounded-full hover:bg-accent transition-all" style={{ color: config.color }}>
                                       <Target className="w-3.5 h-3.5" />
                                     </button>
                                   </TooltipTrigger><TooltipContent><p>Chat only with {config.name}</p></TooltipContent></Tooltip>
