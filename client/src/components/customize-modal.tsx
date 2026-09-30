@@ -855,7 +855,7 @@ export function CustomizeModal({
             <div className="space-y-8">
               <ThemeSegmentedTab
                 value={localTheme}
-                onChange={(v) => { setLocalTheme(v); setTheme(v as any); setIsDirty(true); }}
+                onChange={(v) => { setLocalTheme(v); setTimeout(() => setTheme(v as any), 350); setIsDirty(true); }}
                 isDark={theme === 'dark'}
                 minimalAnimations={localToggles?.minimalAnimations}
               />

@@ -62,28 +62,7 @@ export function ThemeProvider({
   )
 
   useEffect(() => {
-    const overlay = getOverlay()
-    let swap: ReturnType<typeof setTimeout>
-    let timers: ReturnType<typeof setTimeout>[] = []
-
-    // Freeze the current background colour NOW (before theme swap changes the CSS var)
-    const frozenBg = getComputedStyle(document.body).backgroundColor
-    overlay.style.background = frozenBg
-
-    // Step 1 — fast cover (invisible because it matches current bg exactly)
-    overlay.style.transition = "opacity 0.22s ease-in"
-    overlay.style.opacity = "1"
-
-    // Step 2 — swap theme while fully covered
-    swap = setTimeout(() => {
-      applyThemeClass(theme)
-      // Step 3 — slow reveal of the new theme
-      overlay.style.transition = "opacity 1.4s cubic-bezier(0.4,0,0.2,1)"
-      overlay.style.opacity = "0"
-    }, 240)
-
-    timers.push(swap)
-    return () => timers.forEach(clearTimeout)
+    applyThemeClass(theme)
   }, [theme])
 
   const value = {
