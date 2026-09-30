@@ -801,7 +801,6 @@ export function CustomizeModal({
             />
             {menuItems.map((item, idx) => {
               const isActive = activeSection === item.id;
-              const Icon = item.icon;
               return (
                 <button
                   key={item.id}
@@ -809,7 +808,11 @@ export function CustomizeModal({
                   onClick={() => { playTabClick(); setActiveSection(item.id as SettingsSection); }}
                   className={`relative z-10 w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium flex-shrink-0 transition-none ${isActive ? 'text-zinc-900 dark:text-zinc-900' : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'}`}
                 >
-                  <Icon className={`flex-shrink-0 w-5 h-5 ${isActive ? 'text-zinc-900' : 'text-zinc-600 dark:text-zinc-400'}`} />
+                  <img
+                    src={item.icon}
+                    alt=""
+                    className={`flex-shrink-0 w-5 h-5 object-contain ${theme === 'dark' ? 'invert' : 'brightness-0'} ${isActive ? 'opacity-100' : 'opacity-50'}`}
+                  />
                   <span>{item.label}</span>
                 </button>
               );
