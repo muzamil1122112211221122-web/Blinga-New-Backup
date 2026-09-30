@@ -4958,7 +4958,7 @@ Let's start the self-listen session!`;
               'doubao':           { name: getNomadName('doubao', 'Doubao Seed 2.0 Mini'),        logo: '/bytedance-logo.svg', color: '#f59e0b', description: 'ByteDance\'s multilingual smart assistant' },
               'kimi':             { name: getNomadName('kimi', 'Kimi K2.6'),                     logo: '/kimi-logo.svg',color: '#06b6d4', description: 'Moonshot\'s long-context language model' },
               'alibaba':          { name: getNomadName('alibaba', 'Qwen 3.5 Flash'),                 logo: '/alibaba-logo.svg',color: '#ff6a00', description: 'Alibaba\'s advanced Qwen models' },
-                'qwen':             { name: getNomadName('qwen', 'Qwen Flash'),                        logo: '/qwen-logo.svg',   color: '#6366f1', description: 'Alibaba\'s multilingual language expert' },
+                'qwen':             { name: getNomadName('qwen', 'Qwen Flash'),                        logo: '/qwen-logo.png',   color: '#6366f1', description: 'Qwen\'s powerful foundation models' },
               'llama-4':          { name: getNomadName('llama-4', 'Llama 4 Scout'),              logo: '/meta-ai-logo.svg',   color: '#3b82f6', description: 'Meta\'s open-source frontier AI model' },
               'mistral':          { name: getNomadName('mistral', 'Ministral 3'),                logo: '/mistral-logo.png',    color: '#7c3aed', description: 'Fast & efficient European open AI' },
   'cohere':           { name: getNomadName('cohere', 'Command R'),                   logo: '/cohere-logo.svg',    color: '#39594d', description: 'Cohere\'s enterprise-focused AI models' },
