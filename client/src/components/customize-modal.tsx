@@ -260,6 +260,7 @@ interface CustomizeModalProps {
   profilePicture?: string;
   onUserRename?: (name: string) => void;
   onProfilePictureChange?: (dataUrl: string) => void;
+  sidebarOffset?: number;
 }
 
 type SettingsSection = 'general' | 'ai-preferences' | 'memory' | 'subscription' | 'profile';
@@ -362,7 +363,8 @@ export function CustomizeModal({
   user,
   profilePicture,
   onUserRename,
-  onProfilePictureChange
+  onProfilePictureChange,
+  sidebarOffset = 0
 }: CustomizeModalProps) {
   const { theme, setTheme } = useTheme();
   const [activeSection, setActiveSection] = useState<SettingsSection>('general');
