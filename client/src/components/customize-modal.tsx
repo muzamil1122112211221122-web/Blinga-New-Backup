@@ -778,7 +778,7 @@ export function CustomizeModal({
           <div className="flex items-center mb-6 mt-2 px-3">
             <h2 className="text-zinc-900 dark:text-white text-[22px] font-semibold tracking-tight">Settings</h2>
           </div>
-          <div className="flex-1 flex flex-col space-y-1 overflow-y-auto min-h-0 relative [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none' }}>
+          <div className="flex-1 flex flex-col space-y-1 min-h-0 relative">
             {/* vertical sliding pill — spring overshoot on top gives the "fast brake" feel */}
             <div
               aria-hidden
