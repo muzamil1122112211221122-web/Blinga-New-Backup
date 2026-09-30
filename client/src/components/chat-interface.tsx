@@ -5374,11 +5374,11 @@ Let's start the self-listen session!`;
 
                             return model === 'blinga-ai' ? (
                               <div className="relative mx-3 mt-2 mb-2">
-                                <div className="p-[2px] rounded-full transition-all duration-300" style={{ background: resolvedTheme === 'dark' ? 'linear-gradient(135deg,#ffffff 0%,#000000 100%)' : 'linear-gradient(135deg,#000000 0%,#ffffff 100%)' }}>
+                                <div className="p-[2px] rounded-full transition-all duration-300" style={{ background: 'linear-gradient(135deg, #fef08a 0%, #e9d5ff 50%, #bae6fd 100%)' }}>
                                   <div className="rounded-full bg-card">
                                     {cardInner(
                                       <div className="flex items-center justify-center flex-shrink-0">
-                                        <BlingaLogo size="sm" scaleWhenCurrent="scale(1.65) translateY(3px)" className={resolvedTheme === 'dark' ? 'text-white' : 'text-black'} />
+                                        <BlingaLogo size="sm" scaleWhenCurrent="scale(1.55) translateY(3px)" className={resolvedTheme === 'dark' ? 'text-white' : 'text-black'} />
                                       </div>
                                     )}
                                   </div>
