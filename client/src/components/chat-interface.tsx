@@ -5239,7 +5239,7 @@ Let's start the self-listen session!`;
                     const msgs = nomadMessages[model] || [];
                     const isLast = idx === sortedArr.length - 1;
                     return (
-                      <motion.div key={model} layout transition={{ type: 'tween', duration: 0.42, ease: [0.25, 0.46, 0.45, 0.94] }} className="flex-shrink-0 flex items-stretch" style={{ height: '100%', zIndex: openNomadModelDropdown === model ? 99999 : 1, position: 'relative' }}>
+                      <motion.div key={model} layout transition={{ type: 'tween', duration: 0.42, ease: [0.25, 0.46, 0.45, 0.94] }} className="flex-shrink-0 flex items-stretch" style={{ height: '100%', zIndex: 'auto' }}>
                         {/* Column */}
                         <div className="flex-shrink-0 flex flex-col" style={{ width: 390, height: '100%', paddingLeft: 10, paddingRight: 10, opacity: isActive ? 1 : 0.45, transform: isActive ? 'scale(1)' : 'scale(0.97)', transition: 'opacity 0.3s ease, transform 0.3s ease' }}>
                           {/* Toggle card — horizontal */}
