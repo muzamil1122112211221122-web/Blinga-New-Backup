@@ -9,19 +9,19 @@ import voiceDark from "@assets/voice-note_2_1784832046468.svg";
 import historyLight from "@assets/search_1784832046469.svg";
 import historyDark from "@assets/search_2_1784832046468.svg";
 export const SIDEBAR_ASSETS = {
-  search: { light: '/custom-icons/search-interface-symbol.png', dark: '/custom-icons/search-interface-symbol.png' },
-  chat: { light: '/custom-icons/new chat.png', dark: '/custom-icons/new chat.png' },
-  voice: { light: voiceLight, dark: voiceDark }, // keeping original
-  imagine: { light: '/custom-icons/image studio (2).png', dark: '/custom-icons/image studio (2).png' },
-  history: { light: historyLight, dark: historyDark }, // keeping original
-  close: { light: '/sidebar-close-light.png', dark: '/sidebar-close-dark.png' },
-  ownMode: { light: '/custom-icons/owl mode.png', dark: '/custom-icons/owl mode.png' },
+  search: { light: '/custom-icons/search.svg', dark: '/custom-icons/search.svg' },
+  chat:   { light: '/custom-icons/new chat.svg',   dark: '/custom-icons/new chat.svg' },
+  voice:  { light: voiceLight, dark: voiceDark },
+  imagine:{ light: '/custom-icons/imagine studio.svg', dark: '/custom-icons/imagine studio.svg' },
+  history:{ light: historyLight, dark: historyDark },
+  close:  { light: '/sidebar-close-light.png', dark: '/sidebar-close-dark.png' },
+  ownMode:{ light: '/custom-icons/owl mode.svg', dark: '/custom-icons/owl mode.svg' },
   // Tab icons
-  ask:    { light: '/custom-icons/ask tab.png',    dark: '/custom-icons/ask tab.png'    },
-  nomad:  { light: '/custom-icons/nomad.png',  dark: '/custom-icons/nomad.png'  },
-  minds:  { light: '/custom-icons/minds.png',  dark: '/custom-icons/minds.png'  },
-  games:  { light: '/custom-icons/games.png',  dark: '/custom-icons/games.png'  },
-  labs:   { light: '/custom-icons/blinga labs.png',   dark: '/custom-icons/blinga labs.png'   },
-  presentations: { light: '/custom-icons/presentation studio.png', dark: '/custom-icons/presentation studio.png' },
-  motion: { light: '/custom-icons/video studio.png', dark: '/custom-icons/video studio.png' },
+  ask:    { light: '/custom-icons/ask tab.svg',           dark: '/custom-icons/ask tab.svg'           },
+  nomad:  { light: '/custom-icons/nomad.svg',             dark: '/custom-icons/nomad.svg'             },
+  minds:  { light: '/custom-icons/blinga minds.svg',      dark: '/custom-icons/blinga minds.svg'      },
+  games:  { light: '/custom-icons/blinga games.svg',      dark: '/custom-icons/blinga games.svg'      },
+  labs:   { light: '/custom-icons/blinga labs.svg',       dark: '/custom-icons/blinga labs.svg'       },
+  presentations: { light: '/custom-icons/presentation studio.svg', dark: '/custom-icons/presentation studio.svg' },
+  motion: { light: '/custom-icons/motion studio.svg',     dark: '/custom-icons/motion studio.svg'     },
 } as const;

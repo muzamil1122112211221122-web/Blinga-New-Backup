@@ -325,7 +325,7 @@ interface SidebarProps {
   minimalAnimations?: boolean;
 }
 
-export function Sidebar({
+  export function Sidebar({
   isOpen,
   openMode = 'mini',
   forceFull = false,
@@ -389,13 +389,69 @@ export function Sidebar({
   const { usage: sidebarUsageData } = useUsage();
   const isUltimatePlan = sidebarUsageData?.plan === "ultimate";
 
-  const isDarkTheme = theme === "dark" || (
+    const isDarkTheme = theme === "dark" || (
     theme === "system" &&
     typeof window !== "undefined" &&
     window.matchMedia("(prefers-color-scheme: dark)").matches
   );
   const sidebarAsset = (key: keyof typeof SIDEBAR_ASSETS) =>
     SIDEBAR_ASSETS[key][isDarkTheme ? "dark" : "light"];
+
+  // Compute which row the active tab is in (for the sliding pill animation)
+  // Rows: 0=search(no active), 1=newchat, 2=imagine, 3=owlMode, 4=ask, 5=nomad, 6=minds, 7=games, 8=labs, 9=presentations, 10=motion
+  const miniActiveTabIndex = (() => {
+    if (!tabsInSidebar) {
+      if (tabsInSidebar && activeTab === 'ask' && !askHasMessages) return 1;
+      if (tabsInSidebar && activeTab === 'imagine') return 2;
+      return -1;
+    }
+    if (activeTab === 'ask' && !askHasMessages) return 1;
+    if (activeTab === 'imagine') return 2;
+    if (ownMode) return 3;
+    if (activeTab === 'ask' && askHasMessages) return 4;
+    if (activeTab === 'nomad') return 5;
+    if (activeTab === 'philosopher') return 6;
+    if (activeTab === 'blinga-games') return 7;
+    if (activeTab === 'blinga-labs') return 8;
+    if (activeTab === 'presentations') return 9;
+    if (activeTab === 'motion-studio') return 10;
+    return -1;
+  })();
+
+
+const MiniNavButton = ({
+    asset,
+    label,
+    onClick,
+    active,
+    iconSize,
+  }: {
+    asset: keyof typeof SIDEBAR_ASSETS;
+    label: string;
+    onClick: () => void;
+    active?: boolean;
+    iconSize?: string;
+  }) => (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          aria-label={label}
+          onClick={(event) => {
+            event.stopPropagation();
+            onClick();
+          }}
+          className="h-[36px] w-full mx-auto flex items-center justify-center group"
+        >
+          
+          <span className={`flex items-center justify-center w-[44px] h-[32px] rounded-full transition-colors duration-150 ${!active ? "group-hover:bg-zinc-100 dark:group-hover:bg-zinc-800/60" : ""}`}>
+            <img src={sidebarAsset(asset)} alt="" style={{ width: iconSize ?? '20px', height: iconSize ?? '20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display: 'block' }} />
+          </span>
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="right" avoidCollisions={false}>{label}</TooltipContent>
+    </Tooltip>
+  );
 
   useEffect(() => {
     if (!isOpen) {
@@ -596,37 +652,6 @@ export function Sidebar({
 
   // All date group keys (chats only)
   const allGroupKeys = Object.keys(chatGroups).filter(g => (chatGroups[g]?.length ?? 0) > 0);
-  const MiniNavButton = ({
-    asset,
-    label,
-    onClick,
-    active,
-    iconSize,
-  }: {
-    asset: keyof typeof SIDEBAR_ASSETS;
-    label: string;
-    onClick: () => void;
-    active?: boolean;
-    iconSize?: string;
-  }) => (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <button
-          type="button"
-          aria-label={label}
-          onClick={(event) => {
-            event.stopPropagation();
-            onClick();
-          }}
-          className={`h-[32px] w-[48px] mx-auto flex items-center justify-center rounded-full transition-all duration-150 hover:scale-110 active:scale-95 ${active ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-white' : 'text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 rounded-full'}`}
-        >
-          <img src={sidebarAsset(asset)} alt="" className="object-contain" style={{width: iconSize ?? '20px', height: iconSize ?? '20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} />
-        </button>
-      </TooltipTrigger>
-      <TooltipContent side="right" avoidCollisions={false}>{label}</TooltipContent>
-    </Tooltip>
-  );
-
   return (
     <TooltipProvider delayDuration={300}>
     <>
@@ -642,7 +667,7 @@ export function Sidebar({
         onMouseLeave={() => setIsLogoHovered(false)}
       >
           {/* Right edge fade for blending with background glow */}
-          <div className="absolute top-0 bottom-0 left-full w-12 pointer-events-none z-[200]" style={{ background: 'linear-gradient(to right, var(--background), transparent)' }} />
+          
           <div className={`p-3 flex items-center ${isMini ? 'justify-center' : 'justify-between'}`}>
 
           {isMini ? (
@@ -704,7 +729,17 @@ export function Sidebar({
         </div>
 
         {isMini ? (
-          <div className="flex-1 flex flex-col items-center pt-1">
+          <div className="flex-1 flex flex-col items-center pt-1 relative">
+            {/* Sliding active tab pill */}
+            {miniActiveTabIndex >= 0 && (
+              <div
+                className="absolute left-1/2 -translate-x-1/2 w-[44px] h-[32px] rounded-full bg-zinc-200 dark:bg-zinc-700 pointer-events-none"
+                style={{
+                  top: `calc(${miniActiveTabIndex * 36}px + 6px)`,
+                  transition: 'top 0.28s cubic-bezier(0.4, 0, 0.2, 1)',
+                }}
+              />
+            )}
             <MiniNavButton asset="search" label="Search Chats" onClick={openSpotlight} />
             <MiniNavButton asset="chat" label="New Chat" onClick={() => onNewProject?.(false)} active={tabsInSidebar && activeTab === 'ask' && !askHasMessages} />
             <MiniNavButton asset="imagine" label="Imagine Studio" onClick={() => onImagineClick?.()} active={tabsInSidebar && activeTab === 'imagine'} />
@@ -715,9 +750,12 @@ export function Sidebar({
                     type="button"
                     aria-label="Owl Mode"
                     onClick={(e) => { e.stopPropagation(); onToggleOwnMode?.(); }}
-                    className={`h-[32px] w-[48px] mx-auto flex items-center justify-center rounded-full transition-all duration-150 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 active:scale-90 ${ownMode ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-white' : ''}`}
+                    className={`h-[36px] w-full mx-auto flex items-center justify-center transition-all duration-150 group`}
                   >
-                    <img src={sidebarAsset("ownMode")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} />
+                    
+                    <span className={`flex items-center justify-center w-[44px] h-[32px] rounded-full transition-colors duration-150 ${!ownMode ? "group-hover:bg-zinc-100 dark:group-hover:bg-zinc-800/60" : ""}`}>
+                      <img src={sidebarAsset("ownMode")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} />
+                    </span>
                   </button>
                 </TooltipTrigger>
                 <TooltipContent side="right">{ownMode ? 'Exit Owl Mode' : 'Owl Mode'}</TooltipContent>
@@ -752,7 +790,7 @@ export function Sidebar({
                 onClick={openSpotlight}
                 className="w-full flex items-center gap-3 px-3 py-0.5 rounded-full text-zinc-700 dark:text-zinc-300 transition-colors duration-150 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 text-left"
               >
-                <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("search")} alt="" className="object-contain" style={{width:'20px',height:'20px', }} /></span>
+                <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("search")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
                 <span className="text-[14px] font-medium">Search Chats</span>
               </button>
 
@@ -761,7 +799,7 @@ export function Sidebar({
                 onClick={() => onNewProject?.(false)}
                 className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${tabsInSidebar && activeTab === 'ask' && !askHasMessages ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
               >
-                <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("chat")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} /></span>
+                <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("chat")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
                 <span className="text-[14px] font-medium">New Chat</span>
               </button>
 
@@ -770,7 +808,7 @@ export function Sidebar({
                 onClick={() => onImagineClick?.()}
                 className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'imagine' && tabsInSidebar ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
               >
-                <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("imagine")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} /></span>
+                <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("imagine")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
                 <span className="text-[14px] font-medium">Imagine Studio</span>
                 <span className="ml-auto h-1.5 w-1.5 rounded-full bg-pink-500/80" />
               </button>
@@ -783,7 +821,10 @@ export function Sidebar({
                   onClick={() => onToggleOwnMode?.()}
                   className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${ownMode ? 'bg-zinc-900 dark:bg-zinc-700 text-white' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
                 >
-                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("ownMode")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} /></span>
+                  <span className="w-8 flex items-center justify-center flex-shrink-0">
+                    <span className={`flex items-center justify-center w-[44px] h-[32px] rounded-full transition-colors duration-150 ${!ownMode ? "group-hover:bg-zinc-100 dark:group-hover:bg-zinc-800/60" : ""}`}>
+                      <img src={sidebarAsset("ownMode")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} />
+                    </span></span>
                   <span className="text-[14px] font-medium">Owl Mode</span>
                   {ownMode && <span className="ml-auto text-[11px] font-medium opacity-70">ON</span>}
                 </button>
@@ -793,7 +834,7 @@ export function Sidebar({
                   onClick={() => { onTabChange?.('ask'); }}
                   className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'ask' && askHasMessages ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
                 >
-                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("ask")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} /></span>
+                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("ask")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
                   <span className="text-[14px] font-medium">Ask</span>
                 </button>
                 <button
@@ -801,7 +842,7 @@ export function Sidebar({
                   onClick={() => { onTabChange?.('nomad'); }}
                   className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'nomad' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
                 >
-                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("nomad")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} /></span>
+                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("nomad")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
                   <span className="text-[14px] font-medium">Nomad</span>
                 </button>
                 <button
@@ -809,7 +850,7 @@ export function Sidebar({
                   onClick={() => { onTabChange?.('philosopher'); }}
                   className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'philosopher' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
                 >
-                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("minds")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} /></span>
+                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("minds")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
                   <span className="text-[14px] font-medium">Blinga Minds</span>
                 </button>
                 <button
@@ -817,7 +858,7 @@ export function Sidebar({
                   onClick={() => { onTabChange?.('blinga-games'); }}
                   className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'blinga-games' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
                 >
-                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("games")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} /></span>
+                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("games")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
                   <span className="text-[14px] font-medium">Blinga Games</span>
                 </button>
                 <button
@@ -825,7 +866,7 @@ export function Sidebar({
                   onClick={() => { onTabChange?.('blinga-labs'); }}
                   className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'blinga-labs' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
                 >
-                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("labs")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} /></span>
+                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("labs")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
                   <span className="text-[14px] font-medium">Blinga Labs</span>
                 </button>
                   <button
@@ -833,7 +874,7 @@ export function Sidebar({
                     onClick={() => { onTabChange?.('presentations'); }}
                     className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'presentations' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
                   >
-                    <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("presentations")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} /></span>
+                    <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("presentations")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
                     <span className="text-[14px] font-medium">Presentations</span>
                   </button>
                   <button
@@ -841,7 +882,7 @@ export function Sidebar({
                     onClick={() => { onTabChange?.('motion-studio'); }}
                     className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'motion-studio' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
                   >
-                    <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("motion")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(1)' : 'brightness(0)'}} /></span>
+                    <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("motion")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
                     <span className="text-[14px] font-medium">Motion Studio</span>
                   </button>
               </>)}

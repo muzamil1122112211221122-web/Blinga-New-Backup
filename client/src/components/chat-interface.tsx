@@ -1,4 +1,4 @@
-import { NanoAgentsOverlay } from './NanoAgentsOverlay';
+﻿import { NanoAgentsOverlay } from './NanoAgentsOverlay';
 import React, { useState, useRef, useEffect, useLayoutEffect, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -7429,6 +7429,8 @@ Let's start the self-listen session!`;
                   </Tooltip>
                 </div>
               )}
+              {activeTab === 'nomad' && (
+              <>
               {/* Model Selector Pill */}
               <button
                 onClick={() => setModelSelectorOpen(true)}
@@ -7437,6 +7439,8 @@ Let's start the self-listen session!`;
                 <span>Blinga Lite</span>
                 <ChevronDown className="w-3 h-3" />
               </button>
+              </>
+            )}
               {/* Mic */}
               <Tooltip>
                 <TooltipTrigger asChild>
