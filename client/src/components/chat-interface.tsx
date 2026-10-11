@@ -138,7 +138,6 @@ function StableTypingResponse({
     : <div className="text-foreground prose prose-sm max-w-none dark:prose-invert relative">{renderTyping(displayed)}</div>;
 }
 
-// ── Rotating Ask-tab placeholders ────────────────────────────────────────────
 const ROTATING_PLACEHOLDERS = [
   "What do you want to know?",
   "Prepare me a documentary on...",
@@ -160,7 +159,6 @@ const ROTATING_PLACEHOLDERS = [
   "Give me a recipe for chocolate cake",
 ];
 
-// ── Blinga Ultimatum suggestion card pool ──────────────────────────────────────
 type UltimatumCard = { Icon: React.ElementType; label: string; prompt: string; modelName: string; modelLogo: string; color: string };
 const ULTIMATUM_CARD_POOL: UltimatumCard[] = [
   { Icon: Brain,          label: 'Deep Reasoning',  prompt: 'Break down a complex problem step by step',    modelName: 'DeepSeek R1',     modelLogo: '/deepseek-logo.svg',    color: '#6366f1' },
@@ -462,6 +460,7 @@ interface ChatInterfaceProps {
 import microphoneIcon from "@assets/microphone_1784996715112.svg";
 import improvePromptIcon from "@assets/improve_promt__1784996516976.svg";
 import plusButtonIcon from "@assets/add_1784996715112.svg";
+import ringLogoLight from '@assets/blinga_rings_light.svg';
 
 function WikiFace({ name, wikiTitle, className = '' }: { name: string; wikiTitle?: string; className?: string }) {
   const articleTitle = wikiTitle || name;
@@ -785,7 +784,6 @@ const IMAGINE_PROMPTS_BY_STYLE: Record<string, {label: string; prompt: string; i
   ],
 };
 
-// ─── Language auto-detection for TTS voices ──────────────────────────────────
 function detectVoiceForText(text: string): string {
   if (/[\u0600-\u06FF]/.test(text)) return 'ur-PK-AsadNeural';
   if (/[\u0900-\u097F]/.test(text)) return 'hi-IN-MadhurNeural';
@@ -793,7 +791,6 @@ function detectVoiceForText(text: string): string {
   return 'en-US-GuyNeural';
 }
 
-// ─── PC Follow-up Suggestions ────────────────────────────────────────────────
 function PCFollowUpSuggestions({ msgContent, onSelect }: { msgContent: string; onSelect: (q: string) => void }) {
   const [suggestions, setSuggestions] = React.useState<string[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -1468,6 +1465,8 @@ export function ChatInterface({ onShowAuth }: ChatInterfaceProps) {
   const [nomadIsTyping, setNomadIsTyping] = useState<{[model: string]: boolean}>({});
   const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
   const [nomadMode, setNomadMode] = useState<'multi' | 'auto'>('multi');
+  const [draftNomadMode, setDraftNomadMode] = useState<'multi' | 'auto'>('multi');
+  const [openSubModelDropdowns, setOpenSubModelDropdowns] = useState<Set<string>>(new Set());
   // Auto Mode state — full chat conversation tab
   const [nomadAutoMessages, setNomadAutoMessages] = useState<{id: string, role: 'user' | 'assistant', content: string, pickedModel?: {model: string, modelName: string, logo: string, color: string}}[]>([]);
   const [nomadAutoLoading, setNomadAutoLoading] = useState(false);
@@ -2105,7 +2104,6 @@ export function ChatInterface({ onShowAuth }: ChatInterfaceProps) {
     return { displayedText, isTypingComplete };
   };
 
-  // ── Chart block renderer ─────────────────────────────────────────────────
   // Parses [CHART:type]\nLabel: value\n[/CHART] blocks from AI text
   const CHART_COLORS = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6'];
   function parseChartBlocks(text: string): Array<{type: 'text', content: string} | {type: 'chart', chartType: string, data: {name: string, value: number}[]}> {
@@ -2178,20 +2176,42 @@ export function ChatInterface({ onShowAuth }: ChatInterfaceProps) {
     );
   }
 
-  // ── Auto Mode AI Picker ───────────────────────────────────────────────────
   function pickBestAIForPrompt(prompt: string): {model: string, modelName: string, logo: string, color: string} {
     const p = prompt.toLowerCase();
-    if (/code|program|function|debug|bug|script|python|javascript|typescript|react|css|html|algorithm|compile|error|fix.*code|write.*code|class|loop|array|sort|api/.test(p))
-      return { model: 'deepseek-r1', modelName: 'DeepSeek-V4-Pro', logo: '/deepseek-logo.svg', color: '#3b82f6' };
-    if (/search|news|today|latest|current|what.*happening|recent|2024|2025|2026|fact|who.*is|where.*is|when.*was|stock|price|weather/.test(p))
-      return { model: 'perplexity', modelName: 'Perplexity Sonar Pro', logo: '/kimi-logo.svg', color: '#38bdf8' };
-    if (/write|story|essay|poem|creative|novel|blog|article|letter|email|caption|describe|explain.*deeply|paragraph|narrative/.test(p))
-      return { model: 'claude-3.5-sonnet', modelName: 'Claude Fable 5', logo: '/claude-logo.svg', color: '#f97316' };
-    if (/math|calcul|equation|graph|chart|data|statistic|analyz|percent|probability|formula|number|solve|integral|derivative/.test(p))
-      return { model: 'gemini-pro', modelName: 'Gemini 3.1 Pro', logo: '/gemini-logo.svg', color: '#14b8a6' };
-    if (/urdu|hindi|arabic|chinese|translate|pakistan|india|desi|aap|kya|hai|karo|bato/.test(p))
-      return { model: 'qwen', modelName: 'Qwen 3.7 Max', logo: '/mistral-logo.png', color: '#6366f1' };
-    return { model: 'gpt-4o', modelName: 'GPT-5.5 Pro', logo: '/chatgpt-logo.svg', color: '#10a37f' };
+    const mappings = [
+      { regex: /code|program|function|debug|bug|script|python|javascript|typescript|react|css|html|algorithm|compile|error|fix.*code|write.*code|class|loop|array|sort|api/, model: 'deepseek-r1' },
+      { regex: /search|news|today|latest|current|what.*happening|recent|2024|2025|2026|fact|who.*is|where.*is|when.*was|stock|price|weather/, model: 'perplexity' },
+      { regex: /write|story|essay|poem|creative|novel|blog|article|letter|email|caption|describe|explain.*deeply|paragraph|narrative/, model: 'claude-3.5-sonnet' },
+      { regex: /math|calcul|equation|graph|chart|data|statistic|analyz|percent|probability|formula|number|solve|integral|derivative/, model: 'gemini-pro' },
+      { regex: /urdu|hindi|arabic|chinese|translate|pakistan|india|desi|aap|kya|hai|karo|bato/, model: 'qwen' }
+    ];
+
+    let chosenId = 'gpt-4o';
+    let matched = false;
+
+    for (const mapping of mappings) {
+      if (mapping.regex.test(p)) {
+        if (activeAIModels.has(mapping.model)) {
+           chosenId = mapping.model;
+           matched = true;
+           break;
+        }
+      }
+    }
+
+    if (!matched && !activeAIModels.has(chosenId)) {
+        if (activeAIModels.size > 0) {
+            chosenId = Array.from(activeAIModels)[0];
+        } else {
+            chosenId = 'blinga-ai';
+        }
+    }
+
+    const config = nomadConfigMap[chosenId] || { name: chosenId, logo: `/${chosenId}-logo.svg`, color: '#6b7280' };
+    let finalLogo = config.logo;
+    // ensure Blinga logo uses the rings instead of cropped square if we ever need it, but we can just use the config logo.
+    
+    return { model: chosenId, modelName: config.name, logo: finalLogo, color: config.color };
   }
 
   const handleNomadAutoSend = async (content: string) => {
@@ -4174,121 +4194,141 @@ Let's start the self-listen session!`;
   // Check if any Nomad model is typing for thinking animation
   const isAnyNomadModelTyping = Object.values(nomadIsTyping).some(typing => typing);
 
-  // ── Model Selector Modal ──────────────────────────────────────────────────
   const renderNomadModelSelector = () => {
     if (!modelSelectorOpen) return null;
     return (
       <div
         className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/50 backdrop-blur-sm"
-        onClick={(e) => { if (e.target === e.currentTarget) setModelSelectorOpen(false); }}
+        onClick={(e) => { if (e.target === e.currentTarget) { setDraftNomadMode(nomadMode); setModelSelectorOpen(false); } }}
       >
         <div className="bg-white dark:bg-[#1C1C1C] rounded-3xl w-full max-w-[680px] mx-4 shadow-2xl border border-border/50 overflow-hidden flex flex-col" style={{ maxHeight: '85vh' }}>
-          {/* Header */}
-          <div className="p-6 pb-4 flex justify-between items-start border-b border-border/30 flex-shrink-0">
-            <div>
-              <h2 className="text-xl font-bold text-foreground">Choose a model</h2>
-              <p className="text-sm text-muted-foreground mt-0.5">picks the best model for your task</p>
+          {/* Header & Restructured Toolbar */}
+          <div className="p-4 flex flex-col gap-4 border-b border-border/30 flex-shrink-0">
+            {/* Top Row: Title & Close */}
+            <div className="flex justify-between items-center relative">
+              <div className="w-8" />
+              <h2 className="text-lg font-bold text-foreground text-center absolute left-1/2 -translate-x-1/2">Choose a model</h2>
+              <button onClick={() => { setDraftNomadMode(nomadMode); setModelSelectorOpen(false); }} className="text-muted-foreground hover:text-foreground p-1.5 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex-shrink-0 z-10">
+                <X className="w-5 h-5" />
+              </button>
             </div>
-            <button onClick={() => setModelSelectorOpen(false)} className="text-muted-foreground hover:text-foreground p-1.5 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex-shrink-0">
-              <X className="w-5 h-5" />
-            </button>
-          </div>
 
-          {/* Toolbar: Mode + Search + Filter */}
-          <div className="px-5 py-3 flex items-center gap-3 border-b border-border/20 flex-shrink-0">
-            <div className="flex bg-zinc-100 dark:bg-zinc-800 rounded-full p-1">
-              <button
-                onClick={() => setNomadMode('auto')}
-                className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${nomadMode === 'auto' ? 'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 shadow-sm' : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200'}`}
-              >Ultimatum</button>
-              <button
-                onClick={() => setNomadMode('multi')}
-                className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${nomadMode === 'multi' ? 'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 shadow-sm' : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200'}`}
-              >MultiChat</button>
+            {/* Middle Row: Search Bar (centered with integrated Filter) */}
+            <div className="flex justify-center">
+              <div className="relative w-full max-w-md">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none" />
+                <input type="text" placeholder="Search models..." className="w-full bg-zinc-50 dark:bg-zinc-900 border border-border/60 rounded-full py-2 pl-9 pr-12 text-sm focus:outline-none focus:ring-1 focus:ring-primary" />
+                <button className="absolute right-1 top-1/2 -translate-y-1/2 p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors bg-white dark:bg-zinc-800 rounded-full shadow-sm border border-border/40">
+                  <Filter className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none" />
-              <input type="text" placeholder="Search models…" className="w-full bg-zinc-50 dark:bg-zinc-900 border border-border/60 rounded-full py-2 pl-9 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-primary" />
-            </div>
-            <button className="flex items-center gap-1.5 px-3 py-2 border border-border/60 rounded-full text-sm font-medium text-muted-foreground hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors flex-shrink-0">
-              <Filter className="w-4 h-4" /> Filter
-            </button>
-          </div>
 
-          {nomadMode === 'multi' && (
-            <div className="px-5 py-2 flex-shrink-0">
-              <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">{activeAIModels.size} / {ALL_MODEL_IDS.length} providers selected</span>
+            {/* Bottom Row: Mode Toggles (underneath search bar) */}
+            <div className="flex justify-center">
+              <div className="flex bg-zinc-100 dark:bg-zinc-800 rounded-full p-1">
+                <button
+                  onClick={() => setDraftNomadMode('auto')}
+                  className={`px-6 py-1.5 rounded-full text-sm font-semibold transition-all ${draftNomadMode === 'auto' ? 'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 shadow-sm' : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200'}`}
+                >Ultimatum</button>
+                <button
+                  onClick={() => setDraftNomadMode('multi')}
+                  className={`px-6 py-1.5 rounded-full text-sm font-semibold transition-all ${draftNomadMode === 'multi' ? 'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 shadow-sm' : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200'}`}
+                >MultiChat</button>
+              </div>
             </div>
-          )}
+          </div>
 
           {/* Grid */}
           <div className="flex-1 overflow-y-auto px-5 pb-5 pt-2">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {nomadMode === 'multi'
-                ? ALL_MODEL_IDS.map(modelId => {
+              {ALL_MODEL_IDS.map(modelId => {
                     const cfg = nomadConfigMap[modelId] || { name: modelId, providerName: modelId, logo: `/${modelId}-logo.svg`, color: '#6b7280', description: '' };
+                    const subData = NOMAD_SUB_MODELS[modelId];
                     const isSelected = activeAIModels.has(modelId);
+                    const selectedSubModel = nomadSelectedSubModels[modelId] || subData?.default || '';
+                    const isDropdownOpen = openSubModelDropdowns.has(modelId);
+                    const allSubModels = subData ? [...subData.normal, ...subData.flagship] : [];
                     return (
-                      <div key={modelId} onClick={() => { const s = new Set(activeAIModels); isSelected ? s.delete(modelId) : s.add(modelId); setActiveAIModels(s); }}
-                        className={`flex items-center justify-between p-3 rounded-2xl border-2 cursor-pointer transition-all ${isSelected ? 'border-orange-500 bg-orange-50/40 dark:bg-orange-500/10' : 'border-border/50 hover:border-border bg-white dark:bg-zinc-800/50'}`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full flex items-center justify-center bg-white dark:bg-zinc-800 border border-border/40 flex-shrink-0 overflow-hidden">
-                            {modelId === 'blinga-ai' ? <BlingaLogo size="sm" scaleWhenCurrent="scale(1.1)" /> : <img src={cfg.logo} alt="" className="w-5 h-5 object-contain" />}
-                          </div>
-                          <span className="text-sm font-medium text-foreground">{cfg.name}</span>
-                        </div>
-                        {isSelected
-                          ? <div className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center flex-shrink-0"><Check className="w-3 h-3 text-white" strokeWidth={3} /></div>
-                          : <div className="w-5 h-5 rounded-full border-2 border-zinc-300 dark:border-zinc-600 flex-shrink-0" />
-                        }
-                      </div>
-                    );
-                  })
-                : ALL_MODEL_IDS.flatMap(providerId => {
-                    const subData = NOMAD_SUB_MODELS[providerId];
-                    const cfg = nomadConfigMap[providerId] || { name: providerId, logo: `/${providerId}-logo.svg`, color: '#6b7280', description: '' };
-                    if (!subData) return [];
-                    return [...subData.normal, ...subData.flagship].map(subModelName => {
-                      const isFlagship = subData.flagship.includes(subModelName);
-                      const isSelected = nomadSoloModel === providerId && (nomadSelectedSubModels[providerId] || subData.default) === subModelName;
-                      return (
-                        <div key={`${providerId}-${subModelName}`}
-                          onClick={() => { setNomadSoloModel(providerId); setNomadSelectedSubModels(prev => ({ ...prev, [providerId]: subModelName })); }}
-                          className={`flex items-center justify-between p-3 rounded-2xl border-2 cursor-pointer transition-all ${isSelected ? 'border-orange-500 bg-orange-50/40 dark:bg-orange-500/10' : 'border-border/50 hover:border-border bg-white dark:bg-zinc-800/50'}`}
+                      <div key={modelId} className={`rounded-2xl border cursor-pointer transition-all ${isSelected ? 'border-transparent bg-zinc-100 dark:bg-zinc-700/60' : 'border-border/20 hover:border-border/40 bg-white dark:bg-zinc-800/50'}`}>
+                        {/* Main row */}
+                        <div
+                          className="flex items-center justify-between p-3"
+                          onClick={() => { const s = new Set(activeAIModels); isSelected ? s.delete(modelId) : s.add(modelId); setActiveAIModels(s); }}
                         >
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full flex items-center justify-center bg-white dark:bg-zinc-800 border border-border/40 flex-shrink-0 overflow-hidden">
-                              {providerId === 'blinga-ai' ? <BlingaLogo size="sm" scaleWhenCurrent="scale(1.1)" /> : <img src={cfg.logo} alt="" className="w-5 h-5 object-contain" />}
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white dark:bg-zinc-800 border border-border/40 flex-shrink-0 overflow-hidden">
+                              {modelId === 'blinga-ai' ? <img src={ringLogoLight} alt="Blinga" className="w-[30px] h-[30px] object-contain drop-shadow-sm" /> : <img src={cfg.logo} alt="" className="w-6 h-6 object-contain" />}
                             </div>
-                            <span className="text-sm font-medium text-foreground">{subModelName}</span>
+                            <div className="flex flex-col min-w-0">
+                              <span className="text-sm font-semibold text-foreground leading-tight">{cfg.providerName || cfg.name}</span>
+                              {isSelected && selectedSubModel && (
+                                <span className="text-xs text-muted-foreground truncate">{selectedSubModel}</span>
+                              )}
+                            </div>
                           </div>
-                          <div className="flex items-center gap-2">
-                            {isFlagship && <span className="text-[10px] font-bold text-amber-500 bg-amber-50 dark:bg-amber-500/10 px-2 py-0.5 rounded-full flex items-center gap-1"><Sparkles className="w-2.5 h-2.5" />Flagship</span>}
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            {/* Sub-model picker button */}
+                            {allSubModels.length > 1 && (
+                              <button
+                                onClick={(e) => { e.stopPropagation(); const s = new Set(openSubModelDropdowns); isDropdownOpen ? s.delete(modelId) : s.add(modelId); setOpenSubModelDropdowns(s); }}
+                                className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs text-muted-foreground hover:text-foreground hover:bg-zinc-200 dark:hover:bg-zinc-600 transition-colors"
+                              >
+                                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                              </button>
+                            )}
                             {isSelected
-                              ? <div className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center flex-shrink-0"><Check className="w-3 h-3 text-white" strokeWidth={3} /></div>
-                              : <div className="w-5 h-5 rounded-full border-2 border-zinc-300 dark:border-zinc-600 flex-shrink-0" />
+                              ? <div className="w-5 h-5 rounded-full bg-yellow-400 flex items-center justify-center flex-shrink-0"><Check className="w-3 h-3 text-black" strokeWidth={3} /></div>
+                              : <div className="w-5 h-5 rounded-full border border-zinc-300/60 dark:border-zinc-600/60 flex-shrink-0" />
                             }
                           </div>
                         </div>
-                      );
-                    });
-                  })
-              }
+                        {/* Sub-model dropdown */}
+                        <AnimatePresence initial={false}>
+                          {isDropdownOpen && allSubModels.length > 0 && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.25, ease: "easeInOut" }}
+                              className="overflow-hidden"
+                            >
+                              <div className="px-3 pb-3 pt-0 flex flex-wrap gap-1.5">
+                                {allSubModels.map(subModel => {
+                                  const isFlagship = subData?.flagship.includes(subModel);
+                                  const isSubSelected = selectedSubModel === subModel;
+                                  return (
+                                    <button
+                                      key={subModel}
+                                      onClick={(e) => { e.stopPropagation(); setNomadSelectedSubModels(prev => ({ ...prev, [modelId]: subModel })); const s = new Set(activeAIModels); s.add(modelId); setActiveAIModels(s); }}
+                                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] font-medium transition-all border ${isSubSelected ? 'bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 border-transparent' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 border-border/30 hover:border-border/60'}`}
+                                    >
+                                      {subModel}
+                                      {isFlagship && <img src="/custom-icons/vip-icon.svg" className="w-[18px] h-[18px] flex-shrink-0 drop-shadow-sm" alt="VIP" />}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
+                  })}
             </div>
           </div>
 
           {/* Footer */}
           <div className="px-5 py-4 border-t border-border/30 flex justify-between items-center flex-shrink-0 bg-zinc-50/50 dark:bg-zinc-900/30">
             <button
-              onClick={() => { nomadMode === 'auto' ? setNomadSoloModel('blinga-ai') : setActiveAIModels(new Set(['gpt-4o', 'claude-3.5-sonnet', 'gemini-pro', 'deepseek-r1', 'grok-4', 'blinga-ai'])); }}
+              onClick={() => { draftNomadMode === 'auto' ? setNomadSoloModel('blinga-ai') : setActiveAIModels(new Set(['gpt-4o', 'claude-3.5-sonnet', 'gemini-pro', 'deepseek-r1', 'grok-4', 'blinga-ai'])); }}
               className="w-9 h-9 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
               title="Reset to defaults"
             >
               <RefreshCcw className="w-4 h-4" />
             </button>
             <button
-              onClick={() => setModelSelectorOpen(false)}
+              onClick={() => { setNomadMode(draftNomadMode); setModelSelectorOpen(false); }}
               className="bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 dark:text-zinc-900 text-white px-6 py-2.5 rounded-full font-semibold text-sm transition-colors"
             >
               Apply for this chat
@@ -4298,7 +4338,6 @@ Let's start the self-listen session!`;
       </div>
     );
   };
-  // ─────────────────────────────────────────────────────────────────────────
 
   return (
     <TooltipProvider delayDuration={400}>
@@ -4353,7 +4392,7 @@ Let's start the self-listen session!`;
         >
           <div className="absolute top-0 inset-x-0 flex justify-center pt-2 px-3">
             <div className=" text-[11px] sm:text-xs font-semibold text-white bg-destructive/90 backdrop-blur px-4 py-2 rounded-full shadow-lg text-center">
-              Free plan limit reached — tap to upgrade to Blinga Ultimate and continue
+              Free plan limit reached - tap to upgrade to Blinga Ultimate and continue
             </div>
           </div>
         </div>
@@ -4376,7 +4415,7 @@ Let's start the self-listen session!`;
         onOpenSettings={() => setIsCustomizeModalOpen(true)}
          onVoiceClick={() => { setSidebarOpenMode('mini'); openVoiceMode(); }}
          onImagineClick={() => { if (!(settingsToggles.tabsInSidebar ?? false)) { setSidebarOpenMode('mini'); } changeTab('imagine'); }}
-         onTabChange={(tab) => { if (!(settingsToggles.tabsInSidebar ?? false)) { setSidebarOpenMode('mini'); } changeTab(tab as any); }}
+         onTabChange={(tab) => { if (!(settingsToggles.tabsInSidebar ?? false)) { setSidebarOpenMode('mini'); } changeTab(tab); }}
          activeTab={activeTab}
          tabsInSidebar={settingsToggles.tabsInSidebar ?? false}
           minimalAnimations={settingsToggles.minimalAnimations ?? false}
@@ -5844,7 +5883,6 @@ Let's start the self-listen session!`;
           )
 
 ) : ['imagine', 'presentations', 'motion-studio'].includes(activeTab) ? (
-          // ── Imagine Studio home ───────────────────────────────────────────────
           (() => {
             if (imagineMessages.length === 0) {
               const studioGallery = imagineMyPhotos;
@@ -7433,7 +7471,7 @@ Let's start the self-listen session!`;
               <>
               {/* Model Selector Pill */}
               <button
-                onClick={() => setModelSelectorOpen(true)}
+                onClick={() => { setDraftNomadMode(nomadMode); setModelSelectorOpen(true); }}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all flex-shrink-0 border border-border"
               >
                 <span>Blinga Lite</span>
@@ -7843,7 +7881,6 @@ Let's start the self-listen session!`;
         />
 
 
-        {/* ── Browse All Templates — FULLSCREEN ───────────────────────────── */}
         {showAllTemplates && (() => {
           const activeCat = imagineTemplateCategory;
           const filteredTpls = activeCat === 'All' ? STUDIO_VISUAL_TEMPLATES : STUDIO_VISUAL_TEMPLATES.filter(t => t.category === activeCat);
@@ -7983,7 +8020,6 @@ Let's start the self-listen session!`;
           );
         })()}
 
-        {/* ── Imagine Gallery Modal ───────────────────────────────────────── */}
         {imagineGalleryOpen && (
           <div
             className="fixed inset-0 z-[999] flex items-end justify-center sm:items-center p-0 sm:p-4"
@@ -8030,7 +8066,6 @@ Let's start the self-listen session!`;
           </div>
         )}
 
-        {/* ── Template Upload Modal ───────────────────────────────────────── */}
         {imagineTemplateModal && (
           <div
             className="fixed inset-0 z-[999] flex items-center justify-center p-4"
