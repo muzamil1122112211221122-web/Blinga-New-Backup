@@ -445,7 +445,7 @@ const MiniNavButton = ({
         >
           
           <span className={`flex items-center justify-center w-[44px] h-[32px] rounded-full transition-colors duration-150 ${!active ? "group-hover:bg-zinc-100 dark:group-hover:bg-zinc-800/60" : ""}`}>
-            <img src={sidebarAsset(asset)} alt="" style={{ width: iconSize ?? '20px', height: iconSize ?? '20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display: 'block' }} />
+            <img src={sidebarAsset(asset)} alt="" style={{ width: iconSize ?? '18px', height: iconSize ?? '18px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display: 'block' }} />
           </span>
         </button>
       </TooltipTrigger>
@@ -661,12 +661,24 @@ const MiniNavButton = ({
       />
 
       <div
-        className={`fixed top-0 left-0 h-full ${isMini ? 'w-[76px]' : 'w-72'} ${forceFull ? (isOpen ? 'mobile-sidebar-open' : 'mobile-sidebar-closed') : ''} bg-background text-zinc-900 dark:text-zinc-100 z-[100] flex flex-col transition-[width,transform] duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed top-0 left-0 h-full ${isMini ? 'w-[76px]' : 'w-72'} ${forceFull ? (isOpen ? 'mobile-sidebar-open' : 'mobile-sidebar-closed') : ''} bg-background text-zinc-900 dark:text-zinc-100 z-[30] flex flex-col transition-[width,transform] duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
         style={{ pointerEvents: 'auto' }}
         onMouseEnter={() => isMini && setIsLogoHovered(true)}
         onMouseLeave={() => setIsLogoHovered(false)}
       >
-          {/* Right edge fade for blending with background glow */}
+          {/* Right edge fade - fixed outside the sidebar so it's not clipped */}
+          {isOpen && activeTab !== 'nomad' && (
+            <div
+              className="pointer-events-none fixed top-0 z-[29]"
+              style={{
+                left: isMini ? 76 : 288,
+                width: 48,
+                height: '100%',
+                background: 'linear-gradient(to right, var(--background), transparent)',
+                transition: 'left 0.3s cubic-bezier(0.4,0,0.2,1)',
+              }}
+            />
+          )}
           
           <div className={`p-3 flex items-center ${isMini ? 'justify-center' : 'justify-between'}`}>
 
@@ -754,7 +766,7 @@ const MiniNavButton = ({
                   >
                     
                     <span className={`flex items-center justify-center w-[44px] h-[32px] rounded-full transition-colors duration-150 ${!ownMode ? "group-hover:bg-zinc-100 dark:group-hover:bg-zinc-800/60" : ""}`}>
-                      <img src={sidebarAsset("ownMode")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} />
+                      <img src={sidebarAsset("ownMode")} alt="" style={{width:'18px',height:'18px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} />
                     </span>
                   </button>
                 </TooltipTrigger>
@@ -790,7 +802,7 @@ const MiniNavButton = ({
                 onClick={openSpotlight}
                 className="w-full flex items-center gap-3 px-3 py-0.5 rounded-full text-zinc-700 dark:text-zinc-300 transition-colors duration-150 hover:bg-zinc-100 dark:hover:bg-zinc-800/70 text-left"
               >
-                <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("search")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
+                <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("search")} alt="" style={{width:'18px',height:'18px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
                 <span className="text-[14px] font-medium">Search Chats</span>
               </button>
 
@@ -799,7 +811,7 @@ const MiniNavButton = ({
                 onClick={() => onNewProject?.(false)}
                 className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${tabsInSidebar && activeTab === 'ask' && !askHasMessages ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
               >
-                <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("chat")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
+                <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("chat")} alt="" style={{width:'18px',height:'18px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
                 <span className="text-[14px] font-medium">New Chat</span>
               </button>
 
@@ -808,7 +820,7 @@ const MiniNavButton = ({
                 onClick={() => onImagineClick?.()}
                 className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'imagine' && tabsInSidebar ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
               >
-                <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("imagine")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
+                <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("imagine")} alt="" style={{width:'18px',height:'18px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
                 <span className="text-[14px] font-medium">Imagine Studio</span>
                 <span className="ml-auto h-1.5 w-1.5 rounded-full bg-pink-500/80" />
               </button>
@@ -823,7 +835,7 @@ const MiniNavButton = ({
                 >
                   <span className="w-8 flex items-center justify-center flex-shrink-0">
                     <span className={`flex items-center justify-center w-[44px] h-[32px] rounded-full transition-colors duration-150 ${!ownMode ? "group-hover:bg-zinc-100 dark:group-hover:bg-zinc-800/60" : ""}`}>
-                      <img src={sidebarAsset("ownMode")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} />
+                      <img src={sidebarAsset("ownMode")} alt="" style={{width:'18px',height:'18px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} />
                     </span></span>
                   <span className="text-[14px] font-medium">Owl Mode</span>
                   {ownMode && <span className="ml-auto text-[11px] font-medium opacity-70">ON</span>}
@@ -834,7 +846,7 @@ const MiniNavButton = ({
                   onClick={() => { onTabChange?.('ask'); }}
                   className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'ask' && askHasMessages ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
                 >
-                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("ask")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
+                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("ask")} alt="" style={{width:'18px',height:'18px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
                   <span className="text-[14px] font-medium">Ask</span>
                 </button>
                 <button
@@ -842,7 +854,7 @@ const MiniNavButton = ({
                   onClick={() => { onTabChange?.('nomad'); }}
                   className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'nomad' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
                 >
-                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("nomad")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
+                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("nomad")} alt="" style={{width:'18px',height:'18px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
                   <span className="text-[14px] font-medium">Nomad</span>
                 </button>
                 <button
@@ -850,7 +862,7 @@ const MiniNavButton = ({
                   onClick={() => { onTabChange?.('philosopher'); }}
                   className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'philosopher' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
                 >
-                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("minds")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
+                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("minds")} alt="" style={{width:'18px',height:'18px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
                   <span className="text-[14px] font-medium">Blinga Minds</span>
                 </button>
                 <button
@@ -858,7 +870,7 @@ const MiniNavButton = ({
                   onClick={() => { onTabChange?.('blinga-games'); }}
                   className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'blinga-games' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
                 >
-                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("games")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
+                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("games")} alt="" style={{width:'18px',height:'18px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
                   <span className="text-[14px] font-medium">Blinga Games</span>
                 </button>
                 <button
@@ -866,7 +878,7 @@ const MiniNavButton = ({
                   onClick={() => { onTabChange?.('blinga-labs'); }}
                   className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'blinga-labs' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
                 >
-                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("labs")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
+                  <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("labs")} alt="" style={{width:'18px',height:'18px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
                   <span className="text-[14px] font-medium">Blinga Labs</span>
                 </button>
                   <button
@@ -874,7 +886,7 @@ const MiniNavButton = ({
                     onClick={() => { onTabChange?.('presentations'); }}
                     className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'presentations' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
                   >
-                    <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("presentations")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
+                    <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("presentations")} alt="" style={{width:'18px',height:'18px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
                     <span className="text-[14px] font-medium">Presentations</span>
                   </button>
                   <button
@@ -882,7 +894,7 @@ const MiniNavButton = ({
                     onClick={() => { onTabChange?.('motion-studio'); }}
                     className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'motion-studio' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
                   >
-                    <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("motion")} alt="" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
+                    <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("motion")} alt="" style={{width:'18px',height:'18px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
                     <span className="text-[14px] font-medium">Motion Studio</span>
                   </button>
               </>)}

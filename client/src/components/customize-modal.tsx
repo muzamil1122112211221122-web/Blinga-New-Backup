@@ -823,7 +823,13 @@ export function CustomizeModal({
                   <img
                     src={item.icon}
                     alt=""
-                    className={`flex-shrink-0 w-[22px] h-[22px] object-contain ${theme === 'dark' ? 'invert' : 'brightness-0'} ${isActive ? 'opacity-100' : 'opacity-65'}`}
+                    style={{
+                      width: 22, height: 22, flexShrink: 0, objectFit: 'contain',
+                      filter: theme === 'dark' ? 'invert(1)' : 'brightness(0)',
+                      opacity: isActive ? 1 : 0.65,
+                      display: 'block',
+                    }}
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                   />
                   <span>{item.label}</span>
                 </button>

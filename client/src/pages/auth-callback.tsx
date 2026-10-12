@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { BlingaLogo } from "@/components/logo";
 import { useLocation } from "wouter";
 import { supabase } from "@/lib/supabaseClient";
 import { queryClient } from "@/lib/queryClient";
@@ -68,7 +69,7 @@ export default function AuthCallback() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center px-6">
       <div className="flex flex-col items-center space-y-4 text-center">
-        <img src="/blinga-logo.png" alt="Blinga" className="w-16 h-16 object-contain animate-pulse" />
+        <div className="animate-pulse"><BlingaLogo size="2xl" /></div>
         {error ? (
           <>
             <p className="text-red-400 max-w-sm">{error}</p>

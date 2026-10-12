@@ -404,6 +404,7 @@ import {
   Filter,
   Globe,
   GraduationCap,
+  LayoutGrid,
   Heart,
   History,
   Image,
@@ -1461,7 +1462,7 @@ export function ChatInterface({ onShowAuth }: ChatInterfaceProps) {
   const attachTrayRef = React.useRef<HTMLDivElement>(null);
   // Multi-AI states for Nomad tab
   const [nomadMessages, setNomadMessages] = useState<{[model: string]: ChatMessage[]}>({});
-  const [activeAIModels, setActiveAIModels] = useState<Set<string>>(new Set(['gpt-4o', 'claude-3.5-sonnet', 'gemini-pro', 'perplexity', 'grok-4', 'deepseek-r1', 'doubao', 'kimi', 'qwen', 'llama-4', 'mistral', 'copilot', 'blinga-ai']));
+  const [activeAIModels, setActiveAIModels] = useState<Set<string>>(new Set(['blinga-ai', 'gpt-4o', 'claude-3.5-sonnet', 'gemini-pro', 'perplexity', 'grok-4', 'deepseek-r1', 'doubao', 'kimi', 'alibaba', 'qwen', 'llama-4', 'mistral', 'cohere', 'amazon', 'copilot']));
   const [nomadIsTyping, setNomadIsTyping] = useState<{[model: string]: boolean}>({});
   const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
   const [nomadMode, setNomadMode] = useState<'multi' | 'auto'>('multi');
@@ -1520,6 +1521,10 @@ export function ChatInterface({ onShowAuth }: ChatInterfaceProps) {
   const nomadNotifEnabledRef = React.useRef(true);
   const abortControllerRef = React.useRef<AbortController | null>(null);
   const [nomadSoloModel, setNomadSoloModel] = useState<string | null>(null);
+  const [nomadFocusModel, setNomadFocusModel] = useState<string | null>(null);
+  const [nomadFocusModelsByTurn, setNomadFocusModelsByTurn] = useState<Record<number, string>>({});
+  const [nomadChatOnlyModel, setNomadChatOnlyModel] = useState<string | null>(null);
+  const [nomadModelsBeforeChatOnly, setNomadModelsBeforeChatOnly] = useState<Set<string> | null>(null);
   const [isVoiceModeModalOpen, setIsVoiceModeModalOpen] = useState(false);
   const [isVideoCallOpen, setIsVideoCallOpen] = useState(false);
   const [isImagineOpen, setIsImagineOpen] = useState(false);
@@ -1762,7 +1767,7 @@ export function ChatInterface({ onShowAuth }: ChatInterfaceProps) {
       'mistral':           { name: sub('mistral','Mistral Small 3.2'),       logo:'/mistral-logo.png',   color:'#fb923c', providerName: 'Mistral', description:'Fast & efficient open-source model by Mistral' },
       'cohere':            { name: sub('cohere','Command R7B'),              logo:'/cohere-logo.svg',    color:'#22c55e', providerName: 'Cohere', description:'Enterprise-grade retrieval-augmented model' },
       'amazon':            { name: sub('amazon','Nova Pro 1.5'),             logo:'/amazon-logo.svg',    color:'#f59e0b', providerName: 'Amazon', description:"Amazon's Nova 1.5 model" },
-      'copilot':           { name: sub('copilot','Copilot Think'),           logo:'/copilot-logo.svg',   color:'#0078d4', providerName: 'Microsoft', description:"Microsoft's AI powered by OpenAI models" },
+      'copilot':           { name: sub('copilot','Copilot Think'),           logo:'/microsoft-copilot-logo.png',   color:'#0078d4', providerName: 'Microsoft', description:"Microsoft's AI powered by OpenAI models" },
       'blinga-ai':         { name: sub('blinga-ai','Blinga Lite'),           logo:'/blinga-logo.png',    color:'#a855f7', providerName: 'Blinga', description:'Advanced reasoning, powered by Blinga.' },
     };
   }, [nomadSelectedSubModels]);
@@ -4258,7 +4263,7 @@ Let's start the self-listen session!`;
                         >
                           <div className="flex items-center gap-3 min-w-0">
                             <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white dark:bg-zinc-800 border border-border/40 flex-shrink-0 overflow-hidden">
-                              {modelId === 'blinga-ai' ? <img src={ringLogoLight} alt="Blinga" className="w-[30px] h-[30px] object-contain drop-shadow-sm" /> : <img src={cfg.logo} alt="" className="w-6 h-6 object-contain" />}
+                              {modelId === 'blinga-ai' ? <img src={ringLogoLight} alt="Blinga" className="w-[30px] h-[30px] object-contain drop-shadow-sm" /> : <img src={modelId === 'copilot' ? '/microsoft-copilot-logo.png' : cfg.logo} alt="" className={`w-6 h-6 object-contain ${modelId === 'grok-4' ? 'brightness-0 dark:invert' : ''}`} />}
                             </div>
                             <div className="flex flex-col min-w-0">
                               <span className="text-sm font-semibold text-foreground leading-tight">{cfg.providerName || cfg.name}</span>
@@ -4342,11 +4347,11 @@ Let's start the self-listen session!`;
   return (
     <TooltipProvider delayDuration={400}>
     <div
-      className={`h-screen overflow-hidden flex flex-col bg-background relative transition-[padding] duration-300 ${isSidebarOpen && sidebarOpenMode === 'mini' ? 'md:pl-[76px]' : ''} ${(isTyping || isAnyNomadModelTyping || philosopherIsTyping) ? 'ai-thinking' : ''} ${settingsToggles.minimalAnimations ? 'minimal-animations-enabled' : ''}`}
+      className={`h-screen overflow-hidden flex flex-col bg-background relative transition-[padding] duration-300 ${isSidebarOpen && sidebarOpenMode === 'mini' ? 'md:pl-[76px]' : ''} ${isSidebarOpen && sidebarOpenMode === 'full' ? 'md:pl-72' : ''} ${(isTyping || isAnyNomadModelTyping || philosopherIsTyping) ? 'ai-thinking' : ''} ${settingsToggles.minimalAnimations ? 'minimal-animations-enabled' : ''}`}
     >
 
       {/* Top Mini Navigation Pill */}
-      <div className="w-full flex justify-center pt-4 z-40 relative flex-shrink-0 pointer-events-none" style={{ transform: 'translateX(15px)' }}>
+      <div className="w-full flex justify-center pt-4 z-40 relative flex-shrink-0 pointer-events-none transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]" style={{ transform: 'translateX(0)' }}>
         <div ref={topNavRef} className="relative flex items-center bg-zinc-100/90 dark:bg-zinc-800/90 backdrop-blur-md p-1 rounded-full border border-zinc-200/50 dark:border-zinc-700/50 shadow-sm pointer-events-auto">
           
           {/* Sliding Pill Background */}
@@ -4751,7 +4756,7 @@ Let's start the self-listen session!`;
             <PCScrollButtons scrollAreaRef={chatScrollRef} />
           )}
           {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-start min-h-full text-center pt-0 pb-12 max-w-4xl mx-auto" style={{transform:'translateX(15px)',transition:'transform 0.3s ease',position:'relative'}}>
+          <div className="flex flex-col items-center justify-start min-h-full text-center pt-0 pb-12 max-w-4xl mx-auto" style={{position:'relative'}}>
             {/* Welcome screen — crossfade between Blinga and Owl Mode */}
             <div style={settingsToggles.hideBlingaLogo && settingsToggles.hideMadeToShine
               ? {position:'absolute',bottom:'calc(50% + 68px)',left:'50%',transform:'translateX(-50%)',width:'100%',display:'flex',flexDirection:'column',alignItems:'center',transition:'all 0.3s ease'}
@@ -4759,7 +4764,7 @@ Let's start the self-listen session!`;
               {/* Blinga welcome */}
               <div style={{opacity:ownMode?0:1,transition:'opacity 0.4s ease',position:ownMode?'absolute':'relative',pointerEvents:ownMode?'none':'auto',display:'flex',flexDirection:'column',alignItems:'center',width:'100%',top:0}}>
                 {!(settingsToggles.hideBlingaLogo) && <BlingaLogo size="2xl" className="mt-0 mb-4 text-black dark:text-foreground" ringColor={uiAccentColor || undefined} letterColor={uiAccentColor || undefined} />}
-                <h2 className="text-3xl font-normal mb-1 text-foreground" style={{marginLeft: '-22px', ...(uiAccentColor ? { color: uiAccentColor } : {})}}>
+                <h2 className="text-3xl font-normal mb-1 text-foreground" style={uiAccentColor ? { color: uiAccentColor } : {}}>
                   {user?.displayName
                     ? WELCOME_GREETINGS[welcomeGreeting](user.displayName)
                     : 'Welcome to Blinga'}
@@ -5160,7 +5165,7 @@ Let's start the self-listen session!`;
               'mistral':          { name: getNomadName('mistral', 'Ministral 3'),                logo: '/mistral-logo.png',    color: '#7c3aed', providerName: 'Mistral', description: 'Fast & efficient European open AI' },
   'cohere':           { name: getNomadName('cohere', 'Command R'),                   logo: '/cohere-logo.svg',    color: '#39594d', providerName: 'Cohere', description: 'Cohere\'s enterprise-focused AI models' },
                 'amazon':           { name: getNomadName('amazon', 'Nova Pro'),                    logo: '/amazon-logo.svg',    color: '#ff9900', providerName: 'Amazon', description: 'Amazon\'s powerful multimodal Nova models' },
-                'copilot':          { name: getNomadName('copilot', 'GPT-5 mini'),                 logo: '/copilot-logo.svg',   color: '#0078d4', providerName: 'Microsoft', description: 'Microsoft\'s AI powered by OpenAI models' },
+                'copilot':          { name: getNomadName('copilot', 'GPT-5 mini'),                 logo: '/microsoft-copilot-logo.png',   color: '#0078d4', providerName: 'Microsoft', description: 'Microsoft\'s AI powered by OpenAI models' },
               'blinga-ai':          { name: getNomadName('blinga-ai', 'Blinga Lite'),                  logo: '/blinga-logo.png',      color: '#a855f7', providerName: 'Blinga', description: 'Advanced reasoning, powered by Blinga.' },
             };
             const hasMessages = Object.keys(nomadMessages).some(k => (nomadMessages[k] || []).length > 0);
@@ -5177,7 +5182,7 @@ Let's start the self-listen session!`;
             const nomadHasAIMessages = Object.values(nomadMessages).some(msgs => msgs.some(m => m.role === 'assistant'));
             return (
             /* h-full fills the absolute inset-0 parent and allows children to scroll */
-            <div className="w-full h-full flex flex-col relative">
+            <div className="relative z-[9] w-full h-full flex flex-col">
               {/* Nomad Summary Panel — slide in from right */}
               {nomadSummaryOpen && (
                 <div className="absolute right-0 top-2 bottom-2 w-80 bg-card border border-border shadow-2xl z-50 flex flex-col rounded-2xl overflow-hidden"
@@ -5213,13 +5218,42 @@ Let's start the self-listen session!`;
                       <Sparkles className="w-3 h-3" /> Summarize
                     </button>
                   )}
-                  <button onClick={() => setIsCustomizeModalOpen(true)}
-                    className="flex items-center justify-center w-8 h-8 rounded-full bg-card border border-border hover:bg-accent transition-all shadow-sm">
-                    <img src="/settings-icon.png" alt="Settings" className="btn-icon" style={{ width: '17px', height: '17px' }} />
-                  </button>
                 </div>
                 {/* Heading — fully centred */}
                 <h2 className="text-3xl font-bold text-foreground text-center mb-2 pt-1">Nomad</h2>
+
+                <div
+                  className="relative w-fit pb-1"
+                  style={{ left: '50%', transform: 'translateX(-50%)' }}
+                >
+                  <div className="relative flex items-center gap-1 overflow-hidden rounded-full border border-border/60 bg-background/80 p-1 shadow-sm backdrop-blur-xl">
+                    <motion.div
+                      className="absolute inset-y-1 rounded-full bg-card shadow-sm"
+                      animate={{ x: nomadFocusModel ? '100%' : '0%', width: 'calc(50% - 2px)' }}
+                      transition={{ type: 'spring', stiffness: 420, damping: 30 }}
+                    />
+                    <button
+                      onClick={() => { setNomadMode('multi'); setNomadSoloModel(null); setNomadFocusModel(null); setNomadFocusModelsByTurn({}); setNomadChatOnlyModel(null); if (nomadModelsBeforeChatOnly) setActiveAIModels(new Set(nomadModelsBeforeChatOnly)); }}
+                      className={`relative z-10 flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs transition-colors ${!nomadFocusModel && nomadMode === 'multi' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                    >
+                      <MessageSquare className="h-3.5 w-3.5" /> MultiChat
+                    </button>
+                    <button
+                      onClick={() => {
+                        const initialFocusModel = nomadFocusModel || Array.from(activeAIModels)[0] || null;
+                        const turnCount = Math.max(1, ...Object.values(nomadMessages).map(messages => messages.filter(message => message.role === 'assistant').length));
+                        setNomadMode('multi');
+                        setNomadSoloModel(null);
+                        setNomadChatOnlyModel(null);
+                        setNomadFocusModel(initialFocusModel);
+                        if (initialFocusModel) setNomadFocusModelsByTurn(Object.fromEntries(Array.from({ length: turnCount }, (_, index) => [index, initialFocusModel])));
+                      }}
+                      className={`relative z-10 flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs transition-colors ${nomadFocusModel ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                    >
+                      <Target className="h-3.5 w-3.5" /> Focus
+                    </button>
+                  </div>
+                </div>
 
 
                 {/* Solo mode: back button + other model pills */}
@@ -5390,22 +5424,116 @@ Let's start the self-listen session!`;
                 </div>
               )}
 
+              {/* === FOCUS MODE: one model response stream + model rail === */}
+              {nomadMode === 'multi' && nomadFocusModel && nomadHasAIMessages && (() => {
+                const focusPrompts = [...nomadModels]
+                  .flatMap(model => nomadMessages[model.id] || [])
+                  .filter(message => message.role === 'user')
+                  .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+                  .filter((message, index, messages) => messages.findIndex(candidate => candidate.content === message.content && Math.abs(new Date(candidate.createdAt).getTime() - new Date(message.createdAt).getTime()) < 5000) === index);
+                return (
+                  <div className="flex min-h-0 flex-1 gap-4 overflow-y-auto px-6 pb-52">
+                    <div className="order-2 min-w-0 flex-1 overflow-visible px-2 pt-2">
+                      {focusPrompts.map((prompt, responseIndex) => {
+                        const selectedFocusModel = nomadFocusModelsByTurn[responseIndex] || nomadFocusModel;
+                        const selectedModelMessages = nomadMessages[selectedFocusModel] || [];
+                        const matchingPromptIndex = selectedModelMessages.findIndex(message =>
+                          message.role === 'user' &&
+                          message.content === prompt.content
+                        );
+                        const response = matchingPromptIndex >= 0
+                          ? selectedModelMessages.slice(matchingPromptIndex + 1).find(message => message.role === 'assistant')
+                          : selectedModelMessages.filter(message => message.role === 'assistant')[responseIndex];
+                        if (!response) return null;
+                        const focusConfig = nomadConfigMap[selectedFocusModel] || { name: selectedFocusModel, logo: `/${selectedFocusModel}-logo.svg` };
+                        return (
+                        <div key={`${prompt.id}-${selectedFocusModel}`} className="mx-auto flex max-w-5xl flex-col gap-4 pb-8">
+                          <div className="flex justify-center">
+                            <div className="user-msg-bubble max-w-[min(34rem,75%)] rounded-3xl rounded-br-none bg-zinc-200 px-5 py-3 text-sm text-foreground shadow-sm dark:bg-zinc-700">
+                              {prompt.content}
+                            </div>
+                          </div>
+                          <motion.div layout transition={{ layout: { duration: 0.32, ease: [0.22, 1, 0.36, 1] } }} className="relative z-20 overflow-hidden rounded-2xl border border-zinc-300/75 ring-1 ring-white/80 backdrop-blur-2xl dark:border-white/25 dark:ring-white/10" style={{ background: 'transparent', WebkitBackdropFilter: 'blur(30px) saturate(135%)', backdropFilter: 'blur(30px) saturate(135%)' }}>
+                            <div className="flex items-center gap-1.5 border-b border-white/55 px-8 py-3.5 backdrop-blur-xl dark:border-white/10">
+                              <img src={selectedFocusModel === 'blinga-ai' ? ringLogoLight : focusConfig.logo} alt={focusConfig.name} className={`h-4 w-4 rounded-full object-contain ${iconFilter(selectedFocusModel)}`} />
+                              <span className="text-[10px] font-semibold text-muted-foreground">{focusConfig.name}</span>
+                              <span className="ml-auto text-[10px] text-muted-foreground/70">Focus response {responseIndex + 1}</span>
+                            </div>
+                            <div className="px-8 py-5">
+                              <div className="text-sm text-foreground prose prose-sm max-w-none dark:prose-invert break-words leading-relaxed">{renderTypingText(response.content, response.id)}</div>
+                            </div>
+                            <div className="flex items-center gap-0.5 border-t border-white/50 px-7 py-2.5 backdrop-blur-xl dark:border-white/10">
+                              <button className="h-7 w-7 rounded-xl hover:bg-accent" onClick={() => handleLikeMessage(response.id)}><ThumbsUp className="mx-auto h-4 w-4" /></button>
+                              <button className="h-7 w-7 rounded-xl hover:bg-accent" onClick={() => handleDislikeMessage(response.id)}><ThumbsDown className="mx-auto h-4 w-4" /></button>
+                              <button className="h-7 w-7 rounded-xl hover:bg-accent" onClick={() => handleCopyMessage(response.content, response.id)}><Copy className="mx-auto h-4 w-4" /></button>
+                            </div>
+                          </motion.div>
+                        </div>
+                        );
+                      })}
+                    </div>
+                    <div className="order-1 sticky top-4 hidden h-fit w-48 shrink-0 flex-col gap-1 lg:flex">
+                      {focusPrompts.map((prompt, responseIndex) => (
+                        <aside key={`${prompt.id}-rail`} className="rounded-2xl border border-border/35 bg-muted/20 p-1.5 backdrop-blur-xl dark:bg-white/[0.04]">
+                          <div className="px-1.5 pb-1 text-[9px] text-muted-foreground">Response {responseIndex + 1}</div>
+                          {nomadModels.filter(model => activeAIModels.has(model.id)).map(model => {
+                            const modelConfig = nomadConfigMap[model.id];
+                            const isSelected = (nomadFocusModelsByTurn[responseIndex] || nomadFocusModel) === model.id;
+                            return (
+                              <button key={model.id} onClick={() => setNomadFocusModelsByTurn(previous => ({ ...previous, [responseIndex]: model.id }))} className={`relative mb-0.5 flex w-full items-center gap-1.5 overflow-hidden rounded-lg px-2 py-1.5 text-left text-[11px] transition-colors ${isSelected ? 'text-foreground' : 'text-muted-foreground hover:bg-card/70 hover:text-foreground'}`}>
+                                {isSelected && <motion.span layoutId={`focus-model-tab-${responseIndex}`} className="absolute inset-0 rounded-lg bg-card shadow-sm" transition={{ type: 'spring', stiffness: 420, damping: 30 }} />}
+                                <span className="relative z-10 flex items-center gap-1.5">
+                                <img src={model.id === 'blinga-ai' ? ringLogoLight : modelConfig?.logo} alt="" className={`h-4 w-4 rounded-full object-contain ${iconFilter(model.id)}`} />
+                                <span className="truncate">{modelConfig?.name || model.name}</span>
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </aside>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
+
               {/* === MULTI-MODEL COLUMN LAYOUT === */}
-              {nomadMode === 'multi' && !nomadSoloModel && nomadHasAIMessages && (
+              {nomadMode === 'multi' && !nomadSoloModel && !nomadFocusModel && nomadHasAIMessages && (
                 <>
-                <motion.div layoutScroll ref={nomadColsRef} onScroll={updateNomadThumb} className="nomad-hscroll flex flex-nowrap flex-1 min-h-0 overflow-x-auto" style={{ alignItems: 'stretch' }}>
-                  {[...nomadModels.filter(m => activeAIModels.has(m.id)), ...nomadModels.filter(m => !activeAIModels.has(m.id))].map((modelObj, idx, sortedArr) => {
+                {false ? <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+                {(() => {
+                  const allUserMessages = [...nomadModels]
+                    .flatMap(model => nomadMessages[model.id] || [])
+                    .filter(message => message.role === 'user')
+                    .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+                  const uniqueUserMessages = allUserMessages.filter((message, index, messages) =>
+                    messages.findIndex(candidate =>
+                      candidate.content === message.content &&
+                      Math.abs(new Date(candidate.createdAt).getTime() - new Date(message.createdAt).getTime()) < 5000
+                    ) === index
+                  );
+                  return uniqueUserMessages.length ? (
+                    <div className="flex flex-col items-center gap-3 px-6 pb-4 pt-2">
+                      {uniqueUserMessages.map((userMessage, promptIndex) => (
+                        <div key={`${userMessage.id}-${promptIndex}`} className="user-msg-bubble max-w-[min(34rem,75%)] rounded-3xl rounded-br-none bg-zinc-200 px-5 py-3 text-sm text-foreground shadow-sm dark:bg-zinc-700">
+                          {userMessage.content}
+                        </div>
+                      ))}
+                    </div>
+                  ) : null;
+                })()}
+                <motion.div layoutScroll ref={nomadColsRef} onScroll={updateNomadThumb} className="nomad-hscroll flex flex-none min-h-full flex-nowrap items-start gap-2 overflow-x-auto overflow-y-visible" style={{ alignItems: 'flex-start', minHeight: '100%' }}>
+                  {nomadModels.filter(m => activeAIModels.has(m.id)).map((modelObj, idx, sortedArr) => {
                     const model = modelObj.id;
                     const config = nomadConfigMap[model] || { name: model, providerName: model, logo: `/${model}-logo.svg`, color: '#6b7280', description: '' };
                     const isActive = activeAIModels.has(model);
                     const msgs = nomadMessages[model] || [];
                     const isLast = idx === sortedArr.length - 1;
                     return (
-                      <motion.div key={model} layout transition={{ type: 'tween', duration: 0.42, ease: [0.25, 0.46, 0.45, 0.94] }} className="flex-shrink-0 flex items-stretch" style={{ height: '100%', zIndex: 'auto' }}>
+                      <motion.div key={model} layout transition={{ type: 'tween', duration: 0.42, ease: [0.25, 0.46, 0.45, 0.94] }} className="flex-shrink-0 flex items-start" style={{ minHeight: '100%', width: activeAIModels.size <= 3 ? `calc(${100 / Math.max(activeAIModels.size, 1)}% - 8px)` : 620, zIndex: 'auto' }}>
                         {/* Column */}
-                        <div className="flex-shrink-0 flex flex-col" style={{ width: 390, height: '100%', paddingLeft: 10, paddingRight: 10, opacity: isActive ? 1 : 0.45, transform: isActive ? 'scale(1)' : 'scale(0.97)', transition: 'opacity 0.3s ease, transform 0.3s ease' }}>
-                          {/* Toggle card — horizontal */}
-                          {(() => {
+                        <div className="flex min-w-0 flex-1 flex-col" style={{ minHeight: '100%', opacity: isActive ? 1 : 0.45, transform: isActive ? 'scale(1)' : 'scale(0.97)', transition: 'opacity 0.3s ease, transform 0.3s ease' }}>
+                          {/* Reference-style model header — the old toggle card is intentionally not rendered */}
+                          {false ? (() => {
                             const subModels = NOMAD_SUB_MODELS[model];
                             const isDropdownOpen = openNomadModelDropdown === model;
                             const selSubModel = nomadSelectedSubModels[model] || subModels?.default;
@@ -5523,8 +5651,6 @@ Let's start the self-listen session!`;
                                   <span className="text-[9px] text-muted-foreground leading-tight mt-0.5">{config.description}</span>
                                 </div>
                                 <div className="flex items-center gap-1.5 flex-shrink-0">
-                                  {toggleSwitch}
-                                  {!isActive && isNomadModelLocked(model) && <Lock className="w-3 h-3 text-amber-500 flex-shrink-0" />}
                                   <Tooltip><TooltipTrigger asChild>
                                     <button onClick={() => setNomadSoloModel(model)} className="w-5 h-5 flex items-center justify-center rounded-full hover:bg-accent transition-all focus:outline-none focus-visible:outline-none" style={{ color: config.color }}>
                                       <Target className="w-3.5 h-3.5" />
@@ -5535,7 +5661,7 @@ Let's start the self-listen session!`;
                             );
 
                             return model === 'blinga-ai' ? (
-                              <div className="relative mx-3 mt-2 mb-2">
+                              <div className="relative mx-2 mt-2 mb-2">
                                 <div className="p-[2px] rounded-full transition-all duration-300 outline-none" style={{ background: 'linear-gradient(135deg, #fef08a 0%, #e9d5ff 50%, #bae6fd 100%)' }}>
                                   <div className="rounded-full bg-card">
                                     {cardInner(
@@ -5548,7 +5674,7 @@ Let's start the self-listen session!`;
                                 {modelDropdown}
                               </div>
                             ) : (
-                              <div className="relative mx-3 mt-2 mb-2">
+                              <div className="relative mx-2 mt-2 mb-2">
                                 <div className="rounded-full border-2 transition-all duration-300 bg-card outline-none" style={{ borderColor: isActive ? config.color : "rgba(128,128,128,0.25)" }}>
                                   {cardInner(
                                     <div className="w-10 h-10 flex items-center justify-center flex-shrink-0">
@@ -5559,18 +5685,18 @@ Let's start the self-listen session!`;
                                 {modelDropdown}
                               </div>
                             );
-                          })()}
+                          })() : null}
 
                           {/* Messages */}
                           <div
                             ref={(el) => { if (el) nomadScrollRefs.current.set(model, el); }}
-                            className="mx-2 flex flex-col space-y-6 pb-52 overflow-y-auto flex-1 min-h-0"
+                            className="flex flex-col space-y-6 overflow-visible px-2 pb-52"
                             style={{ minHeight: 60 }}
                           >
                             {(() => {
                               const mcab = "h-7 w-7 flex items-center justify-center rounded-xl transition-all duration-200 text-zinc-800 dark:text-zinc-300 hover:text-foreground hover:bg-accent ";
                               const lastColAiId = [...msgs].reverse().find(m => m.role === 'assistant')?.id;
-                              return msgs.map(message => (
+                              return msgs.filter(message => message.role !== 'user').map(message => (
                               <div key={message.id} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                 {message.role === 'user' ? (
                                   <div className="user-msg-bubble bg-zinc-200 dark:bg-zinc-700 rounded-3xl rounded-br-none px-4 py-3 text-sm max-w-[85%] chat-bubble shadow-sm [overflow-wrap:anywhere]">
@@ -5591,17 +5717,17 @@ Let's start the self-listen session!`;
                                     </div>
                                   </div>
                                 ) : (
-                                  <div className="max-w-[90%]">
-                                    <div className="flex items-center gap-1.5 mb-1.5 ml-1">
+                                  <div className="relative mx-2 w-[calc(100%-1rem)] overflow-hidden rounded-2xl border border-zinc-300/75 ring-1 ring-white/80 backdrop-blur-2xl dark:border-white/25 dark:ring-white/10" style={{ background: 'transparent', WebkitBackdropFilter: 'blur(30px) saturate(135%)', backdropFilter: 'blur(30px) saturate(135%)' }}>
+                                    <div className="relative z-10 flex items-center gap-1.5 border-b border-white/55 px-8 py-3.5 backdrop-blur-xl dark:border-white/10">
                                       <img src={config.logo} alt={config.name} className={`w-4 h-4 object-contain rounded-full flex-shrink-0 ${iconFilter(model)}`} onError={e => { e.currentTarget.style.display='none'; }} />
                                       <span className="text-[10px] font-semibold text-muted-foreground">{config.name}</span>
                                     </div>
-                                    <div className={`rounded-3xl px-4 py-3 chat-bubble relative ${message.content.includes('```') ? 'bg-[#1e1e1e] border border-zinc-700 shadow-xl' : ''}`}>
+                                    <div className={`relative z-10 px-8 py-5 ${message.content.includes('```') ? 'bg-[#1e1e1e] border-b border-zinc-700' : ''}`}>
                                       <div className="text-sm text-foreground prose prose-sm max-w-none dark:prose-invert break-words leading-relaxed">
                                         {renderTypingText(message.content, message.id)}
                                       </div>
                                     </div>
-                                    <div className="flex items-center gap-0.5 mt-1">
+                                    <div className="relative z-10 flex items-center gap-0.5 border-t border-white/50 px-7 py-2.5 backdrop-blur-xl dark:border-white/10">
                                       <Tooltip><TooltipTrigger asChild>
                                         <button className={`${mcab} ${likedMessages.has(message.id) ? '' : ''}`} onClick={() => handleLikeMessage(message.id)}>
                                           {likedMessages.has(message.id) ? <img src="/icon-like-clicked-light.png" className="h-4 w-4 object-contain block dark:hidden" alt="like" /> : <img src="/icon-like-black.png" className="h-4 w-4 object-contain block dark:hidden brightness-0" alt="like" />}{likedMessages.has(message.id) ? <img src="/icon-like-clicked-dark.png" className="h-4 w-4 object-contain hidden dark:block" alt="like" /> : <img src="/icon-like-gray2.png" className="h-4 w-4 object-contain hidden dark:block opacity-75" alt="like" />}
@@ -5635,9 +5761,6 @@ Let's start the self-listen session!`;
                                         </DropdownMenuContent>
                                       </DropdownMenu>
                                     </div>
-                                    {message.id === lastColAiId && (
-                                      <p className="text-[9.5px] text-muted-foreground/35 mt-1.5 ml-0.5 select-none">Blinga is an AI, it can make mistakes.</p>
-                                    )}
                                   </div>
                                 )}
                               </div>
@@ -5657,13 +5780,85 @@ Let's start the self-listen session!`;
                             )}
                           </div>
                         </div>
-                        {!isLast && (
-                          <div className="flex-shrink-0 w-[2.5px] rounded-full" style={{ background: 'rgba(128,128,128,0.35)', alignSelf: 'stretch', margin: '16px 0' }} />
-                        )}
                       </motion.div>
                     );
                   })}
                 </motion.div>
+                </div>
+                : (() => {
+                  const selectedModels = nomadModels.filter(m => activeAIModels.has(m.id));
+                  const allUserMessages = selectedModels
+                    .flatMap(model => nomadMessages[model.id] || [])
+                    .filter(message => message.role === 'user')
+                    .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+                  const prompts = allUserMessages.filter((message, index, messages) =>
+                    messages.findIndex(candidate =>
+                      candidate.content === message.content &&
+                      Math.abs(new Date(candidate.createdAt).getTime() - new Date(message.createdAt).getTime()) < 5000
+                    ) === index
+                  );
+                  const responseForTurn = (modelId: string, turnIndex: number) =>
+                    (nomadMessages[modelId] || []).filter(message => message.role === 'assistant')[turnIndex];
+                  const actionClass = 'h-7 w-7 flex items-center justify-center rounded-xl transition-colors hover:bg-accent';
+                  return (
+                    <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-2 pb-52">
+                      {prompts.map((prompt, turnIndex) => (
+                        <div key={`${prompt.id}-turn`} className="flex flex-col gap-4 pb-8 pt-2">
+                          <div className="flex justify-center">
+                            <div className="user-msg-bubble max-w-[min(34rem,75%)] rounded-3xl rounded-br-none bg-zinc-200 px-5 py-3 text-sm text-foreground shadow-sm dark:bg-zinc-700">
+                              {prompt.content}
+                            </div>
+                          </div>
+                          <div className="nomad-row-scroll relative z-10 flex flex-nowrap items-start gap-2 overflow-x-auto pb-1">
+                            {selectedModels.map(modelObj => {
+                              const response = responseForTurn(modelObj.id, turnIndex);
+                              if (!response) return null;
+                              const config = nomadConfigMap[modelObj.id] || { name: modelObj.id, providerName: modelObj.id, logo: `/${modelObj.id}-logo.svg` };
+                              return (
+                                <motion.div layout transition={{ layout: { duration: 0.32, ease: [0.22, 1, 0.36, 1] } }} key={`${modelObj.id}-${response.id}`} className="relative z-20 w-[620px] min-w-[620px] flex-shrink-0 overflow-hidden rounded-2xl border border-zinc-300/75 ring-1 ring-white/80 backdrop-blur-2xl dark:border-white/25 dark:ring-white/10" style={{ background: 'transparent', WebkitBackdropFilter: 'blur(30px) saturate(135%)', backdropFilter: 'blur(30px) saturate(135%)' }}>
+                                  <div className="flex items-center gap-1.5 border-b border-white/55 px-8 py-3.5 backdrop-blur-xl dark:border-white/10">
+                                    <img src={modelObj.id === 'blinga-ai' ? ringLogoLight : config.logo} alt={config.name} className={`h-4 w-4 rounded-full object-contain ${iconFilter(modelObj.id)}`} onError={e => { e.currentTarget.style.display = 'none'; }} />
+                                    <span className="text-[10px] font-semibold text-muted-foreground">{config.name}</span>
+                                    <button
+                                      className="ml-auto rounded-full border border-border/60 px-2.5 py-1 text-[10px] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                                      onClick={() => {
+                                        const isThisChatOnly = nomadChatOnlyModel === modelObj.id && activeAIModels.size === 1;
+                                        if (isThisChatOnly) {
+                                          setActiveAIModels(new Set(nomadModelsBeforeChatOnly || nomadModels.map(model => model.id)));
+                                          setNomadModelsBeforeChatOnly(null);
+                                          setNomadChatOnlyModel(null);
+                                        } else {
+                                          setNomadModelsBeforeChatOnly(new Set(activeAIModels));
+                                          setActiveAIModels(new Set([modelObj.id]));
+                                          setNomadChatOnlyModel(modelObj.id);
+                                          setNomadFocusModel(null);
+                                          setNomadSoloModel(null);
+                                        }
+                                      }}
+                                    >
+                                      {nomadChatOnlyModel === modelObj.id && activeAIModels.size === 1 ? 'MultiChat' : 'Chat only'}
+                                    </button>
+                                  </div>
+                                  <div className="px-8 py-5">
+                                    <div className="text-sm text-foreground prose prose-sm max-w-none dark:prose-invert break-words leading-relaxed">
+                                      {renderTypingText(response.content, response.id)}
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center gap-0.5 border-t border-white/50 px-7 py-2.5 backdrop-blur-xl dark:border-white/10">
+                                    <button className={actionClass} onClick={() => handleLikeMessage(response.id)} aria-label="Like"><img src="/icon-like-black.png" className="h-4 w-4 brightness-0 dark:hidden" alt="" /><img src="/icon-like-gray2.png" className="hidden h-4 w-4 opacity-75 dark:block" alt="" /></button>
+                                    <button className={actionClass} onClick={() => handleDislikeMessage(response.id)} aria-label="Dislike"><img src="/icon-dislike-black.png" className="h-4 w-4 brightness-0 dark:hidden" alt="" /><img src="/icon-dislike-gray2.png" className="hidden h-4 w-4 opacity-75 dark:block" alt="" /></button>
+                                    <button className={actionClass} onClick={() => handleCopyMessage(response.content, response.id)} aria-label="Copy"><img src="/icon-copy-black.png" className="h-4 w-4 brightness-0 dark:hidden" alt="" /><img src="/icon-copy-gray2.png" className="hidden h-4 w-4 opacity-75 dark:block" alt="" /></button>
+                                    <button className={actionClass} onClick={() => handleSpeakMessage(response.content, response.id)} aria-label="Read aloud"><Volume2 className="h-4 w-4" /></button>
+                                  </div>
+                                </motion.div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })()}
                 </>
               )}
 
@@ -5775,7 +5970,7 @@ Let's start the self-listen session!`;
               })()}
 
               {/* ── Custom always-visible horizontal scrollbar (absolute, never clipped) ── */}
-              {nomadMode === 'multi' && !nomadSoloModel && nomadHasAIMessages && (
+              {nomadMode === 'multi' && !nomadSoloModel && !nomadFocusModel && nomadHasAIMessages && (
                 <div style={{ position: 'absolute', bottom: 8, left: 20, right: 20, height: 6, zIndex: 30, pointerEvents: 'none' }}>
                   <div style={{ position: 'absolute', inset: 0, borderRadius: 999, background: resolvedTheme === 'dark' ? '#1c1c1c' : '#dcdcdc' }} />
                   <div ref={nomadThumbRef} style={{
@@ -6698,7 +6893,7 @@ Let's start the self-listen session!`;
       </div>
       
       {/* Gradient overlay — fades content into bars area. Always present so bars never show text behind them */}
-      {activeTab !== 'blinga-games' && activeTab !== 'blinga-labs' && !isVoiceModeModalOpen && !isVoiceModeOpen && (
+      {activeTab !== 'nomad' && activeTab !== 'blinga-games' && activeTab !== 'blinga-labs' && !isVoiceModeModalOpen && !isVoiceModeOpen && (
         <div
           className="absolute bottom-0 left-0 right-0 pointer-events-none"
           style={{ height: 380, zIndex: 8, background: 'linear-gradient(to bottom, transparent 0%, hsl(var(--background)) 52%)' }}
@@ -6785,8 +6980,9 @@ Let's start the self-listen session!`;
         };
 
         const askFnBarCentered = (activeTab === 'ask' && messages.length === 0) || (activeTab === 'workspace' && workspaceView === 'inner' && imagineMessages.length === 0);
+        const contentCenterLeft = isSidebarOpen ? (sidebarOpenMode === 'full' ? 'calc(50vw + 144px)' : 'calc(50vw + 38px)') : '50vw';
         return (
-          <div className={`macos-function-bar ${!askFnBarCentered ? 'macos-function-bar-with-messages' : ''} rounded-3xl mx-3 sm:mx-4 mb-1 max-w-[50rem] mx-auto w-full !border-none !shadow-none ${activeTab === 'philosopher' || activeTab === 'blinga-games' || activeTab === 'blinga-labs' || ['imagine', 'presentations', 'motion-studio'].includes(activeTab) || activeTab === 'nomad' || functionBarStyle === 'message-bar' || isVoiceModeModalOpen || isVoiceModeOpen ? 'hidden' : ''}`} style={askFnBarCentered ? {width: 'fit-content', position: 'fixed', top: (activeTab === 'workspace' && workspaceView === 'inner') ? (isPill ? 'calc(50% - 40px)' : 'calc(50% - 55px)') : (activeTab === 'workspace' ? (isPill ? 'calc(50% - 22px)' : 'calc(50% - 38px)') : (isPill ? 'calc(50% - 48px)' : 'calc(50% - 68px)')), left: (isSidebarOpen && sidebarOpenMode === 'mini') ? 'calc(50vw + 38px)' : '50vw', transform: isPill ? 'translateX(calc(-50% - 14px))' : 'translateX(-50%)', zIndex: 20, marginBottom: '10px'} : {width: 'fit-content', marginLeft: 'auto', marginRight: 'auto', marginTop: isPill ? '43px' : '11px', marginBottom: '14px', transform: isPill ? 'translateX(-14px)' : undefined, position: 'relative', zIndex: 30}}>
+          <div className={`macos-function-bar ${!askFnBarCentered ? 'macos-function-bar-with-messages' : ''} rounded-3xl mx-3 sm:mx-4 mb-1 max-w-[50rem] mx-auto w-full !border-none !shadow-none ${activeTab === 'philosopher' || activeTab === 'blinga-games' || activeTab === 'blinga-labs' || ['imagine', 'presentations', 'motion-studio'].includes(activeTab) || activeTab === 'nomad' || functionBarStyle === 'message-bar' || isVoiceModeModalOpen || isVoiceModeOpen ? 'hidden' : ''}`} style={askFnBarCentered ? {width: 'fit-content', position: 'fixed', top: (activeTab === 'workspace' && workspaceView === 'inner') ? (isPill ? 'calc(50% - 40px)' : 'calc(50% - 55px)') : (activeTab === 'workspace' ? (isPill ? 'calc(50% - 22px)' : 'calc(50% - 38px)') : (isPill ? 'calc(50% - 48px)' : 'calc(50% - 68px)')), left: contentCenterLeft, transform: 'translateX(calc(-50% - 15px))', zIndex: 20, marginBottom: '10px', transition: 'left 320ms cubic-bezier(0.22, 1, 0.36, 1), transform 320ms cubic-bezier(0.22, 1, 0.36, 1)'} : {width: 'fit-content', marginLeft: 'auto', marginRight: 'auto', marginTop: isPill ? '43px' : '11px', marginBottom: '14px', transform: 'none', position: 'relative', zIndex: 30}}>
             <div className={`flex flex-wrap justify-center p-3 bg-transparent !border-none ${isPill ? 'gap-2' : 'gap-4'}`}>
               {!(activeTab === 'workspace') && renderFunctionBtn(
                 <img src={resolvedTheme === 'dark' ? '/fn-voice-gray.png' : '/fn-voice-black.png'} alt="Long Answer" className="btn-icon" style={{ opacity: 1, width:'26px',height:'26px' }} />,
@@ -7149,16 +7345,16 @@ Let's start the self-listen session!`;
 
 
       {/* New Unified Message Bar */}
-      <div data-message-bar className={`max-w-[48rem] w-full px-4 ${((activeTab === 'ask' && messages.length > 0) || (activeTab === 'nomad' && Object.values(nomadMessages).some(msgs => msgs.length > 0)) || (activeTab === 'philosopher' && philosopherMessages.length > 0)) ? 'message-composer-with-messages' : ''} ${(activeTab === 'ask' && messages.length === 0) || (activeTab === 'workspace' && workspaceView === 'inner' && imagineMessages.length === 0) || (activeTab === 'nomad' && nomadMode === 'multi' && Object.values(nomadMessages).every(msgs => msgs.length === 0)) ? 'absolute lg:fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20' : (activeTab === 'philosopher' && selectedPersonality && philosopherMessages.length === 0) ? 'absolute lg:fixed left-1/2 -translate-x-1/2 -translate-y-1/2 z-20' : 'flex-shrink-0 mx-auto mb-4 sm:mb-8'} ${activeTab === 'blinga-games' || activeTab === 'blinga-labs' || ['imagine', 'presentations', 'motion-studio'].includes(activeTab) || (activeTab === 'philosopher' && !selectedPersonality) || isVoiceModeModalOpen || isVoiceModeOpen ? 'hidden' : ''}`} style={
+      <div data-message-bar className={`max-w-[48rem] w-full px-4 ${((activeTab === 'ask' && messages.length > 0) || (activeTab === 'nomad' && Object.values(nomadMessages).some(msgs => msgs.length > 0)) || (activeTab === 'philosopher' && philosopherMessages.length > 0)) ? 'message-composer-with-messages' : ''} ${(activeTab === 'ask' && messages.length === 0) || (activeTab === 'workspace' && workspaceView === 'inner' && imagineMessages.length === 0) || (activeTab === 'nomad' && nomadMode === 'multi' && Object.values(nomadMessages).every(msgs => msgs.length === 0)) ? 'absolute lg:fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20' : (activeTab === 'philosopher' && selectedPersonality && philosopherMessages.length === 0) ? 'absolute lg:fixed left-1/2 -translate-x-1/2 -translate-y-1/2 z-20' : 'flex-shrink-0 mx-auto mb-4 sm:mb-8'} ${activeTab === 'blinga-games' || activeTab === 'blinga-labs' || ['imagine', 'presentations', 'motion-studio'].includes(activeTab) || (activeTab === 'workspace' && workspaceView === 'cards') || (activeTab === 'philosopher' && !selectedPersonality) || isVoiceModeModalOpen || isVoiceModeOpen ? 'hidden' : ''}`} style={
         (activeTab === 'ask' && messages.length === 0)
-          ? { top: 'calc(50% + 85px)', position: 'fixed', left: (isSidebarOpen && sidebarOpenMode === 'mini') ? 'calc(50vw + 53px)' : 'calc(50vw + 15px)', width: 'min(48rem, calc(100vw - 2rem))', maxWidth: '48rem' }
+          ? { top: 'calc(50% + 85px)', position: 'fixed', left: isSidebarOpen ? (sidebarOpenMode === 'full' ? 'calc(50vw + 144px)' : 'calc(50vw + 38px)') : '50vw', width: 'min(48rem, calc(100vw - 2rem))', maxWidth: '48rem' }
           : (activeTab === 'workspace' && workspaceView === 'inner' && imagineMessages.length === 0)
-              ? { top: 'calc(50% + 85px)', position: 'fixed', left: (isSidebarOpen && sidebarOpenMode === 'mini') ? 'calc(50vw + 53px)' : 'calc(50vw + 15px)', width: 'min(48rem, calc(100vw - 2rem))', maxWidth: '48rem' }
+              ? { top: 'calc(50% + 85px)', position: 'fixed', left: isSidebarOpen ? (sidebarOpenMode === 'full' ? 'calc(50vw + 144px)' : 'calc(50vw + 38px)') : '50vw', width: 'min(48rem, calc(100vw - 2rem))', maxWidth: '48rem' }
           : (activeTab === 'nomad' && nomadMode === 'multi' && Object.values(nomadMessages).every(msgs => msgs.length === 0))
-              ? { position: 'fixed', left: (isSidebarOpen && sidebarOpenMode === 'mini') ? 'calc(50vw + 53px)' : 'calc(50vw + 15px)', width: 'min(48rem, calc(100vw - 2rem))', maxWidth: '48rem' }
+              ? { position: 'fixed', left: isSidebarOpen ? (sidebarOpenMode === 'full' ? 'calc(50vw + 144px)' : 'calc(50vw + 38px)') : '50vw', width: 'min(48rem, calc(100vw - 2rem))', maxWidth: '48rem' }
               : (activeTab === 'philosopher' && selectedPersonality && philosopherMessages.length === 0)
                 ? { top: 'calc(50% + 51px)' }
-                : { position: 'relative', left: (isSidebarOpen && sidebarOpenMode === 'mini') ? '15px' : '15px', zIndex: 10 }
+                : { position: 'relative', left: 0, zIndex: 10 }
       }>
         {activeTab === 'nomad' && nomadMode === 'multi' && Object.values(nomadMessages).every(msgs => msgs.length === 0) && (
           <div className="flex flex-col items-center text-center mb-6">
@@ -7472,9 +7668,19 @@ Let's start the self-listen session!`;
               {/* Model Selector Pill */}
               <button
                 onClick={() => { setDraftNomadMode(nomadMode); setModelSelectorOpen(true); }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all flex-shrink-0 border border-border"
+                className="flex items-center gap-1.5 px-2 py-1.5 rounded-full text-xs font-semibold bg-transparent text-zinc-600 dark:text-zinc-300 hover:bg-black/5 dark:hover:bg-white/5 transition-all flex-shrink-0 border-none"
               >
-                <span>Blinga Lite</span>
+                <span className="flex items-center pl-1">
+                  {nomadModels.filter(model => activeAIModels.has(model.id)).slice(0, 5).map((model, index) => {
+                    const config = nomadConfigMap[model.id];
+                    return (
+                      <span key={model.id} className="flex h-5 w-5 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white" style={{ marginLeft: index === 0 ? 0 : -6, zIndex: 20 - index }}>
+                        {model.id === 'blinga-ai' ? <span className="flex h-5 w-5 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white pointer-events-none"><BlingaLogo size="sm" className="pointer-events-none scale-[0.52]" /></span> : <img src={config?.logo || '/blinga-logo.png'} alt={config?.name || model.name} className="h-4 w-4 object-contain" onError={e => { e.currentTarget.style.display = 'none'; }} />}
+                      </span>
+                    );
+                  })}
+                </span>
+                <span>{activeAIModels.size} models</span>
                 <ChevronDown className="w-3 h-3" />
               </button>
               </>
@@ -7821,6 +8027,10 @@ Let's start the self-listen session!`;
             </div>
           )}
         </div>
+
+        {activeTab === 'nomad' && Object.values(nomadMessages).some(msgs => msgs.some(message => message.role === 'assistant')) && (
+          <p className="mt-1 text-center text-[9.5px] text-muted-foreground/45 select-none">Blinga is an AI, it can make mistakes.</p>
+        )}
 
         {/* ── Quick action chips — Ask tab empty state ── */}
         {activeTab === 'ask' && messages.length === 0 && (

@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseClient";
 
 // ─── Eagerly loaded (needed immediately on first paint) ───────────────────────
+import { BlingaLogo } from "@/components/logo";
 import Landing from "@/pages/landing";
 
 // ─── Lazily loaded (only downloaded when user actually navigates there) ───────
@@ -25,12 +26,9 @@ function PageShell() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
       <div className="flex flex-col items-center space-y-4">
-        <img
-          src="/blinga-logo.png"
-          alt="Blinga"
-          className="w-16 h-16 object-contain animate-pulse"
-          // image is already preloaded in index.html so this is instant
-        />
+        <div className="animate-pulse">
+          <BlingaLogo size="2xl" />
+        </div>
         <p className="text-white text-xl font-bold tracking-widest animate-pulse">BLINGA</p>
       </div>
     </div>
