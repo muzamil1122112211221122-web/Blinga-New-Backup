@@ -70,14 +70,16 @@ const WORK_SMARTER_FEATURES = [
     title: "Side-by-side Multi-AI Answers",
     desc: "Ask one question and view responses from GPT-5, Claude, Gemini, and Grok side by side in real time.",
     icon: Layers,
-    badge: "Exclusive"
+    badge: "Exclusive",
+    image: "/landing-nomad.png"
   },
   {
     tag: "Imagine Studio",
     title: "Instant AI Image Creation & Styles",
     desc: "Generate stunning 4K visuals, anime art, cinematic graphics, and product renders with curated prompts.",
     icon: Img,
-    badge: "Creative Suite"
+    badge: "Creative Suite",
+    image: "/landing-imagine-studio.png"
   },
   {
     tag: "Minds",
@@ -508,7 +510,7 @@ export default function Landing() {
                   <div>
                     {feat.image ? (
                       <div className="w-full overflow-hidden bg-gradient-to-br from-amber-100 via-white to-amber-50 p-3">
-                        <img src={feat.image} alt={feat.title} className="block h-56 w-full rounded-[1.5rem] object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]" />
+                        <img src={feat.image} alt={feat.title} className="block aspect-[5/3] h-auto w-full rounded-[1.5rem] object-cover object-top" />
                       </div>
                     ) : (
                       <div className="relative mx-3 mt-3 flex h-56 items-center justify-center overflow-hidden rounded-[1.5rem] border border-amber-100 bg-gradient-to-br from-amber-100 via-white to-yellow-50">

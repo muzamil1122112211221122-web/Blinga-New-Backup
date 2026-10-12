@@ -75,7 +75,7 @@ import { COUNTRIES } from "@/lib/countries";
 import microphoneIcon from "@assets/microphone__1784996516975.svg";
 import improvePromptIcon from "@assets/improve_promt__1784996516976.svg";
 import plusButtonIcon from "@assets/plus_button__1784996516977.svg";
-import studioHero from "@assets/Gemini_Generated_Image_rdsaverdsaverdsa_1784927084436.svg";
+import studioHero from "@assets/Gemini_Generated_Image_rdsaverdsaverdsa_1784927084436-raster.svg";
 
 // ─── Minimal Mode context — kept for compatibility, always false ──────────────
 const MinimalModeCtx = React.createContext(false);

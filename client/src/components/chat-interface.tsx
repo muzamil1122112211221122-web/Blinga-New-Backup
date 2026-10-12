@@ -1,4 +1,4 @@
-﻿import { NanoAgentsOverlay } from './NanoAgentsOverlay';
+import { NanoAgentsOverlay } from './NanoAgentsOverlay';
 import React, { useState, useRef, useEffect, useLayoutEffect, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -16,7 +16,7 @@ import pixelArt2 from "@assets/a1b857df7f3bd73ec2ff9f2ee45b0b67_1780675830866.jp
 import pixelArt3 from "@assets/3367465_1780675830867.svg";
 import pixelArt4 from "@assets/images_(1)_1780675830868.jpg";
 import pixelArt5 from "@assets/Pixel-art-Creez-un-adorable-cochon-en-quelques-pixels_1780675830868.jpeg";
-import studioHero from "@assets/new_banner_bg.svg";
+import studioHero from "@assets/Gemini_Generated_Image_rdsaverdsaverdsa_1784927084436-raster.svg";
 import { supabase } from "@/lib/supabaseClient";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -6086,25 +6086,25 @@ Let's start the self-listen session!`;
                   {/* ── Fully scrollable studio page ── */}
                   <div className="absolute inset-0 overflow-y-auto bg-background text-foreground" style={{ scrollbarWidth: 'thin' }}>
                     <div className="relative min-h-full overflow-hidden px-5 pb-36">
-                      <div className=" absolute inset-x-0 top-0 h-[420px] overflow-hidden">
-                        <img src={studioHero} alt="" className="h-full w-full object-contain object-center" style={{ imageRendering: "auto" }} />
+                      <div className="absolute inset-x-0 top-0 h-[560px] overflow-hidden">
+                        <img src={studioHero} alt="" className="h-full w-full object-cover object-top" style={{ imageRendering: "auto" }} />
                         {/* bottom fade */}
-                        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, transparent 65%, var(--background) 100%)' }} />
+                        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, transparent 48%, color-mix(in srgb, var(--background) 35%, transparent) 68%, var(--background) 100%)' }} />
                         {/* top fade */}
-                        <div className="absolute inset-x-0 top-0" style={{ height: '23%', background: 'linear-gradient(to bottom, var(--background), transparent)' }} />
+                        <div className="absolute inset-x-0 top-0" style={{ height: '34%', background: 'linear-gradient(to bottom, var(--background) 0%, color-mix(in srgb, var(--background) 72%, transparent) 42%, transparent 100%)' }} />
                         {/* left fade */}
-                        <div className="absolute inset-y-0 left-0" style={{ width: '7%', background: 'linear-gradient(to right, var(--background) 0%, var(--background) 40%, transparent 100%)' }} />
+                        <div className="absolute inset-y-0 left-0" style={{ width: '14%', background: 'linear-gradient(to right, var(--background) 0%, color-mix(in srgb, var(--background) 68%, transparent) 42%, transparent 100%)' }} />
                         {/* right fade */}
-                        <div className="absolute inset-y-0 right-0" style={{ width: '7%', background: 'linear-gradient(to right, var(--background) 0%, var(--background) 40%, transparent 100%)' }} />
+                        <div className="absolute inset-y-0 right-0" style={{ width: '18%', background: 'linear-gradient(to left, var(--background) 0%, color-mix(in srgb, var(--background) 72%, transparent) 42%, transparent 100%)' }} />
                       </div>
 
                       <div className="relative mx-auto w-full max-w-[1180px] pt-6">
-                        <div className="mx-auto mt-[260px] flex max-w-[480px] flex-col items-center text-center">
-                          <h2 className="tracking-[-0.055em] text-foreground" style={{ fontSize: 'clamp(28px,4vw,42px)', lineHeight: 1.1, fontWeight: 1000, WebkitTextStroke: '0.6px currentColor' }}>
-                            <span style={{ fontWeight: 1000 }}>Blinga Labs</span>{' '}
-                            <span style={{ fontWeight: 1000 }}>Imagine Studio</span>
+                        <div className="mx-auto mt-[350px] flex max-w-[480px] flex-col items-center text-center">
+                          <h2 className="tracking-[-0.045em] text-foreground" style={{ fontSize: 'clamp(28px,4vw,42px)', lineHeight: 1.1, fontWeight: 500, WebkitTextStroke: '0.2px currentColor' }}>
+                            <span style={{ fontWeight: 500 }}>Blinga Labs</span>{' '}
+                            <span style={{ fontWeight: 500 }}>Imagine Studio</span>
                           </h2>
-                          <p className="mt-2 font-medium text-muted-foreground" style={{ fontSize: 'clamp(15px,1.6vw,18px)' }}>The Canvas of Tomorrow</p>
+                          <p className="mt-2 font-medium text-zinc-800 dark:text-zinc-900" style={{ fontSize: 'clamp(15px,1.6vw,18px)' }}>The Canvas of Tomorrow</p>
                         </div>
 
                         {/* ── Inline message bar — full width outside narrow heading container ── */}
@@ -6170,7 +6170,7 @@ Let's start the self-listen session!`;
                                       <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
                                           <button className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold text-zinc-600 bg-zinc-100 hover:bg-zinc-200 transition-all flex-shrink-0 border border-zinc-200/60">
-                                            <img src={`/icon-orient-${imagineOrientation}.png`} alt={imagineOrientation} className="w-[17px] h-[17px]" />
+                                            <img src={`/icon-orient-${imagineOrientation}.svg`} alt={imagineOrientation} className="w-[17px] h-[17px]" />
                                             <span>{active.name}</span>
                                             <span className="opacity-50 font-normal">{active.ratio}</span>
                                             <ChevronDown className="w-3 h-3 opacity-60" />
@@ -6186,7 +6186,7 @@ Let's start the self-listen session!`;
                                                 <DropdownMenuItem asChild key={o.id} onSelect={() => setImagineOrientation(o.id)}>
                                                   <button
                                                   className={`relative z-10 flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-[10px] font-semibold transition-colors duration-200 min-w-[56px] ${isAct ? 'text-zinc-800' : 'text-zinc-400 hover:text-zinc-700'}`}>
-                                                  <img src={`/icon-orient-${o.id}.png`} alt={o.name} className={`w-[23px] h-[23px] ${isAct ? '' : 'opacity-50'}`} />
+                                                  <img src={`/icon-orient-${o.id}.svg`} alt={o.name} className={`w-[23px] h-[23px] ${isAct ? '' : 'opacity-50'}`} />
                                                   <span>{o.name}</span>
                                                   <span className={`text-[9px] font-normal ${isAct ? 'opacity-70' : 'opacity-40'}`}>{o.ratio}</span>
                                                 </button>
@@ -6248,7 +6248,7 @@ Let's start the self-listen session!`;
                                           <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
                                               <button className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold text-zinc-600 bg-zinc-100 hover:bg-zinc-200 transition-all flex-shrink-0 border border-zinc-200/60">
-                                                <img src={`/icon-orient-${imagineOrientation}.png`} alt={imagineOrientation} className="w-[17px] h-[17px]" />
+                                                <img src={`/icon-orient-${imagineOrientation}.svg`} alt={imagineOrientation} className="w-[17px] h-[17px]" />
                                                 <span>{active.name}</span>
                                                 <span className="opacity-50 font-normal">{active.ratio}</span>
                                                 <ChevronDown className="w-3 h-3 opacity-60" />
@@ -6264,7 +6264,7 @@ Let's start the self-listen session!`;
                                                     <DropdownMenuItem asChild key={o.id} onSelect={() => setImagineOrientation(o.id)}>
                                                   <button
                                                       className={`relative z-10 flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-[10px] font-semibold transition-colors duration-200 min-w-[56px] ${isAct ? 'text-zinc-800' : 'text-zinc-400 hover:text-zinc-700'}`}>
-                                                      <img src={`/icon-orient-${o.id}.png`} alt={o.name} className={`w-[23px] h-[23px] ${isAct ? '' : 'opacity-50'}`} />
+                                                      <img src={`/icon-orient-${o.id}.svg`} alt={o.name} className={`w-[23px] h-[23px] ${isAct ? '' : 'opacity-50'}`} />
                                                       <span>{o.name}</span>
                                                       <span className={`text-[9px] font-normal ${isAct ? 'opacity-70' : 'opacity-40'}`}>{o.ratio}</span>
                                                     </button>
@@ -7164,7 +7164,7 @@ Let's start the self-listen session!`;
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <button className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-white/[0.07] hover:bg-zinc-200 dark:hover:bg-white/10 transition-all flex-shrink-0 border border-zinc-200/60 dark:border-white/10">
-                          <img src={`/icon-orient-${imagineOrientation}.png`} alt={imagineOrientation} className="w-[17px] h-[17px] dark:invert" />
+                          <img src={`/icon-orient-${imagineOrientation}.svg`} alt={imagineOrientation} className="w-[17px] h-[17px] dark:invert" />
                           <span>{active.name}</span>
                           <span className="opacity-50 font-normal">{active.ratio}</span>
                           <ChevronDown className="w-3 h-3 opacity-60" />
@@ -7180,7 +7180,7 @@ Let's start the self-listen session!`;
                               <DropdownMenuItem asChild key={o.id} onSelect={() => setImagineOrientation(o.id)}>
                                                   <button
                                 className={`relative z-10 flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-[10px] font-semibold transition-colors duration-200 min-w-[56px] ${isAct ? 'text-zinc-800 dark:text-black' : 'text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}>
-                                <img src={`/icon-orient-${o.id}.png`} alt={o.name} className={`w-[23px] h-[23px] ${isAct ? 'dark:invert-0' : 'dark:invert opacity-50'}`} />
+                                <img src={`/icon-orient-${o.id}.svg`} alt={o.name} className={`w-[23px] h-[23px] ${isAct ? 'dark:invert-0' : 'dark:invert opacity-50'}`} />
                                 <span>{o.name}</span>
                                 <span className={`text-[9px] font-normal ${isAct ? 'opacity-70' : 'opacity-40'}`}>{o.ratio}</span>
                               </button>
@@ -7246,7 +7246,7 @@ Let's start the self-listen session!`;
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <button className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-white/[0.07] hover:bg-zinc-200 dark:hover:bg-white/10 transition-all flex-shrink-0 border border-zinc-200/60 dark:border-white/10">
-                              <img src={`/icon-orient-${imagineOrientation}.png`} alt={imagineOrientation} className="w-[17px] h-[17px] dark:invert" />
+                              <img src={`/icon-orient-${imagineOrientation}.svg`} alt={imagineOrientation} className="w-[17px] h-[17px] dark:invert" />
                               <span>{active.name}</span>
                               <span className="opacity-50 font-normal">{active.ratio}</span>
                               <ChevronDown className="w-3 h-3 opacity-60" />
@@ -7262,7 +7262,7 @@ Let's start the self-listen session!`;
                                   <DropdownMenuItem asChild key={o.id} onSelect={() => setImagineOrientation(o.id)}>
                                                   <button
                                     className={`relative z-10 flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-[10px] font-semibold transition-colors duration-200 min-w-[56px] ${isAct ? 'text-zinc-800 dark:text-black' : 'text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}>
-                                    <img src={`/icon-orient-${o.id}.png`} alt={o.name} className={`w-[23px] h-[23px] ${isAct ? 'dark:invert-0' : 'dark:invert opacity-50'}`} />
+                                    <img src={`/icon-orient-${o.id}.svg`} alt={o.name} className={`w-[23px] h-[23px] ${isAct ? 'dark:invert-0' : 'dark:invert opacity-50'}`} />
                                     <span>{o.name}</span>
                                     <span className={`text-[9px] font-normal ${isAct ? 'opacity-70' : 'opacity-40'}`}>{o.ratio}</span>
                                   </button>
@@ -7584,7 +7584,7 @@ Let's start the self-listen session!`;
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <button className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-white/[0.07] hover:bg-zinc-200 dark:hover:bg-white/10 transition-all flex-shrink-0 border border-zinc-200/60 dark:border-white/10">
-                        <img src={`/icon-orient-${imagineOrientation}.png`} alt={imagineOrientation} className="w-[17px] h-[17px] dark:invert" />
+                        <img src={`/icon-orient-${imagineOrientation}.svg`} alt={imagineOrientation} className="w-[17px] h-[17px] dark:invert" />
                         <span>{active.name}</span>
                         <span className="opacity-50 font-normal">{active.ratio}</span>
                         <ChevronDown className="w-3 h-3 opacity-60" />
@@ -7604,7 +7604,7 @@ Let's start the self-listen session!`;
                               onClick={() => setImagineOrientation(o.id)}
                               className={`relative z-10 flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-[10px] font-semibold transition-colors duration-200 min-w-[56px] ${isActive ? 'text-zinc-800 dark:text-black' : 'text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}
                             >
-                              <img src={`/icon-orient-${o.id}.png`} alt={o.name} className={`w-[23px] h-[23px] ${isActive ? 'dark:invert-0' : 'dark:invert opacity-50'}`} />
+                              <img src={`/icon-orient-${o.id}.svg`} alt={o.name} className={`w-[23px] h-[23px] ${isActive ? 'dark:invert-0' : 'dark:invert opacity-50'}`} />
                               <span>{o.name}</span>
                               <span className={`text-[9px] font-normal ${isActive ? 'opacity-70' : 'opacity-40'}`}>{o.ratio}</span>
                             </button>
@@ -7769,7 +7769,7 @@ Let's start the self-listen session!`;
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <button className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold text-zinc-600 dark:text-zinc-300 bg-zinc-100 dark:bg-white/[0.07] hover:bg-zinc-200 dark:hover:bg-white/10 transition-all flex-shrink-0 border border-zinc-200/60 dark:border-white/10">
-                            <img src={`/icon-orient-${imagineOrientation}.png`} alt={imagineOrientation} className="w-[17px] h-[17px] dark:invert" />
+                            <img src={`/icon-orient-${imagineOrientation}.svg`} alt={imagineOrientation} className="w-[17px] h-[17px] dark:invert" />
                             <span>{active.name}</span>
                             <span className="opacity-50 font-normal">{active.ratio}</span>
                             <ChevronDown className="w-3 h-3 opacity-60" />
@@ -7789,7 +7789,7 @@ Let's start the self-listen session!`;
                                   onClick={() => setImagineOrientation(o.id)}
                                   className={`relative z-10 flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-[10px] font-semibold transition-colors duration-200 min-w-[56px] ${isActive ? 'text-zinc-800 dark:text-black' : 'text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'}`}
                                 >
-                                  <img src={`/icon-orient-${o.id}.png`} alt={o.name} className={`w-[23px] h-[23px] ${isActive ? 'dark:invert-0' : 'dark:invert opacity-50'}`} />
+                                  <img src={`/icon-orient-${o.id}.svg`} alt={o.name} className={`w-[23px] h-[23px] ${isActive ? 'dark:invert-0' : 'dark:invert opacity-50'}`} />
                                   <span>{o.name}</span>
                                   <span className={`text-[9px] font-normal ${isActive ? 'opacity-70' : 'opacity-40'}`}>{o.ratio}</span>
                                 </button>
@@ -8907,6 +8907,8 @@ Let's start the self-listen session!`;
 </TooltipProvider>
   );
 }
+
+
 
 
 
