@@ -51,15 +51,15 @@ const MODEL_MAPPING = {
 // Groq model mapping
 function mapToGroqModel(blingaModel: string): string {
   const groqModels: Record<string, string> = {
-    'blinga-prime': 'llama-3.3-70b-versatile',
-    'blinga-education': 'llama-3.3-70b-versatile',
-    'claude-3.5-sonnet': 'llama-3.3-70b-versatile',
-    'gpt-4o': 'llama-3.3-70b-versatile',
-    'gemini-pro': 'llama-3.3-70b-versatile',
-    'llama-3.1': 'llama-3.1-70b-versatile',
-    'auto': 'llama-3.3-70b-versatile'
+    'blinga-prime': 'openai/gpt-oss-120b',
+    'blinga-education': 'openai/gpt-oss-120b',
+    'claude-3.5-sonnet': 'openai/gpt-oss-120b',
+    'gpt-4o': 'openai/gpt-oss-120b',
+    'gemini-pro': 'openai/gpt-oss-120b',
+    'llama-3.1': 'openai/gpt-oss-120b',
+    'auto': 'openai/gpt-oss-120b'
   };
-  return groqModels[blingaModel] || 'llama-3.3-70b-versatile';
+  return groqModels[blingaModel] || 'openai/gpt-oss-120b';
 }
 
 interface ChatClient {
@@ -970,13 +970,13 @@ You are now in DOCUMENT WRITING MODE. The user wants a complete, polished, stand
               const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ model: 'llama-3.3-70b-versatile', messages: allMessages, temperature: 0.7, max_tokens: chatMaxTokens }),
+                body: JSON.stringify({ model: 'openai/gpt-oss-120b', messages: allMessages, temperature: 0.7, max_tokens: chatMaxTokens }),
               });
               if (groqRes.ok) {
                 const data = await groqRes.json();
                 const text = data.choices?.[0]?.message?.content;
                 if (text) {
-                  aiResponse = { content: text, metadata: { model: 'llama-3.3-70b-versatile', provider: 'Groq', usage: data.usage, attempt } };
+                  aiResponse = { content: text, metadata: { model: 'openai/gpt-oss-120b', provider: 'Groq', usage: data.usage, attempt } };
                   console.log(`Groq key successful for ${model} (${text.length} chars)`);
                 }
               } else {
@@ -1808,7 +1808,7 @@ Prompt to improve: ${originalPrompt}`;
                 'Content-Type': 'application/json'
               },
               body: JSON.stringify({
-                model: 'llama-3.3-70b-versatile',
+                model: 'openai/gpt-oss-120b',
                 messages: [{ role: 'user', content: enhancementPrompt }],
                 temperature: 0.1,
                 max_tokens: maxTokens,
@@ -2018,7 +2018,7 @@ Prompt to improve: ${originalPrompt}`;
         if (apiKey.provider === 'groq') {
           response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST', headers: { 'Authorization': `Bearer ${apiKey.key}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ model: 'llama-3.3-70b-versatile', messages: [{ role: 'user', content: prompt }], temperature: 0.7, max_tokens: 120 }),
+            body: JSON.stringify({ model: 'openai/gpt-oss-120b', messages: [{ role: 'user', content: prompt }], temperature: 0.7, max_tokens: 120 }),
           });
         } else {
           response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -2121,7 +2121,7 @@ Make statements educational, interesting, and covering science, history, geograp
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${groqKey}` },
         body: JSON.stringify({
-          model: 'llama-3.3-70b-versatile',
+          model: 'openai/gpt-oss-120b',
           messages: [{ role: 'user', content: prompt }],
           temperature: 0.85,
           max_tokens: 2500,
@@ -2425,7 +2425,7 @@ async function describeGeneratedImage(prompt: string): Promise<string> {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
+        model: 'openai/gpt-oss-120b',
         messages: [
           {
             role: 'system',

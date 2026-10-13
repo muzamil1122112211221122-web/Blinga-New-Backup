@@ -495,52 +495,45 @@ function WikiFace({ name, wikiTitle, className = '' }: { name: string; wikiTitle
 
 // Local custom images — checked before Wikipedia fallback
 const LOCAL_PERSONALITY_IMAGES: Record<string, string> = {
-  'jinnah':      '/personalities/jinnah.png',
-  'gandhi':      '/personalities/gandhi.png',
-  'caesar':      '/personalities/caesar.png',
-  'alexander':   '/personalities/alexander.png',
-  'napoleon':    '/personalities/napoleon.png',
-  'mandela':     '/personalities/mandela.png',
-  'genghis':     '/personalities/genghis.png',
-  'akbar':       '/personalities/akbar.png',
-  'suleiman':    '/personalities/suleiman.png',
-  'tipu':        '/personalities/tipu.png',
-  'socrates':    '/personalities/socrates.png',
-  'aristotle':   '/personalities/aristotle.png',
-  'confucius':   '/personalities/confucius.png',
-  'nietzsche':   '/personalities/nietzsche.png',
-  'marx':        '/personalities/marx.png',
-  'kant':        '/personalities/kant.png',
-  'suntzu':      '/personalities/suntzu.png',
-  'machiavelli': '/personalities/machiavelli.png',
-  'shakespeare': '/personalities/shakespeare.png',
-  'rumi':        '/personalities/rumi.png',
-  'plato':       '/personalities/plato.png',
-  'einstein':    '/personalities/einstein.png',
-  'newton':      '/personalities/newton.png',
-  'tesla':       '/personalities/tesla.png',
-  'da_vinci':    '/personalities/da_vinci.png',
-  'hawking':     '/personalities/hawking.png',
-  'turing':      '/personalities/turing.png',
+  'jinnah':      '/personalities-svg/jinnah.svg',
+  'gandhi':      '/personalities-svg/gandhi.svg',
+  'caesar':      '/personalities-svg/caesar.svg',
+  'alexander':   '/personalities-svg/alexander.svg',
+  'napoleon':    '/personalities-svg/napoleon.svg',
+  'mandela':     '/personalities-svg/mandela.svg',
+  'genghis':     '/personalities-svg/genghis.svg',
+  'akbar':       '/personalities-svg/akbar.svg',
+  'suleiman':    '/personalities-svg/suleiman.svg',
+  'tipu':        '/personalities-svg/tipu.svg',
+  'socrates':    '/personalities-svg/socrates.svg', 'aristotle': '/personalities-svg/aristotle.svg',
+  'confucius':   '/personalities-svg/confucius.svg', 'nietzsche': '/personalities-svg/nietzsche.svg',
+  'marx':        '/personalities-svg/marx.svg', 'kant': '/personalities-svg/kant.svg',
+  'suntzu':      '/personalities-svg/suntzu.svg', 'machiavelli': '/personalities-svg/machiavelli.svg',
+  'shakespeare': '/personalities-svg/shakespeare.svg', 'rumi': '/personalities-svg/rumi.svg',
+  'plato':       '/personalities-svg/plato.svg', 'einstein': '/personalities-svg/einstein.svg',
+  'newton':      '/personalities-svg/newton.svg', 'tesla': '/personalities-svg/tesla.svg',
+  'da_vinci':    '/personalities-svg/da_vinci.svg', 'hawking': '/personalities-svg/hawking.svg',
+  'turing':      '/personalities-svg/turing.svg',
 };
 
-function PersonalityCard({ id, name, wikiTitle }: { id: string; name: string; wikiTitle?: string }) {
+function PersonalityCard({ id, name, wikiTitle, darkTheme = false }: { id: string; name: string; wikiTitle?: string; darkTheme?: boolean }) {
   const localSrc = LOCAL_PERSONALITY_IMAGES[id] ?? null;
+  const themedSrc = darkTheme ? null : `/personalities-light-svg/${id}.svg`;
   const articleTitle = wikiTitle || name;
   const [wikiSrc, setWikiSrc] = useState<string | null>(localSrc ? null : (getCachedWikiImage(articleTitle) ?? null));
   useEffect(() => {
-    if (localSrc) return; // skip Wikipedia fetch when we have a local image
+    if (localSrc || themedSrc) return; // skip Wikipedia fetch when a themed local image exists
     const cached = getCachedWikiImage(articleTitle);
     if (cached) { setWikiSrc(cached); return; }
     let cancelled = false;
     fetchWikiImage(articleTitle).then(url => { if (!cancelled && url) setWikiSrc(url); });
     return () => { cancelled = true; };
-  }, [articleTitle, localSrc]);
-  const src = localSrc ?? wikiSrc;
+  }, [articleTitle, localSrc, themedSrc]);
+  const src = themedSrc ?? localSrc ?? wikiSrc;
   return src ? (
-    <img src={src} alt={name} className="absolute inset-0 w-full object-cover object-top" style={{ height: '115%', top: 0 }} />
+    <img src={src} alt={name} className="absolute inset-0 h-full w-full object-cover object-top" />
   ) : (
-    <div className="absolute inset-0 bg-gradient-to-br from-zinc-800 to-zinc-900 flex items-center justify-center text-white text-4xl font-bold">
+    <div className={`absolute inset-0 flex items-center justify-center text-4xl font-bold ${darkTheme ? 'bg-gradient-to-br from-zinc-800 to-zinc-900 text-white' : 'bg-gradient-to-br from-white to-amber-100 text-zinc-900'}`}>
       {name.charAt(0)}
     </div>
   );
@@ -1322,6 +1315,7 @@ export function ChatInterface({ onShowAuth }: ChatInterfaceProps) {
   const [messageBarStyle, setMessageBarStyle] = useState<string>(
     () => localStorage.getItem('messageBarStyle') || 'compact'
   );
+  const isLongPrompt = inputValue.length > 41;
 
   useEffect(() => {
     const handler = () => setFunctionBarStyle(localStorage.getItem('functionBarStyle') || 'pill');
@@ -2372,7 +2366,10 @@ export function ChatInterface({ onShowAuth }: ChatInterfaceProps) {
       },
       img: ({src, alt}: any) => {
         if (!src) return null;
-        return <GeneratedImageDisplay src={src} alt={alt || "Generated image"} />;
+        const isNomadLogo = src === '/blinga-rings-light.svg' || Object.values(nomadSummaryLogoMap).includes(src);
+        return isNomadLogo
+          ? <img src={src} alt={alt || ''} className="nomad-inline-logo" width={18} height={18} loading="eager" />
+          : <GeneratedImageDisplay src={src} alt={alt || "Generated image"} />;
       },
       table: TableWithDownload as any,
       thead: ({ children }: any) => <thead className="bg-muted/60">{children}</thead>,
@@ -2430,13 +2427,42 @@ export function ChatInterface({ onShowAuth }: ChatInterfaceProps) {
       const responses = msgs.filter(m => m.role === 'assistant').map(m => m.content).join('\n');
       return `**${name}:**\n${responses}`;
     });
-    const prompt = `Analyze these responses from multiple AI models and produce a structured report:\n\n${parts.join('\n\n---\n\n')}\n\nFormat your response EXACTLY as follows:\n\n## Summary\n[For each AI, write: **[AI Name]:** one-sentence summary of their response]\n\n## Similarities\n[Mention which AIs agreed, using their names. E.g. "GPT-4o and Claude both said..." or "All models agreed that..."]\n\n## Differences\n[Mention specific contrasts using names. E.g. "Grok said X, but Claude argued Y..." Be specific about WHO said WHAT.]\n\n## Conclusion\n[2-3 sentences on the overall takeaway and which response was most insightful and why.]\n\nUse exact AI names from the summary section. Be concise and clear.`;
+    const prompt = `Analyze these responses from multiple AI models and produce a structured report. Make the most important facts unmistakable by putting each critical takeaway on its own blockquote line beginning with **Important:**. Make every section heading bold markdown and make every AI name bold markdown.\n\n${parts.join('\n\n---\n\n')}\n\nFormat your response EXACTLY as follows:\n\n**Summary**\n[For each AI, write: **[AI Name]:** one-sentence summary of their response]\n\n**Important points**\n> **Important:** [the most useful factual takeaway]\n> **Important:** [another key point, if needed]\n\n**Similarities**\n[Mention which AIs agreed, using their exact names.]\n\n**Differences**\n[Mention specific contrasts using exact AI names. Be specific about WHO said WHAT.]\n\n**Conclusion**\n[2-3 sentences on the overall takeaway and which response was most insightful and why.]\n\nUse exact AI names from the source responses. Be concise and clear.`;
     try {
       const res = await authFetch('/api/test-ai', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: prompt, conversationId: 'nomad-summary' }) });
       if (res.ok) { const data = await res.json(); setNomadSummary(data.response || 'Could not generate summary.'); }
       else setNomadSummary('Failed to generate summary.');
     } catch { setNomadSummary('Failed to generate summary. Please try again.'); }
     finally { setNomadSummarizing(false); }
+  };
+
+  const nomadSummaryLogoMap: Record<string, string> = {
+    'blinga-ai': '/blinga-logo.png', 'gpt-4o': '/chatgpt-logo.svg',
+    'claude-3.5-sonnet': '/claude-logo.svg', 'gemini-pro': '/gemini-logo.svg',
+    'grok-4': '/grok-logo.svg', 'deepseek-r1': '/deepseek-logo.svg',
+    'doubao': '/doubao-logo.svg', 'kimi': '/kimi-logo.svg', 'alibaba': '/alibaba-logo.svg',
+    'qwen': '/qwen-logo.png', 'llama-4': '/meta-ai-logo.svg', 'mistral': '/mistral-logo.png',
+    'cohere': '/cohere-logo.svg', 'amazon': '/amazon-logo.svg', 'copilot': '/microsoft-copilot-logo.png'
+  };
+
+  const formatNomadSummary = (text: string) => {
+    let formatted = text;
+    const summaryModels = nomadModels.filter(model => Object.entries(nomadMessages).some(([id, msgs]) => id === model.id && msgs.some(m => m.role === 'assistant')));
+    const knownNames = [
+      ...summaryModels.map(model => ({ name: model.name, logo: model.id === 'blinga-ai' ? '/blinga-rings-light.svg' : (nomadSummaryLogoMap[model.id] || '/blinga-rings-light.svg') })),
+      { name: 'Blinga Lite', logo: '/blinga-rings-light.svg' },
+      { name: 'GPT-5 mini', logo: '/chatgpt-logo.svg' },
+      { name: 'Claude Haiku 4.5', logo: '/claude-logo.svg' },
+      { name: 'Gemini 3.5 Flash-Lite', logo: '/gemini-logo.svg' },
+    ];
+    [...new Map(knownNames.map(item => [item.name, item])).values()].forEach(model => {
+      const escaped = model.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const logo = model.logo;
+      formatted = formatted.replace(new RegExp(`(^|\\n)\\s*(?:\\*\\*)?${escaped}(?:\\*\\*)?:(?:\\*\\*)?`, 'gi'), `$1![${model.name}](${logo}) **${model.name}:**`);
+    });
+    formatted = formatted.replace(/^#{1,6}\s+(.+)$/gm, '**$1**');
+    formatted = formatted.replace(/^(Summary|Important points|Similarities|Differences|Conclusion)$/gm, '**$1**');
+    return formatted;
   };
 
   const handleNomadSendMessage = async (content: string) => {
@@ -2729,7 +2755,7 @@ Rules:
   useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
-      if (messageBarStyle === 'compact') {
+      if (messageBarStyle === 'compact' && !isLongPrompt) {
         // Measure real height without transition
         const prevTransition = textarea.style.transition;
         textarea.style.transition = 'none';
@@ -2744,7 +2770,7 @@ Rules:
         textarea.style.height = Math.min(textarea.scrollHeight, 200) + 'px';
       }
     }
-  }, [inputValue, messageBarStyle]);
+  }, [inputValue, messageBarStyle, isLongPrompt]);
 
   // Hide/show background animation during AI thinking
   useEffect(() => {
@@ -6137,8 +6163,8 @@ Let's start the self-listen session!`;
                                 </div>
                               </div>
                             )}
-                            <div className={`w-full relative bg-white dark:bg-[#383838] transition-all duration-300 crisp-outline !border-none !outline-none mx-auto ${messageBarStyle === 'compact' ? 'rounded-full' : 'rounded-[1.5rem]'}`} style={{ maxWidth: '48rem' }}>
-                              {messageBarStyle === 'compact' ? (
+                            <div className={`w-full relative bg-white dark:bg-[#383838] transition-all duration-300 crisp-outline !border-none !outline-none mx-auto ${messageBarStyle === 'compact' && !isLongPrompt ? 'rounded-full' : 'rounded-[1.5rem]'}`} style={{ maxWidth: '48rem' }}>
+                              {messageBarStyle === 'compact' && !isLongPrompt ? (
                                 <div className="flex items-end px-2 pt-2 pb-[7px] gap-1">
                                   <Tooltip>
                                     <DropdownMenu>
@@ -6727,13 +6753,13 @@ Let's start the self-listen session!`;
                       <button
                         key={p.id}
                         onClick={() => { setSelectedPersonality(p); setPhilosopherMessages([]); setPhilosopherInput(''); }}
-                        className="relative rounded-2xl overflow-hidden aspect-[3/4] group focus:outline-none bg-zinc-900 transition-all duration-300 hover:scale-[1.04] hover:shadow-2xl hover:shadow-black/60 hover:z-10"
+                        className={`relative rounded-2xl overflow-hidden aspect-[3/4] group focus:outline-none border transition-all duration-300 hover:scale-[1.02] hover:z-10 ${resolvedTheme === 'dark' ? 'border-white/15 bg-zinc-900 hover:border-white/30 hover:shadow-2xl hover:shadow-black/60' : 'border-amber-200 bg-amber-50 hover:border-amber-300 hover:shadow-xl hover:shadow-amber-900/10'}`}
                       >
-                        <PersonalityCard id={p.id} name={p.name} wikiTitle={p.wikiTitle} />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent " />
+                        <PersonalityCard id={p.id} name={p.name} wikiTitle={p.wikiTitle} darkTheme={resolvedTheme === 'dark'} />
+                        <div className={`absolute inset-0 bg-gradient-to-t ${resolvedTheme === 'dark' ? 'from-black/90 via-black/20' : 'from-white/95 via-white/20'} to-transparent `} />
                         <div className="absolute bottom-0 left-0 right-0 px-3 pb-3 text-left">
-                          <div className="text-[13px] font-bold text-white leading-snug line-clamp-1">{p.name}</div>
-                          <div className="text-[10px] text-white/60 leading-snug mt-0.5 line-clamp-1">{p.role}</div>
+                          <div className={`text-[13px] font-bold leading-snug line-clamp-1 ${resolvedTheme === 'dark' ? 'text-white' : 'text-zinc-900'}`}>{p.name}</div>
+                          <div className={`text-[10px] leading-snug mt-0.5 line-clamp-1 ${resolvedTheme === 'dark' ? 'text-white/60' : 'text-zinc-600'}`}>{p.role}</div>
                         </div>
                       </button>
                     ))}
@@ -7119,8 +7145,8 @@ Let's start the self-listen session!`;
             </div>
           )}
 
-          <div className={`relative bg-white dark:bg-[#383838] transition-all duration-300 crisp-outline !border-none !outline-none ${messageBarStyle === 'compact' ? 'rounded-full' : 'rounded-[1.5rem]'}`}>
-            {messageBarStyle === 'compact' ? (
+          <div className={`relative bg-white dark:bg-[#383838] transition-all duration-300 crisp-outline !border-none !outline-none ${messageBarStyle === 'compact' && !isLongPrompt ? 'rounded-full' : 'rounded-[1.5rem]'}`}>
+            {messageBarStyle === 'compact' && !isLongPrompt ? (
               <div className="flex items-center px-2 py-2 gap-1">
                 {/* Attachment button */}
                 <Tooltip>
@@ -7385,7 +7411,7 @@ Let's start the self-listen session!`;
               ) : (
                 <>
                     <div className="flex flex-shrink-0 items-center justify-between border-b border-zinc-200/80 px-5 py-4 dark:border-white/10" onClick={e => e.stopPropagation()}>
-                    <div className="flex items-center gap-2"><FileText className="h-4 w-4 text-zinc-500" /><span className="text-sm font-semibold">AI Summary</span></div>
+            <div className="flex min-w-0 items-center gap-3"><FileText className="h-4 w-4 shrink-0 text-zinc-500" /><span className="text-sm font-semibold">AI Summary</span></div>
                     <div className="flex items-center gap-2">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild><button className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 px-3 py-1.5 text-xs font-medium hover:bg-zinc-50 dark:border-white/15 dark:hover:bg-white/10"><Download className="h-3.5 w-3.5" /> Download</button></DropdownMenuTrigger>
@@ -7401,7 +7427,9 @@ Let's start the self-listen session!`;
                     </div>
                   </div>
                   <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5 text-left [scrollbar-width:thin]" onClick={e => e.stopPropagation()}>
-                    {nomadSummaryReveal && !nomadSummarizing && <div className="prose prose-sm max-w-none leading-7 dark:prose-invert">{renderTypingText(nomadSummary || 'Preparing summary…', 'nomad-summary-reveal')}</div>}
+            {nomadSummaryReveal && !nomadSummarizing && <div className="nomad-summary-content prose prose-sm max-w-none leading-7 dark:prose-invert">
+              {renderTypingText(formatNomadSummary(nomadSummary || 'Preparing summary…'), 'nomad-summary-reveal')}
+            </div>}
                   </div>
                 </>
               )}
@@ -7493,9 +7521,9 @@ Let's start the self-listen session!`;
         )}
 
         <div
-          className={`relative bg-white dark:bg-[#383838] transition-all duration-300 crisp-outline !border-none !outline-none ${messageBarStyle === 'compact' && attachedFiles.length === 0 ? 'rounded-full' : 'rounded-[1.5rem]'}`}
+          className={`relative bg-white dark:bg-[#383838] transition-all duration-300 crisp-outline !border-none !outline-none ${isLongPrompt ? 'long-prompt-composer rounded-[1.75rem]' : messageBarStyle === 'compact' && attachedFiles.length === 0 ? 'rounded-full' : 'rounded-[1.5rem]'}`}
         >
-          {messageBarStyle === 'compact' ? (
+          {messageBarStyle === 'compact' && !isLongPrompt ? (
             /* ── Compact: single-row pill layout ── */
             <div className="flex items-end px-2 pt-2 pb-[7px] gap-1">
               {/* LEFT: Attachment + function-bar buttons */}
@@ -7763,26 +7791,27 @@ Let's start the self-listen session!`;
           ) : (
             /* ── Default: two-row layout (unchanged) ── */
             <>
-              <div className="p-1.5 sm:p-2">
+              <div className={`${isLongPrompt ? 'p-0' : 'p-1.5 sm:p-2'}`}>
                 <Textarea
                   ref={textareaRef}
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={handleKeyDown}
                   onPaste={handleComposePaste}
+                  spellCheck={false}
                   placeholder={['imagine', 'presentations', 'motion-studio'].includes(activeTab) ? 'Just Prompt and image is in your hands!' : activeTab === 'philosopher' && selectedPersonality ? `Talk with ${selectedPersonality.name}...` : activeTab === 'blinga-games' ? 'Type your answer or move...' : 'What do you want to know ?'}
-                  className="w-full !min-h-[40px] max-h-[140px] bg-transparent dark:text-white text-black placeholder-zinc-500 resize-none focus:outline-none border-none shadow-none ring-0 focus:ring-0 focus-visible:ring-0 focus-visible:outline-none focus-visible:ring-offset-0 text-[21px] sm:text-[22px] leading-relaxed p-2 !rounded-none overflow-y-auto"
+                  className={`w-full !min-h-[40px] ${isLongPrompt ? 'max-h-[180px] pb-12 pt-1.5' : 'max-h-[140px] p-2'} bg-transparent dark:text-white text-black placeholder-zinc-500 resize-none focus:outline-none border-none shadow-none ring-0 focus:ring-0 focus-visible:ring-0 focus-visible:outline-none focus-visible:ring-offset-0 text-[21px] sm:text-[22px] leading-relaxed !rounded-none overflow-y-auto`}
                   data-testid="input-message"
                 />
               </div>
 
-              <div className="flex items-center justify-between px-2 pb-2">
+              <div className={`flex items-center justify-between px-2 pb-2 ${isLongPrompt ? 'absolute inset-x-0 bottom-0 rounded-b-[1.75rem] bg-white/95 dark:bg-[#383838]/95 backdrop-blur-sm pt-1' : ''}`}>
                 <div className="flex items-center gap-1">
                   {/* Expand prompt inline, left of model selector */}
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <button
-                        className={`w-4 h-4 flex items-center justify-center transition-all flex-shrink-0 ${inputValue.trim() ? 'text-zinc-600 dark:text-zinc-300 opacity-90 hover:opacity-100 scale-110' : 'text-zinc-400 opacity-30 hover:opacity-60'}`}
+                        className={`long-expand-control w-4 h-4 flex items-center justify-center transition-all flex-shrink-0 ${inputValue.trim() ? 'text-zinc-600 dark:text-zinc-300 opacity-90 hover:opacity-100 scale-110' : 'text-zinc-400 opacity-30 hover:opacity-60'}`}
                         onClick={() => setPromptFullscreen(true)}
                         tabIndex={-1}
                       >
@@ -7843,7 +7872,7 @@ Let's start the self-listen session!`;
                     }
                     setSelectedModel(value);
                   }}>
-                    <SelectTrigger className="h-8 px-2 text-xs font-semibold text-zinc-700 dark:text-zinc-300 hover:bg-black/5 dark:hover:bg-white/5 !border-none !border-0 bg-transparent shadow-none !shadow-none ring-0 !ring-0 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:outline-none focus-visible:ring-offset-0 transition-all rounded-full outline-none flex-shrink-0 w-auto">
+                    <SelectTrigger className={`long-model-switcher h-8 px-2 text-xs font-semibold text-zinc-700 dark:text-zinc-300 hover:bg-black/5 dark:hover:bg-white/5 !border-none !border-0 bg-transparent shadow-none !shadow-none ring-0 !ring-0 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:outline-none focus-visible:ring-offset-0 transition-all rounded-full outline-none flex-shrink-0 w-auto`}>
                       <span className="truncate">{MODEL_OPTIONS.find(m => m.id === selectedModel)?.name ?? selectedModel}</span>
                     </SelectTrigger>
                     <SelectContent forceMount className="bg-white dark:bg-[#383838] !bg-white dark:!bg-[#383838] !border-none !border-0 text-black dark:text-white rounded-xl shadow-2xl overflow-hidden ring-0 !ring-0 outline-none !outline-none">
@@ -7935,6 +7964,7 @@ Let's start the self-listen session!`;
                             size="icon"
                             className="w-9 h-9 text-zinc-400 hover:text-white hover:bg-white/10 rounded-full transition-all"
                             data-testid="button-attachment"
+                            data-long-attachment="true"
                           >
                             <img src={resolvedTheme === "dark" ? "/plus-gray.png" : "/plus-black.png"} style={{ opacity: 1, width: 18, height: 18 }} alt="attach" />
                           </Button>

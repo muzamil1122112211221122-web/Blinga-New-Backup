@@ -664,6 +664,89 @@
   .nomad-message-composer.nomad-sidebar-mini::before { left: 78px; }
   .nomad-message-composer.nomad-sidebar-full::before { left: 290px; }
 
+/* Keep the summary's high-value takeaways visually distinct from the report. */
+.nomad-summary-content blockquote {
+  margin: 1rem 0;
+  border-left: 3px solid rgb(234 179 8 / 0.8);
+  border-radius: 0.75rem;
+  background: rgb(254 249 195 / 0.85);
+  padding: 0.7rem 0.9rem;
+  color: inherit;
+}
+.nomad-summary-content blockquote strong:first-child { color: rgb(161 98 7); }
+.long-prompt-composer > div:last-child {
+  min-height: 38px;
+  align-items: center;
+  gap: 0.25rem;
+}
+.long-prompt-composer > div:last-child > div { align-items: center; }
+.long-prompt-composer button { flex-shrink: 0; }
+.long-prompt-composer [data-testid="button-send-message"] { width: 2rem; height: 2rem; }
+.long-prompt-composer [data-testid="button-send-message"] {
+  background: #fcc603 !important;
+  color: white !important;
+  opacity: 1;
+}
+.dark .long-prompt-composer [data-testid="button-send-message"] { background: #fcd703 !important; }
+.long-prompt-composer [data-long-attachment="true"] {
+  position: absolute;
+  left: 0.5rem;
+  bottom: 0.2rem;
+  z-index: 3;
+}
+.long-prompt-composer .long-expand-control {
+  position: absolute;
+  right: 8.5rem;
+  bottom: 0.35rem;
+  z-index: 3;
+}
+.long-prompt-composer .long-model-switcher {
+  position: absolute;
+  right: 10.5rem;
+  bottom: 0.45rem;
+  z-index: 2;
+}
+.long-prompt-composer > div:last-child > div:first-child { min-width: 2rem; }
+.long-prompt-composer {
+  border-top: 0 !important;
+  max-height: 174px;
+}
+.long-prompt-composer > div:first-child {
+  max-height: 174px;
+  overflow: hidden;
+  padding: 0.7rem 0.75rem 0;
+}
+.long-prompt-composer textarea {
+  box-sizing: border-box;
+  max-height: 174px !important;
+  min-height: 40px !important;
+  width: 100%;
+  padding: 0 0 2.65rem !important;
+  vertical-align: top;
+  line-height: 1.45 !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+.long-prompt-composer textarea::-webkit-scrollbar { width: 7px; }
+.long-prompt-composer textarea::-webkit-scrollbar-track { background: transparent; }
+.long-prompt-composer textarea::-webkit-scrollbar-thumb { background: rgb(161 161 170 / 0.45); border-radius: 999px; }
+.long-prompt-composer textarea { scrollbar-width: thin; scrollbar-color: rgb(161 161 170 / 0.55) transparent; }
+.nomad-summary-content .nomad-inline-logo {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin: 0 0.35rem 0 0;
+  vertical-align: -0.25rem;
+  object-fit: contain;
+}
+.nomad-summary-content strong,
+.nomad-summary-content p strong { font-weight: 800 !important; color: rgb(24 24 27); }
+.dark .nomad-summary-content strong,
+.dark .nomad-summary-content p strong { color: rgb(250 250 250); }
+.dark .nomad-summary-content blockquote { background: rgb(133 77 14 / 0.22); }
+.dark .nomad-summary-content blockquote strong:first-child { color: rgb(253 224 71); }
+
   .dark .macos-function-bar {
     border: none !important;
     background: transparent !important;

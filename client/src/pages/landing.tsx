@@ -71,7 +71,7 @@ const WORK_SMARTER_FEATURES = [
     desc: "Ask one question and view responses from GPT-5, Claude, Gemini, and Grok side by side in real time.",
     icon: Layers,
     badge: "Exclusive",
-    image: "/landing-nomad.png"
+    image: "/landing-nomad-new.png"
   },
   {
     tag: "Imagine Studio",
@@ -87,7 +87,7 @@ const WORK_SMARTER_FEATURES = [
     desc: "Step into character-led conversations with historical minds and distinctive personalities, designed for thoughtful, memorable exploration.",
     icon: Sparkles,
     badge: "Explore",
-    image: "/feature-minds.png"
+    image: "/landing-minds-new.png"
   },
   {
     tag: "Prompt Optimizer",
@@ -102,7 +102,7 @@ const WORK_SMARTER_FEATURES = [
     desc: "Bring multiple model responses together and turn them into a concise overview of the key information, agreements, and critical details.",
     icon: FileText,
     badge: "Productivity",
-    image: "/feature-summarize.jpg"
+    image: "/landing-summary-focus.png"
   },
   {
     tag: "Blinga Ultimatum",
@@ -384,7 +384,7 @@ export default function Landing() {
 
       {/* ── NOMAD SIDE BY SIDE COMPARISON ───────────────────────── */}
       {false && <section id="comparison" className="py-24 bg-[#FAF9F8]">
-        <div className="max-w-6xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-3xl mx-auto mb-14">
             <span className="text-xs font-bold uppercase tracking-widest text-sky-700 bg-sky-50 px-3 py-1 rounded-full border border-sky-200">
               Only On Blinga
