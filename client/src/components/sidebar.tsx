@@ -445,7 +445,11 @@ const MiniNavButton = ({
         >
           
           <span className={`flex items-center justify-center w-[44px] h-[32px] rounded-full transition-colors duration-150 ${!active ? "group-hover:bg-zinc-100 dark:group-hover:bg-zinc-800/60" : ""}`}>
-            <img src={sidebarAsset(asset)} alt="" style={{ width: iconSize ?? '18px', height: iconSize ?? '18px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display: 'block' }} />
+            {asset === 'search' ? (
+              <Search aria-hidden="true" style={{ width: iconSize ?? '18px', height: iconSize ?? '18px', strokeWidth: 2.2 }} />
+            ) : (
+              <img src={sidebarAsset(asset)} alt="" style={{ width: iconSize ?? '18px', height: iconSize ?? '18px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display: 'block' }} />
+            )}
           </span>
         </button>
       </TooltipTrigger>
@@ -661,7 +665,7 @@ const MiniNavButton = ({
       />
 
       <div
-        className={`fixed top-0 left-0 h-full ${isMini ? 'w-[76px]' : 'w-72'} ${forceFull ? (isOpen ? 'mobile-sidebar-open' : 'mobile-sidebar-closed') : ''} bg-background text-zinc-900 dark:text-zinc-100 z-[30] flex flex-col transition-[width,transform] duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed top-0 bottom-0 left-0 h-auto overflow-visible ${isMini ? 'w-[76px]' : 'w-72'} ${forceFull ? (isOpen ? 'mobile-sidebar-open' : 'mobile-sidebar-closed') : ''} bg-background text-zinc-900 dark:text-zinc-100 ${activeTab === 'nomad' ? 'z-[60]' : 'z-[30]'} flex flex-col transition-[width,transform] duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
         style={{ pointerEvents: 'auto' }}
         onMouseEnter={() => isMini && setIsLogoHovered(true)}
         onMouseLeave={() => setIsLogoHovered(false)}
@@ -906,7 +910,7 @@ const MiniNavButton = ({
             </div>
           </>
         )}
-        {!isMini && <div className="flex-1 overflow-y-auto px-3">
+        {!isMini && <div className="min-h-0 flex-1 overflow-y-auto px-3">
           <div className="space-y-2">
             {/* ── Pinned section ── */}
             {pinnedItems.length > 0 && (
@@ -1051,7 +1055,7 @@ const MiniNavButton = ({
         </div>}
 
         {/* ── Bottom joined card (usage + user account) ── */}
-        <div className={`mt-auto ${isMini ? 'p-2' : 'px-3 pb-3'}`}>
+        <div className={`mt-auto min-h-0 max-h-[40%] overflow-y-auto flex-shrink ${isMini ? 'p-2' : 'px-3 pb-3'}`}>
           {isMini ? (
             /* Mini mode: just avatar button */
             user && (

@@ -109,7 +109,8 @@ const WORK_SMARTER_FEATURES = [
     title: "Automated Intent-based Model Routing",
     desc: "Never guess which AI to pick. Our smart router automatically directs your prompt to the best frontier engine.",
     icon: Sparkles,
-    badge: "AI Router"
+    badge: "AI Router",
+    image: "/landing-ultimatum.png"
   }
 ];
 
@@ -282,7 +283,7 @@ export default function Landing() {
           {/* Main Headline */}
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-zinc-950 leading-[1.08] mb-6">
             World&apos;s Best AI Models &amp; Tools.<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-800">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500">
               One Intelligent Workspace for Every Model.
             </span>
           </h1>
@@ -509,8 +510,8 @@ export default function Landing() {
                 >
                   <div>
                     {feat.image ? (
-                      <div className="w-full overflow-hidden bg-gradient-to-br from-amber-100 via-white to-amber-50 p-3">
-                        <img src={feat.image} alt={feat.title} className="block aspect-[5/3] h-auto w-full rounded-[1.5rem] object-cover object-top" />
+                      <div className="w-full overflow-hidden bg-white p-3">
+                        <img src={feat.image} alt={feat.title} className="block aspect-[5/3] h-auto w-full rounded-[1.5rem] object-contain object-center" />
                       </div>
                     ) : (
                       <div className="relative mx-3 mt-3 flex h-56 items-center justify-center overflow-hidden rounded-[1.5rem] border border-amber-100 bg-gradient-to-br from-amber-100 via-white to-yellow-50">

@@ -1465,6 +1465,7 @@ export function ChatInterface({ onShowAuth }: ChatInterfaceProps) {
   const [activeAIModels, setActiveAIModels] = useState<Set<string>>(new Set(['blinga-ai', 'gpt-4o', 'claude-3.5-sonnet', 'gemini-pro', 'perplexity', 'grok-4', 'deepseek-r1', 'doubao', 'kimi', 'alibaba', 'qwen', 'llama-4', 'mistral', 'cohere', 'amazon', 'copilot']));
   const [nomadIsTyping, setNomadIsTyping] = useState<{[model: string]: boolean}>({});
   const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
+  const [modelSelectorClosing, setModelSelectorClosing] = useState(false);
   const [nomadMode, setNomadMode] = useState<'multi' | 'auto'>('multi');
   const [draftNomadMode, setDraftNomadMode] = useState<'multi' | 'auto'>('multi');
   const [openSubModelDropdowns, setOpenSubModelDropdowns] = useState<Set<string>>(new Set());
@@ -1499,6 +1500,10 @@ export function ChatInterface({ onShowAuth }: ChatInterfaceProps) {
   const [nomadSummaryOpen, setNomadSummaryOpen] = useState(false);
   const [nomadSummary, setNomadSummary] = useState('');
   const [nomadSummarizing, setNomadSummarizing] = useState(false);
+  const [nomadSummaryButtonExpanded, setNomadSummaryButtonExpanded] = useState(false);
+  const [nomadSummaryButtonTall, setNomadSummaryButtonTall] = useState(false);
+  const [nomadSummaryReveal, setNomadSummaryReveal] = useState(false);
+  const [nomadSummaryClosing, setNomadSummaryClosing] = useState(false);
   type NomadHistSession = { id: string; ts: number; mode: 'multi' | 'auto'; preview: string; autoMsgs: typeof nomadAutoMessages; multiMsgs: {[model: string]: ChatMessage[]}; };
   // Per-conversation nomad persistence via backend (Supabase)
   const saveNomadForConv = (convId: string, autoMsgs: typeof nomadAutoMessages, multiMsgs: typeof nomadMessages, mode: 'multi' | 'auto') => {
@@ -2410,6 +2415,11 @@ export function ChatInterface({ onShowAuth }: ChatInterfaceProps) {
       />
     );
   };
+
+  // Keep Nomad focused on comparing text responses; provider image markdown
+  // should not open remote image cards in the comparison view.
+  const renderNomadText = (text: string, messageId: string) =>
+    renderTypingText(text.replace(/!\[[^\]]*\]\([^)]*\)/g, ''), messageId);
 
   const handleNomadSummarize = async () => {
     const allMsgs = Object.entries(nomadMessages).filter(([, msgs]) => msgs.some(m => m.role === 'assistant'));
@@ -4200,20 +4210,27 @@ Let's start the self-listen session!`;
   const isAnyNomadModelTyping = Object.values(nomadIsTyping).some(typing => typing);
 
   const renderNomadModelSelector = () => {
-    if (!modelSelectorOpen) return null;
+    if (!modelSelectorOpen && !modelSelectorClosing) return null;
+    const closeModelSelector = () => {
+      setModelSelectorClosing(true);
+      window.setTimeout(() => {
+        setModelSelectorOpen(false);
+        setModelSelectorClosing(false);
+      }, 220);
+    };
     return (
       <div
-        className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/50 backdrop-blur-sm"
-        onClick={(e) => { if (e.target === e.currentTarget) { setDraftNomadMode(nomadMode); setModelSelectorOpen(false); } }}
+        className={`nomad-selector-backdrop fixed inset-0 z-[99999] flex items-center justify-center bg-black/50 backdrop-blur-sm ${modelSelectorClosing ? 'nomad-selector-backdrop-closing' : ''}`}
+        onClick={(e) => { if (e.target === e.currentTarget) { setDraftNomadMode(nomadMode); closeModelSelector(); } }}
       >
-        <div className="bg-white dark:bg-[#1C1C1C] rounded-3xl w-full max-w-[680px] mx-4 shadow-2xl border border-border/50 overflow-hidden flex flex-col" style={{ maxHeight: '85vh' }}>
+        <div className={`nomad-selector-panel bg-white dark:bg-[#1C1C1C] rounded-3xl w-full max-w-[680px] mx-4 shadow-2xl border border-border/50 overflow-hidden flex flex-col ${modelSelectorClosing ? 'nomad-selector-panel-closing' : ''}`} style={{ maxHeight: '85vh' }}>
           {/* Header & Restructured Toolbar */}
           <div className="p-4 flex flex-col gap-4 border-b border-border/30 flex-shrink-0">
             {/* Top Row: Title & Close */}
             <div className="flex justify-between items-center relative">
               <div className="w-8" />
               <h2 className="text-lg font-bold text-foreground text-center absolute left-1/2 -translate-x-1/2">Choose a model</h2>
-              <button onClick={() => { setDraftNomadMode(nomadMode); setModelSelectorOpen(false); }} className="text-muted-foreground hover:text-foreground p-1.5 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex-shrink-0 z-10">
+              <button onClick={() => { setDraftNomadMode(nomadMode); closeModelSelector(); }} className="text-muted-foreground hover:text-foreground p-1.5 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex-shrink-0 z-10">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -4333,7 +4350,7 @@ Let's start the self-listen session!`;
               <RefreshCcw className="w-4 h-4" />
             </button>
             <button
-              onClick={() => { setNomadMode(draftNomadMode); setModelSelectorOpen(false); }}
+              onClick={() => { setNomadMode(draftNomadMode); closeModelSelector(); }}
               className="bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 dark:text-zinc-900 text-white px-6 py-2.5 rounded-full font-semibold text-sm transition-colors"
             >
               Apply for this chat
@@ -5183,42 +5200,57 @@ Let's start the self-listen session!`;
             return (
             /* h-full fills the absolute inset-0 parent and allows children to scroll */
             <div className="relative z-[9] w-full h-full flex flex-col">
-              {/* Nomad Summary Panel — slide in from right */}
-              {nomadSummaryOpen && (
-                <div className="absolute right-0 top-2 bottom-2 w-80 bg-card border border-border shadow-2xl z-50 flex flex-col rounded-2xl overflow-hidden"
-                  style={{ animation: 'sheetEnter 0.3s cubic-bezier(0.23,1,0.32,1) both' }}>
-                  <div className="flex items-center justify-between px-4 py-3 flex-shrink-0 border-b border-border">
-                    <span className="font-semibold text-sm text-foreground flex items-center gap-2">
-                      <Sparkles className="w-4 h-4" /> AI Summary
-                    </span>
-                    <button onClick={() => setNomadSummaryOpen(false)} className="p-1.5 rounded-full hover:bg-accent transition-colors">
-                      <X className="w-4 h-4 text-muted-foreground" />
-                    </button>
-                  </div>
-                  <div className="flex-1 overflow-y-auto px-4 pb-4 pt-3">
+              {/* Nomad Summary — centered, scrollable 620px workspace */}
+              {false && nomadSummaryOpen && (
+                <div className="pointer-events-none absolute inset-0 z-50 bg-transparent">
+                  <div className="pointer-events-auto fixed bottom-[4.75rem] flex h-[min(620px,calc(100vh-6rem))] w-[min(620px,calc(100vw-2rem))] -translate-x-1/2 flex-col overflow-hidden rounded-3xl border border-zinc-200/90 bg-white dark:border-white/15 dark:bg-zinc-950"
+                    style={{ left: isSidebarOpen ? (sidebarOpenMode === 'full' ? 'calc(50vw + 144px)' : 'calc(50vw + 38px)') : '50vw', animation: 'nomadSummaryEnter 0.95s cubic-bezier(0.16, 1, 0.3, 1) both' }}>
+                    <div className="flex flex-shrink-0 items-center justify-between border-b border-zinc-200/80 px-6 py-4 dark:border-white/10">
+                      <div className="flex items-center gap-2.5">
+                        <FileText className="h-4 w-4 text-zinc-500 dark:text-zinc-300" />
+                        <div>
+                          <div className="text-sm font-semibold text-zinc-900 dark:text-white">AI Summary</div>
+                          <div className="text-[11px] text-zinc-500 dark:text-zinc-400">Comparison of all Nomad responses</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {!nomadSummarizing && nomadSummary && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <button className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 shadow-sm transition hover:border-zinc-300 hover:bg-zinc-50 dark:border-white/15 dark:bg-white/5 dark:text-zinc-200 dark:hover:bg-white/10">
+                                <Download className="h-3.5 w-3.5" /> Download
+                              </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="z-[200] min-w-[220px] rounded-xl border-none bg-white p-1 text-black shadow-2xl dark:bg-[#383838] dark:text-white">
+                              <DropdownMenuItem onClick={async () => { await downloadPdf(nomadSummary, 'nomad-summary'); }}><FileDown className="h-3.5 w-3.5 text-red-500" /> PDF (.pdf)</DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => downloadTxt(nomadSummary, 'nomad-summary')}><FileDown className="h-3.5 w-3.5 text-blue-500" /> Text (.txt)</DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => { const blob = new Blob([nomadSummary], { type: 'text/markdown' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'nomad-summary.md'; a.click(); URL.revokeObjectURL(url); }}><FileDown className="h-3.5 w-3.5 text-purple-500" /> Markdown (.md)</DropdownMenuItem>
+                              <DropdownMenuItem onClick={async () => { await downloadWordDoc(nomadSummary, 'nomad-summary'); }}><FileDown className="h-3.5 w-3.5 text-blue-600" /> Word document (.docx)</DropdownMenuItem>
+                              <DropdownMenuItem onClick={async () => { await downloadPptx(nomadSummary, 'nomad-summary'); }}><FileDown className="h-3.5 w-3.5 text-orange-500" /> PowerPoint (.pptx)</DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
+                        <button onClick={() => setNomadSummaryOpen(false)} aria-label="Close summary" className="rounded-full p-2 text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-white/10 dark:hover:text-white">
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="min-h-0 flex-1 overflow-y-scroll px-6 py-5 [scrollbar-color:rgba(113,113,122,.45)_transparent] [scrollbar-width:thin]">
                     {nomadSummarizing ? (
-                      <div className="flex flex-col items-center justify-center h-32 gap-3">
+                      <div className="flex h-full flex-col items-center justify-center gap-3">
                         <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                         <span className="text-sm text-muted-foreground">Analyzing AI responses…</span>
                       </div>
                     ) : (
-                      <div className="text-sm text-foreground prose prose-sm max-w-none dark:prose-invert">
+                      <div className="text-sm leading-7 text-foreground prose prose-sm max-w-none dark:prose-invert">
                         <ReactMarkdown remarkPlugins={[remarkGfm]}>{nomadSummary || 'Click Summarize to compare all AI responses.'}</ReactMarkdown>
                       </div>
                     )}
+                    </div>
                   </div>
                 </div>
               )}
               <div className="px-4 pt-2 pb-2 flex-shrink-0 relative">
-                {/* Action buttons — absolutely pinned top-right so they don't affect centering */}
-                <div className="absolute top-2 right-4 flex items-center gap-2 z-10">
-                  {nomadHasAIMessages && nomadMode === 'multi' && (
-                    <button onClick={handleNomadSummarize}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-card border border-border hover:bg-accent transition-all shadow-sm text-foreground">
-                      <Sparkles className="w-3 h-3" /> Summarize
-                    </button>
-                  )}
-                </div>
                 {/* Heading — fully centred */}
                 <h2 className="text-3xl font-bold text-foreground text-center mb-2 pt-1">Nomad</h2>
 
@@ -5292,34 +5324,13 @@ Let's start the self-listen session!`;
               {nomadMode === 'auto' && (
                 <div ref={nomadAutoScrollContainerRef} className={`flex-1 min-h-0 px-4 pt-4 pb-52 ${nomadAutoMessages.length === 0 && !nomadAutoLoading ? 'overflow-y-hidden' : 'overflow-y-auto'}`} style={{ scrollbarWidth: 'thin' }}>
                   {nomadAutoMessages.length === 0 && !nomadAutoLoading && (
-                    <div className="flex flex-col items-center justify-center min-h-[60%] gap-4 text-center py-10">
-                      <div className="w-32 h-32 rounded-2xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg,#000000,#ffffff)' }}>
-                        <img src="/nomad-auto-icon.png" alt="auto" className="w-24 h-24 object-contain" style={{ filter: 'invert(1)' }} />
+                    <div className="flex flex-col items-center justify-center min-h-[60%] gap-4 text-center py-10 -translate-y-[7px]">
+                      <div className="flex h-24 w-24 items-center justify-center rounded-2xl border border-violet-200 bg-gradient-to-br from-violet-50 via-white to-amber-50 shadow-sm">
+                        <img src="/nomad-auto-icon.svg" alt="Blinga Ultimatum" className="h-16 w-16 object-contain" />
                       </div>
                       <div>
                         <h3 className="text-base font-semibold text-foreground mb-1">Blinga Ultimatum</h3>
                         <p className="text-sm text-muted-foreground max-w-xs">Blinga picks the best AI for your prompt — coding, writing, math, search, and more.</p>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2 w-full max-w-md mt-2">
-                        {ultimatumCards.slice(0, 2).map(c => (
-                          <div
-                            key={c.label}
-                            onClick={() => setInputValue(c.prompt)}
-                            className="group relative rounded-xl border border-border bg-card p-3 text-left cursor-pointer transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 overflow-hidden"
-                            style={{ borderTop: `2px solid ${c.color}` }}
-                          >
-                            <div className="absolute inset-0 opacity-0 group-hover:opacity-[0.04] transition-opacity duration-200 rounded-xl" style={{ background: c.color }} />
-                            <div className="w-7 h-7 rounded-lg flex items-center justify-center mb-2 flex-shrink-0" style={{ background: c.color + '15' }}>
-                              <c.Icon size={15} style={{ color: c.color }} strokeWidth={1.8} />
-                            </div>
-                            <p className="text-xs font-bold text-foreground mb-0.5 leading-tight">{c.label}</p>
-                            <p className="text-[10px] text-muted-foreground leading-snug mb-2">{c.prompt}</p>
-                            <div className="flex items-center gap-1">
-                              <img src={c.modelLogo} alt={c.modelName} className="w-3 h-3 object-contain rounded-full flex-shrink-0" onError={e => { e.currentTarget.style.display='none'; }} />
-                              <span className="text-[9px] font-semibold text-muted-foreground">{c.modelName}</span>
-                            </div>
-                          </div>
-                        ))}
                       </div>
                     </div>
                   )}
@@ -5460,7 +5471,7 @@ Let's start the self-listen session!`;
                               <span className="ml-auto text-[10px] text-muted-foreground/70">Focus response {responseIndex + 1}</span>
                             </div>
                             <div className="px-8 py-5">
-                              <div className="text-sm text-foreground prose prose-sm max-w-none dark:prose-invert break-words leading-relaxed">{renderTypingText(response.content, response.id)}</div>
+                              <div className="text-sm text-foreground prose prose-sm max-w-none dark:prose-invert break-words leading-relaxed">{renderNomadText(response.content, response.id)}</div>
                             </div>
                             <div className="flex items-center gap-0.5 border-t border-white/50 px-7 py-2.5 backdrop-blur-xl dark:border-white/10">
                               <button className="h-7 w-7 rounded-xl hover:bg-accent" onClick={() => handleLikeMessage(response.id)}><ThumbsUp className="mx-auto h-4 w-4" /></button>
@@ -5724,7 +5735,7 @@ Let's start the self-listen session!`;
                                     </div>
                                     <div className={`relative z-10 px-8 py-5 ${message.content.includes('```') ? 'bg-[#1e1e1e] border-b border-zinc-700' : ''}`}>
                                       <div className="text-sm text-foreground prose prose-sm max-w-none dark:prose-invert break-words leading-relaxed">
-                                        {renderTypingText(message.content, message.id)}
+                                        {renderNomadText(message.content, message.id)}
                                       </div>
                                     </div>
                                     <div className="relative z-10 flex items-center gap-0.5 border-t border-white/50 px-7 py-2.5 backdrop-blur-xl dark:border-white/10">
@@ -5841,7 +5852,7 @@ Let's start the self-listen session!`;
                                   </div>
                                   <div className="px-8 py-5">
                                     <div className="text-sm text-foreground prose prose-sm max-w-none dark:prose-invert break-words leading-relaxed">
-                                      {renderTypingText(response.content, response.id)}
+                                      {renderNomadText(response.content, response.id)}
                                     </div>
                                   </div>
                                   <div className="flex items-center gap-0.5 border-t border-white/50 px-7 py-2.5 backdrop-blur-xl dark:border-white/10">
@@ -5901,7 +5912,7 @@ Let's start the self-listen session!`;
                               <div className="flex-1">
                                 <div className={`rounded-3xl px-4 py-3 chat-bubble relative ${message.content.includes('```') ? 'bg-[#1e1e1e] border border-zinc-700 shadow-xl' : ''}`}>
                                   <div className="text-foreground prose prose-sm max-w-none dark:prose-invert leading-relaxed">
-                                     {renderTypingText(message.content, message.id)}
+                                     {renderNomadText(message.content, message.id)}
                                   </div>
                                 </div>
                                 <div className="flex items-center gap-0.5 mt-1">
@@ -7345,12 +7356,12 @@ Let's start the self-listen session!`;
 
 
       {/* New Unified Message Bar */}
-      <div data-message-bar className={`max-w-[48rem] w-full px-4 ${((activeTab === 'ask' && messages.length > 0) || (activeTab === 'nomad' && Object.values(nomadMessages).some(msgs => msgs.length > 0)) || (activeTab === 'philosopher' && philosopherMessages.length > 0)) ? 'message-composer-with-messages' : ''} ${(activeTab === 'ask' && messages.length === 0) || (activeTab === 'workspace' && workspaceView === 'inner' && imagineMessages.length === 0) || (activeTab === 'nomad' && nomadMode === 'multi' && Object.values(nomadMessages).every(msgs => msgs.length === 0)) ? 'absolute lg:fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20' : (activeTab === 'philosopher' && selectedPersonality && philosopherMessages.length === 0) ? 'absolute lg:fixed left-1/2 -translate-x-1/2 -translate-y-1/2 z-20' : 'flex-shrink-0 mx-auto mb-4 sm:mb-8'} ${activeTab === 'blinga-games' || activeTab === 'blinga-labs' || ['imagine', 'presentations', 'motion-studio'].includes(activeTab) || (activeTab === 'workspace' && workspaceView === 'cards') || (activeTab === 'philosopher' && !selectedPersonality) || isVoiceModeModalOpen || isVoiceModeOpen ? 'hidden' : ''}`} style={
+      <div data-message-bar className={`max-w-[48rem] w-full px-4 ${((activeTab === 'ask' && messages.length > 0) || (activeTab === 'nomad' && Object.values(nomadMessages).some(msgs => msgs.length > 0)) || (activeTab === 'philosopher' && philosopherMessages.length > 0)) ? 'message-composer-with-messages' : ''} ${activeTab === 'nomad' ? `nomad-message-composer ${isSidebarOpen ? (sidebarOpenMode === 'full' ? 'nomad-sidebar-full' : 'nomad-sidebar-mini') : 'nomad-sidebar-closed'}` : ''} ${(activeTab === 'ask' && messages.length === 0) || (activeTab === 'workspace' && workspaceView === 'inner' && imagineMessages.length === 0) || (activeTab === 'nomad' && ((nomadMode === 'multi' && Object.values(nomadMessages).every(msgs => msgs.length === 0)) || (nomadMode === 'auto' && nomadAutoMessages.length === 0))) ? 'absolute lg:fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20' : (activeTab === 'philosopher' && selectedPersonality && philosopherMessages.length === 0) ? 'absolute lg:fixed left-1/2 -translate-x-1/2 -translate-y-1/2 z-20' : 'flex-shrink-0 mx-auto mb-4 sm:mb-8'} ${activeTab === 'blinga-games' || activeTab === 'blinga-labs' || ['imagine', 'presentations', 'motion-studio'].includes(activeTab) || (activeTab === 'workspace' && workspaceView === 'cards') || (activeTab === 'philosopher' && !selectedPersonality) || isVoiceModeModalOpen || isVoiceModeOpen ? 'hidden' : ''}`} style={
         (activeTab === 'ask' && messages.length === 0)
           ? { top: 'calc(50% + 85px)', position: 'fixed', left: isSidebarOpen ? (sidebarOpenMode === 'full' ? 'calc(50vw + 144px)' : 'calc(50vw + 38px)') : '50vw', width: 'min(48rem, calc(100vw - 2rem))', maxWidth: '48rem' }
           : (activeTab === 'workspace' && workspaceView === 'inner' && imagineMessages.length === 0)
               ? { top: 'calc(50% + 85px)', position: 'fixed', left: isSidebarOpen ? (sidebarOpenMode === 'full' ? 'calc(50vw + 144px)' : 'calc(50vw + 38px)') : '50vw', width: 'min(48rem, calc(100vw - 2rem))', maxWidth: '48rem' }
-          : (activeTab === 'nomad' && nomadMode === 'multi' && Object.values(nomadMessages).every(msgs => msgs.length === 0))
+          : (activeTab === 'nomad' && ((nomadMode === 'multi' && Object.values(nomadMessages).every(msgs => msgs.length === 0)) || (nomadMode === 'auto' && nomadAutoMessages.length === 0)))
               ? { position: 'fixed', left: isSidebarOpen ? (sidebarOpenMode === 'full' ? 'calc(50vw + 144px)' : 'calc(50vw + 38px)') : '50vw', width: 'min(48rem, calc(100vw - 2rem))', maxWidth: '48rem' }
               : (activeTab === 'philosopher' && selectedPersonality && philosopherMessages.length === 0)
                 ? { top: 'calc(50% + 51px)' }
@@ -7366,11 +7377,35 @@ Let's start the self-listen session!`;
         )}
         {/* Nomad Summarize bar — above msg bar */}
         {activeTab === 'nomad' && Object.values(nomadMessages).some(msgs => msgs.some(m => m.role === 'assistant')) && (
-          <div className="flex justify-center mb-2">
-            <button onClick={handleNomadSummarize}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold bg-card border border-border hover:bg-accent transition-all shadow-sm text-foreground">
-              <Sparkles className="w-3.5 h-3.5" /> Summarize all responses
-            </button>
+          <div className="flex justify-center mb-3">
+            <div role="button" tabIndex={0} onClick={() => { if (!nomadSummaryButtonExpanded) { setNomadSummaryButtonExpanded(true); window.setTimeout(() => setNomadSummaryButtonTall(true), 1050); window.setTimeout(() => setNomadSummaryReveal(true), 2100); handleNomadSummarize(); } }}
+              className={`group absolute bottom-0 left-1/2 z-40 inline-flex -translate-x-1/2 overflow-hidden border border-zinc-300/80 bg-white/90 text-xs font-semibold text-zinc-700 shadow-[0_4px_14px_rgba(0,0,0,0.08)] backdrop-blur-md will-change-[width,height] transition-[width,height,border-radius] duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] dark:border-white/15 dark:bg-zinc-900/80 dark:text-zinc-200 ${nomadSummaryButtonExpanded ? 'w-[min(620px,calc(100vw-2rem))] rounded-3xl' : 'w-[180px] rounded-full'} ${nomadSummaryButtonTall ? 'h-[min(620px,calc(100vh-6rem))] flex-col items-stretch' : 'h-10 items-center justify-center gap-2 px-4 py-2'}`}>
+              {!nomadSummaryButtonTall ? (
+                <><FileText className="h-3.5 w-3.5 text-zinc-500" /><span>Summarize responses</span></>
+              ) : (
+                <>
+                    <div className="flex flex-shrink-0 items-center justify-between border-b border-zinc-200/80 px-5 py-4 dark:border-white/10" onClick={e => e.stopPropagation()}>
+                    <div className="flex items-center gap-2"><FileText className="h-4 w-4 text-zinc-500" /><span className="text-sm font-semibold">AI Summary</span></div>
+                    <div className="flex items-center gap-2">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild><button className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 px-3 py-1.5 text-xs font-medium hover:bg-zinc-50 dark:border-white/15 dark:hover:bg-white/10"><Download className="h-3.5 w-3.5" /> Download</button></DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="z-[200] min-w-[210px] rounded-xl border-none bg-white p-1 shadow-2xl dark:bg-[#383838]">
+                        <DropdownMenuItem onClick={() => downloadTxt(nomadSummary, 'nomad-summary')}>Text (.txt)</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => { const blob = new Blob([nomadSummary], { type: 'text/markdown' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'nomad-summary.md'; a.click(); URL.revokeObjectURL(url); }}>Markdown (.md)</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => downloadPdf(nomadSummary, 'nomad-summary')}>PDF (.pdf)</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => downloadWordDoc(nomadSummary, 'nomad-summary')}>Word document (.docx)</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => downloadPptx(nomadSummary, 'nomad-summary')}>PowerPoint (.pptx)</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                    <button aria-label="Close summary" onClick={() => { setNomadSummaryClosing(true); setNomadSummaryReveal(false); window.setTimeout(() => setNomadSummaryButtonTall(false), 1000); window.setTimeout(() => { setNomadSummaryButtonExpanded(false); setNomadSummaryButtonTall(false); setNomadSummaryClosing(false); setNomadSummaryOpen(false); }, 2050); }} className="rounded-full p-2 text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-white/10 dark:hover:text-white"><X className="h-4 w-4" /></button>
+                    </div>
+                  </div>
+                  <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5 text-left [scrollbar-width:thin]" onClick={e => e.stopPropagation()}>
+                    {nomadSummaryReveal && !nomadSummarizing && <div className="prose prose-sm max-w-none leading-7 dark:prose-invert">{renderTypingText(nomadSummary || 'Preparing summary…', 'nomad-summary-reveal')}</div>}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         )}
 

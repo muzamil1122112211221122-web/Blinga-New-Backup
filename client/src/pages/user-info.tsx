@@ -159,31 +159,19 @@ function ProfileSetup({ user }: { user: UserProfile }) {
   return (
     <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-12 sm:px-6">
       <div className="blinga-onboarding-enter w-full max-w-[540px]">
-        <div className="mb-7 flex flex-col items-center text-center">
-          <div className="blinga-logo-breathe mb-3">
-            <Logo size="xl" className="text-zinc-900" />
-          </div>
-          <span className="text-xs font-bold uppercase tracking-[0.3em] text-zinc-400">Blinga</span>
-        </div>
-        <div className="overflow-hidden rounded-[40px] border border-zinc-200/90 bg-white shadow-[0_32px_100px_rgba(0,0,0,0.11),0_8px_24px_rgba(0,0,0,0.03)]">
-          <div className="h-1.5 w-full bg-zinc-100/80">
-            <div className="blinga-progress-sweep h-full w-2/3 rounded-full bg-zinc-900" />
-          </div>
+        <div className="mb-7" aria-hidden="true" />
+        <div className="overflow-hidden rounded-[24px] border border-zinc-200/90 bg-white shadow-[0_24px_70px_rgba(0,0,0,0.09),0_6px_18px_rgba(0,0,0,0.03)]">
           <form onSubmit={submit} className="p-7 sm:p-11">
             <div className="mb-9 text-center">
-              <div className="mb-5 flex justify-center">
-                <div className="blinga-account-icon flex h-[72px] w-[72px] items-center justify-center rounded-[26px] bg-zinc-900 text-white shadow-[0_14px_28px_rgba(24,24,27,0.2)]">
-                  <UserRound className="h-8 w-8" strokeWidth={1.8} />
-                </div>
-              </div>
-              <h1 className="text-[29px] font-black tracking-tight text-zinc-900 sm:text-[32px]">Tell us a little about you</h1>
+              <div className="mb-2" aria-hidden="true" />
+              <h1 className="text-[29px] font-semibold tracking-tight text-zinc-900 sm:text-[32px]">Tell us a little about you</h1>
               <p className="mx-auto mt-3 max-w-[390px] text-sm leading-6 text-zinc-500">This helps us personalize your Blinga experience. Your phone number is used once to keep every account unique.</p>
             </div>
 
             <div className="space-y-5">
               <label className="block">
                 <span className="mb-2 block text-xs font-bold uppercase tracking-[0.12em] text-zinc-500">Your name</span>
-                <div className={`flex h-14 items-center gap-3 rounded-[22px] border bg-white px-4 transition-[border,box-shadow] duration-300 ${nameError ? "border-red-300 ring-4 ring-red-50" : "border-zinc-200 focus-within:border-zinc-400 focus-within:ring-4 focus-within:ring-zinc-100"}`}>
+                <div className={`flex h-14 items-center gap-3 rounded-xl border bg-white px-4 transition-[border,box-shadow] duration-300 ${nameError ? "border-red-300" : "border-zinc-200 focus-within:border-zinc-400"}`}>
                   <UserRound className="h-4 w-4 shrink-0 text-zinc-400" />
                   <input
                     autoFocus
@@ -218,7 +206,7 @@ function ProfileSetup({ user }: { user: UserProfile }) {
 
             {submitError && <div className="mt-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium leading-relaxed text-red-700">{submitError}</div>}
 
-            <Button type="submit" disabled={isSaving} className="mt-8 h-13 w-full rounded-[22px] bg-zinc-900 text-sm font-bold text-white shadow-lg shadow-zinc-900/10 transition-[background-color,transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:bg-zinc-800 hover:shadow-xl disabled:opacity-60">
+            <Button type="submit" disabled={isSaving} className="mt-8 h-13 w-full rounded-xl bg-emerald-800 text-sm font-semibold text-white shadow-lg shadow-emerald-900/15 transition-[background-color,transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:bg-emerald-900 hover:shadow-xl disabled:opacity-60">
               {isSaving ? "Saving your details…" : "Continue to Blinga"}
               {!isSaving && <Check className="ml-2 h-4 w-4" />}
             </Button>
