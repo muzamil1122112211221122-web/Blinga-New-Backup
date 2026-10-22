@@ -1,0 +1,50 @@
+801:                   <span className="text-[14px] font-medium">Blinga Minds</span>
+802:                 </button>
+803:                 <button
+804:                   type="button"
+805:                   onClick={() => { onTabChange?.('blinga-games'); }}
+806:                   className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'blinga-games' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
+807:                 >
+808:                   <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("games")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
+809:                   <span className="text-[14px] font-medium">Blinga Games</span>
+810:                 </button>
+811:                 <button
+812:                   type="button"
+813:                   onClick={() => { onTabChange?.('blinga-labs'); }}
+814:                   className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'blinga-labs' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
+815:                 >
+816:                   <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("labs")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
+817:                   <span className="text-[14px] font-medium">Blinga Labs</span>
+818:                 </button>
+819:                   <button
+820:                     type="button"
+821:                     onClick={() => { onTabChange?.('presentations'); }}
+822:                     className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'presentations' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
+823:                   >
+824:                     <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("presentations")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
+825:                     <span className="text-[14px] font-medium">Presentations</span>
+826:                   </button>
+827:                   <button
+828:                     type="button"
+829:                     onClick={() => { onTabChange?.('motion-studio'); }}
+830:                     className={`w-full flex items-center gap-3 px-3 py-0.5 rounded-full transition-all duration-150 ${minimalAnimations ? "" : "active:scale-[0.97]"} text-left ${activeTab === 'motion-studio' ? 'bg-[#EAE7DF] dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 font-semibold' : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/70'}`}
+831:                   >
+832:                     <span className="w-8 flex items-center justify-center flex-shrink-0"><img src={sidebarAsset("motion")} alt="" className="object-contain" style={{width:'20px',height:'20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display:'block'}} /></span>
+833:                     <span className="text-[14px] font-medium">Motion Studio</span>
+834:                   </button>
+835:               </>)}
+836:             </div>
+837: 
+838:             <div className="flex items-center gap-3 px-6 mb-1 mt-4 text-zinc-900 dark:text-zinc-100 font-semibold flex-shrink-0">
+839:               <img src={sidebarAsset("history")} alt="" className="h-4 w-4 object-contain flex-shrink-0" />
+840:               <span className="text-[15px]">Chats:</span>
+841:             </div>
+842:           </>
+843:         )}
+844:         {!isMini && <div className="flex-1 overflow-y-auto px-3">
+845:           <div className="space-y-2">
+846:             {/* ── Pinned section ── */}
+847:             {pinnedItems.length > 0 && (
+848:               <div className="space-y-0.5">
+849:                 <h4 className="text-[11px] font-bold text-amber-500 uppercase tracking-wider mb-1 px-3 flex items-center gap-1.5">
+850:                   <Pin className="w-2.5 h-2.5" /> Pinned

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <script>document.documentElement.classList.add('preload');</script>
+    <style>
+      html,body{background:#0a0a0a;margin:0;padding:0;}
+      .preload *,.preload *::before,.preload *::after{transition-duration:0s!important;animation-duration:0s!important;}
+      #root:empty::before{
+        content:'';display:block;position:fixed;inset:0;background:#0a0a0a;z-index:9999;
+      }
+    </style>
+    <title>Blinga - AI Chat Platform</title>
+    <meta name="description" content="Blinga - Advanced AI chat platform with multiple model support. Blinga from Plant M." />
+
+    <!-- Settings sidebar tab icons -->
+    <link rel="preload" as="image" href="/settings-account-gray.png" />
+    <link rel="preload" as="image" href="/settings-account-black.png" />
+    <link rel="preload" as="image" href="/settings-appearance-gray.png" />
+    <link rel="preload" as="image" href="/settings-appearance-black.png" />
+    <link rel="preload" as="image" href="/settings-behaviour-gray.png" />
+    <link rel="preload" as="image" href="/settings-behaviour-black.png" />
+    <link rel="preload" as="image" href="/settings-nomad-gray.png" />
+    <link rel="preload" as="image" href="/settings-nomad-black.png" />
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         GLOBAL IMAGE PRELOAD — browser fetches ALL custom PNGs before
+         JavaScript even parses, so images are cache-warm by the time
+         any component renders (before login, before navigation).
+         ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- AI model logos -->
+    <link rel="preload" as="image" href="/chatgpt-logo.png" />
+    <link rel="preload" as="image" href="/chatgpt-logo-white.png" />
+    <link rel="preload" as="image" href="/claude-logo.png" />
+    <link rel="preload" as="image" href="/gemini-logo.png" />
+    <link rel="preload" as="image" href="/grok-logo.png" />
+    <link rel="preload" as="image" href="/deepseek-logo.png" />
+    <link rel="preload" as="image" href="/kimi-logo.png" />
+    <link rel="preload" as="image" href="/perplexity-logo.png" />
+    <link rel="preload" as="image" href="/mistral-logo.png" />
+    <link rel="preload" as="image" href="/qwen-logo.png" />
+    <link rel="preload" as="image" href="/llama-logo.png" />
+    <link rel="preload" as="image" href="/doubao-logo.png" />
+    <link rel="preload" as="image" href="/blinga-logo.png" />
+    <link rel="preload" as="image" href="/bytedance-logo.png" />
+    <link rel="preload" as="image" href="/copilot-logo.png" />
+    <link rel="preload" as="image" href="/meta-ai-logo.png" />
+    <link rel="preload" as="image" href="/forus-logo.png" />
+
+    <!-- Mode / avatar icons -->
+    <link rel="preload" as="image" href="/nomad-avatar.png" />
+    <link rel="preload" as="image" href="/nomad-auto-icon.png" />
+    <link rel="preload" as="image" href="/nomad-multi-icon.png" />
+    <link rel="preload" as="image" href="/nomad-multi-dark.png" />
+    <link rel="preload" as="image" href="/nomad-multi-light.png" />
+    <link rel="preload" as="image" href="/philosopher-avatar.png" />
+    <link rel="preload" as="image" href="/blinga-games-avatar.png" />
+    <link rel="preload" as="image" href="/forus-games-avatar.png" />
+    <link rel="preload" as="image" href="/lumin-avatar.png" />
+    <link rel="preload" as="image" href="/incognito-dark.png" />
+    <link rel="preload" as="image" href="/incognito-light.png" />
+    <link rel="preload" as="image" href="/owl-dark.png" />
+    <link rel="preload" as="image" href="/owl-light.png" />
+
+    <!-- Sidebar icons -->
+    <link rel="preload" as="image" href="/sb-search-icon.png" />
+    <link rel="preload" as="image" href="/sb-chat-icon.png" />
+    <link rel="preload" as="image" href="/sb-voice-icon.png" />
+    <link rel="preload" as="image" href="/sb-imagine-icon.png" />
+    <link rel="preload" as="image" href="/sb-history-icon.png" />
+    <link rel="preload" as="image" href="/creativity-icon.png" />
+    <link rel="preload" as="image" href="/integration-icon.png" />
+    <link rel="preload" as="image" href="/settings-icon.png" />
+    <link rel="preload" as="image" href="/brain-icon.png" />
+
+    <!-- General UI icons -->
+    <link rel="preload" as="image" href="/audio-icon.png" />
+    <link rel="preload" as="image" href="/chat-ai-icon.png" />
+    <link rel="preload" as="image" href="/copy-icon.png" />
+    <link rel="preload" as="image" href="/dislike-icon.png" />
+    <link rel="preload" as="image" href="/downloads-icon.png" />
+    <link rel="preload" as="image" href="/high-volume-icon.png" />
+    <link rel="preload" as="image" href="/mute-icon.png" />
+    <link rel="preload" as="image" href="/thumbs-up-icon.png" />
+    <link rel="preload" as="image" href="/icon-edit-image.png" />
+    <link rel="preload" as="image" href="/icon-remove-bg.png" />
+    <link rel="preload" as="image" href="/icon-orient-none.png" />
+    <link rel="preload" as="image" href="/icon-orient-portrait.png" />
+    <link rel="preload" as="image" href="/icon-orient-square.png" />
+    <link rel="preload" as="image" href="/icon-orient-wide.png" />
+    <link rel="preload" as="image" href="/podium-bars.png" />
+    <link rel="preload" as="image" href="/leaderboard-bg.png" />
+
+    <!-- Quick action button icons (Ask tab empty state) -->
+    <link rel="preload" as="image" href="/quick-visuals-light.png" />
+    <link rel="preload" as="image" href="/quick-visuals-dark.png" />
+    <link rel="preload" as="image" href="/quick-websearch-light.png" />
+    <link rel="preload" as="image" href="/quick-websearch-dark.png" />
+    <link rel="preload" as="image" href="/quick-files-light.png" />
+    <link rel="preload" as="image" href="/quick-files-dark.png" />
+    <link rel="preload" as="image" href="/quick-games-light.png" />
+    <link rel="preload" as="image" href="/quick-games-dark.png" />
+
+    <!-- Imagine style thumbnails -->
+    <link rel="preload" as="image" href="/style-anime.png" />
+
+    <!-- Blinga Games — banner + logo for every game -->
+    <link rel="preload" as="image" href="/game-memory-banner.png" />
+    <link rel="preload" as="image" href="/game-memory-logo.png" />
+    <link rel="preload" as="image" href="/game-maths-banner.png" />
+    <link rel="preload" as="image" href="/game-maths-logo.png" />
+    <link rel="preload" as="image" href="/game-word-banner.png" />
+    <link rel="preload" as="image" href="/game-word-logo.png" />
+    <link rel="preload" as="image" href="/game-quiz-banner.png" />
+    <link rel="preload" as="image" href="/game-quiz-logo.png" />
+    <link rel="preload" as="image" href="/game-car-banner.png" />
+    <link rel="preload" as="image" href="/game-car-logo.png" />
+    <link rel="preload" as="image" href="/game-oddword-banner.png" />
+    <link rel="preload" as="image" href="/game-oddword-logo.png" />
+    <link rel="preload" as="image" href="/game-rps.png" />
+    <link rel="preload" as="image" href="/game-tictactoe.png" />
+
+    <!-- Enhance / editor icons -->
+    <link rel="preload" as="image" href="/enhance-dark.png" />
+    <link rel="preload" as="image" href="/enhance-light.png" />
+    <link rel="preload" as="image" href="/icon-editor-dark.png" />
+    <link rel="preload" as="image" href="/icon-editor-light.png" />
+
+    <!-- Mic icons -->
+    <link rel="preload" as="image" href="/mic-dark.png" />
+    <link rel="preload" as="image" href="/mic-light.png" />
+
+    <!-- Sidebar close icons -->
+    <link rel="preload" as="image" href="/sidebar-close-dark.png" />
+    <link rel="preload" as="image" href="/sidebar-close-light.png" />
+
+    <!-- Plus icons -->
+    <link rel="preload" as="image" href="/plus-black.png" />
+    <link rel="preload" as="image" href="/plus-gray.png" />
+    <link rel="preload" as="image" href="/plus-dark.png" />
+    <link rel="preload" as="image" href="/plus-light.png" />
+
+    <!-- Tab bar icons (desktop + mobile) -->
+    <link rel="preload" as="image" href="/tab-ask-dark.png" />
+    <link rel="preload" as="image" href="/tab-ask-light.png" />
+    <link rel="preload" as="image" href="/tab-imagine-dark.png" />
+    <link rel="preload" as="image" href="/tab-imagine-light.png" />
+    <link rel="preload" as="image" href="/tab-nomad-dark.png" />
+    <link rel="preload" as="image" href="/tab-nomad-light.png" />
+    <link rel="preload" as="image" href="/tab-minds-dark.png" />
+    <link rel="preload" as="image" href="/tab-minds-light.png" />
+    <link rel="preload" as="image" href="/tab-labs-dark.png" />
+    <link rel="preload" as="image" href="/tab-labs-light.png" />
+    <link rel="preload" as="image" href="/tab-games-dark.png" />
+    <link rel="preload" as="image" href="/tab-games-light.png" />
+
+    <!-- Settings tab icons (additional) -->
+    <link rel="preload" as="image" href="/settings-general-black.png" />
+    <link rel="preload" as="image" href="/settings-general-gray.png" />
+    <link rel="preload" as="image" href="/settings-subscription-black.png" />
+    <link rel="preload" as="image" href="/settings-subscription-gray.png" />
+
+    <!-- Edit prompt icon -->
+    <link rel="preload" as="image" href="/icon-edit-prompt-gray.png" />
+
+    <!-- AI response action icons (like / dislike / copy / more / redo) -->
+    <link rel="preload" as="image" href="/icon-like-black.png" />
+    <link rel="preload" as="image" href="/icon-like-gray.png" />
+    <link rel="preload" as="image" href="/icon-like-gray2.png" />
+    <link rel="preload" as="image" href="/icon-dislike-black.png" />
+    <link rel="preload" as="image" href="/icon-dislike-gray.png" />
+    <link rel="preload" as="image" href="/icon-dislike-gray2.png" />
+    <link rel="preload" as="image" href="/icon-copy-black.png" />
+    <link rel="preload" as="image" href="/icon-copy-gray.png" />
+    <link rel="preload" as="image" href="/icon-copy-gray2.png" />
+    <link rel="preload" as="image" href="/icon-more-black.png" />
+    <link rel="preload" as="image" href="/icon-more-gray.png" />
+    <link rel="preload" as="image" href="/icon-redo-black.png" />
+    <link rel="preload" as="image" href="/icon-redo-gray.png" />
+
+    <!-- Toolbar / composer icons -->
+    <link rel="preload" as="image" href="/icon-voice-black.png" />
+    <link rel="preload" as="image" href="/icon-voice-gray.png" />
+    <link rel="preload" as="image" href="/icon-moon-black.png" />
+    <link rel="preload" as="image" href="/icon-moon-gray.png" />
+    <link rel="preload" as="image" href="/icon-sun-black.png" />
+    <link rel="preload" as="image" href="/icon-sun-gray.png" />
+    <link rel="preload" as="image" href="/icon-setting-black.png" />
+    <link rel="preload" as="image" href="/icon-setting-gray.png" />
+    <link rel="preload" as="image" href="/icon-download-black.png" />
+    <link rel="preload" as="image" href="/icon-download-gray.png" />
+    <link rel="preload" as="image" href="/icon-laptop-black.png" />
+    <link rel="preload" as="image" href="/icon-laptop-gray.png" />
+    <link rel="preload" as="image" href="/icon-webdesign-black.png" />
+    <link rel="preload" as="image" href="/icon-webdesign-gray.png" />
+    <link rel="preload" as="image" href="/icon-templates-dark.png" />
+    <link rel="preload" as="image" href="/icon-templates-light.png" />
+
+    <!-- Floating Nav (fn) icons -->
+    <link rel="preload" as="image" href="/fn-longans-black.png" />
+    <link rel="preload" as="image" href="/fn-longans-gray.png" />
+    <link rel="preload" as="image" href="/fn-settings-black.png" />
+    <link rel="preload" as="image" href="/fn-settings-gray.png" />
+    <link rel="preload" as="image" href="/fn-voice-black.png" />
+    <link rel="preload" as="image" href="/fn-voice-gray.png" />
+
+    <!-- Blinga Imagine templates -->
+    <link rel="preload" as="image" href="/templates/anime.png" />
+    <link rel="preload" as="image" href="/templates/ceo.png" />
+    <link rel="preload" as="image" href="/templates/redecorate.png" />
+    <link rel="preload" as="image" href="/templates/restore.png" />
+    <link rel="preload" as="image" href="/templates/sketch.png" />
+    <link rel="preload" as="image" href="/templates/style-upgrade.png" />
+    <link rel="preload" as="image" href="/templates/winter.png" />
+
+    <!-- Blinga Minds — personality avatars (all 27) -->
+    <link rel="preload" as="image" href="/personalities/akbar.png" />
+    <link rel="preload" as="image" href="/personalities/alexander.png" />
+    <link rel="preload" as="image" href="/personalities/aristotle.png" />
+    <link rel="preload" as="image" href="/personalities/caesar.png" />
+    <link rel="preload" as="image" href="/personalities/confucius.png" />
+    <link rel="preload" as="image" href="/personalities/da_vinci.png" />
+    <link rel="preload" as="image" href="/personalities/einstein.png" />
+    <link rel="preload" as="image" href="/personalities/gandhi.png" />
+    <link rel="preload" as="image" href="/personalities/genghis.png" />
+    <link rel="preload" as="image" href="/personalities/hawking.png" />
+    <link rel="preload" as="image" href="/personalities/jinnah.png" />
+    <link rel="preload" as="image" href="/personalities/kant.png" />
+    <link rel="preload" as="image" href="/personalities/machiavelli.png" />
+    <link rel="preload" as="image" href="/personalities/mandela.png" />
+    <link rel="preload" as="image" href="/personalities/marx.png" />
+    <link rel="preload" as="image" href="/personalities/napoleon.png" />
+    <link rel="preload" as="image" href="/personalities/newton.png" />
+    <link rel="preload" as="image" href="/personalities/nietzsche.png" />
+    <link rel="preload" as="image" href="/personalities/plato.png" />
+    <link rel="preload" as="image" href="/personalities/rumi.png" />
+    <link rel="preload" as="image" href="/personalities/shakespeare.png" />
+    <link rel="preload" as="image" href="/personalities/socrates.png" />
+    <link rel="preload" as="image" href="/personalities/suleiman.png" />
+    <link rel="preload" as="image" href="/personalities/suntzu.png" />
+    <link rel="preload" as="image" href="/personalities/tesla.png" />
+    <link rel="preload" as="image" href="/personalities/tipu.png" />
+    <link rel="preload" as="image" href="/personalities/turing.png" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

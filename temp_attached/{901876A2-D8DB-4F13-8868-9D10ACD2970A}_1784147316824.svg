@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="62" height="286" viewBox="0 0 60 280">
+<path fill="#a38941" fill-rule="evenodd" d="M 59,2 L 37,2 L 37,43 L 39,46 L 45,46 L 48,43 L 52,42 L 53,40 L 51,36 L 51,28 L 55,21 L 59,18 Z"/>
+<path fill="#897437" fill-rule="evenodd" d="M 52,28 L 52,36 L 54,40 L 53,42 L 48,44 L 45,47 L 39,47 L 37,44 L 37,90 L 42,91 L 46,94 L 58,95 L 59,94 L 59,45 L 54,40 L 52,36 Z"/>
+<path fill="#675829" fill-rule="evenodd" d="M 37,91 L 37,143 L 39,144 L 38,145 L 44,147 L 59,147 L 59,95 L 58,96 L 46,95 L 42,92 Z"/>
+<path fill="#483e1e" fill-rule="evenodd" d="M 37,144 L 37,191 L 38,192 L 46,192 L 51,191 L 52,189 L 59,188 L 59,148 L 44,148 L 37,145 L 38,144 Z M 59,21 L 55,25 L 53,30 L 54,37 L 59,43 Z"/>
+<path fill="#352d16" fill-rule="evenodd" d="M 59,189 L 52,190 L 51,192 L 46,193 L 38,193 L 37,192 L 37,228 L 38,230 L 46,230 L 47,228 L 58,228 L 59,227 Z"/>
+<path fill="#1d1910" fill-rule="evenodd" d="M 59,228 L 58,229 L 47,229 L 46,231 L 38,231 L 37,229 L 37,266 L 42,266 L 43,267 L 46,266 L 59,266 Z"/>
+<path fill="#0a090b" fill-rule="evenodd" d="M 36,209 L 36,275 L 37,276 L 59,276 L 59,267 L 46,267 L 43,268 L 36,266 Z"/>
+<path fill="#09090b" fill-rule="evenodd" d="M 1,0 L 1,279 L 59,279 L 59,277 L 37,277 L 35,275 L 35,1 L 36,0 L 59,0 Z"/>
+</svg>

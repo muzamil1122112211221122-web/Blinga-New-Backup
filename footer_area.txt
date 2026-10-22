@@ -1,0 +1,21 @@
+       title="Reset to defaults"
+            >
+              <RefreshCcw className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => { setNomadMode(draftNomadMode); setModelSelectorOpen(false); }}
+              className="bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 dark:text-zinc-900 text-white px-6 py-2.5 rounded-full font-semibold text-sm transition-colors"
+            >
+              Apply for this chat
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  // ?????????????????????????????????????????????????????????????????????????
+
+  return (
+    <TooltipProvider delayDuration={400}>
+    <div
+      className={`h-screen overflow-hidden flex flex-col bg-background relative transition-[padding] duration-30

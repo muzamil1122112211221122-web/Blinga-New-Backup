@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Begin Experience Button</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<style>
+    :root {
+      --mouse-x: 78%;
+      --mouse-y: 50%;
+      --glow-radius: 200px;
+      --glow-opacity: 0.95;
+      --secondary-glow-x: 65%;
+      --secondary-glow-y: 50%;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #0b0b0e;
+      color: #000000;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin: 0;
+      user-select: none;
+    }
+
+    /* Fixed Container - Strictly stationary anchor */
+    .button-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Completely stationary button - ZERO movement, transform or wobble */
+    .begin-btn {
+      position: relative;
+      width: 440px;
+      height: 88px;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, #ffffff 0%, #fdfdf9 45%, #fffdf0 100%);
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 42px;
+      overflow: hidden;
+      box-shadow: 
+        0 24px 50px -12px rgba(0, 0, 0, 0.65),
+        0 4px 22px 0 rgba(252, 198, 3, 0.22),
+        inset 0 1px 2px rgba(255, 255, 255, 0.95),
+        inset 0 -2px 6px rgba(0, 0, 0, 0.04);
+      transform: none !important;
+      transition: box-shadow 0.35s ease;
+    }
+
+    .begin-btn:hover {
+      box-shadow: 
+        0 28px 60px -12px rgba(0, 0, 0, 0.75),
+        0 8px 34px 0 rgba(252, 198, 3, 0.38),
+        inset 0 1px 2px rgba(255, 255, 255, 1);
+    }
+
+    /* Multi-layered Organic Autonomous + Interactive Yellow Aurora */
+    .reactive-gold-aurora {
+      position: absolute;
+      inset: 0;
+      border-radius: 9999px;
+      pointer-events: none;
+      z-index: 1;
+      background: 
+        radial-gradient(
+          circle var(--glow-radius) at var(--mouse-x) var(--mouse-y),
+          rgba(252, 198, 3, 0.95) 0%,
+          rgba(255, 222, 89, 0.8) 32%,
+          rgba(245, 158, 11, 0.5) 58%,
+          transparent 80%
+        ),
+        radial-gradient(
+          circle 160px at var(--secondary-glow-x) var(--secondary-glow-y),
+          rgba(254, 240, 138, 0.55) 0%,
+          rgba(252, 198, 3, 0.3) 50%,
+          transparent 80%
+        );
+      mix-blend-mode: multiply;
+      opacity: var(--glow-opacity);
+      will-change: background, opacity;
+    }
+
+    /* Subtle Specular Rim inside pill */
+    .glass-rim {
+      position: absolute;
+      inset: 1px;
+      border-radius: 9999px;
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* High contrast Black typography */
+    .btn-label {
+      position: relative;
+      z-index: 10;
+      color: #050505;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+    }
+
+    /* Black precision arrow icon */
+    .arrow-icon-wrap {
+      position: relative;
+      z-index: 10;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .begin-btn:hover .arrow-icon-wrap {
+      transform: translateX(4px);
+    }
+  </style>
+</head>
+<body>
+<!-- Stationary Container -->
+<div class="button-container" id="trackZone">
+<!-- Pure Stationary Button -->
+<button aria-label="Begin Experience" class="begin-btn" id="beginBtn">
+<!-- High precision specular rim -->
+<div class="glass-rim"></div>
+<!-- Organic Autonomous + Cursor Interactive Yellow Aurora inside button -->
+<div class="reactive-gold-aurora" id="goldAurora"></div>
+<!-- Black Bold Label -->
+<span class="btn-label">Begin Experience</span>
+<!-- Black Arrow Icon -->
+<div class="arrow-icon-wrap">
+<svg fill="none" height="34" viewbox="0 0 34 34" width="34" xmlns="http://www.w3.org/2000/svg">
+<path d="M 6 17 L 28 17 M 19 8 L 28 17 L 19 26" stroke="#050505" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5"></path>
+</svg>
+</div>
+</button>
+</div>
+<script>
+    const btn = document.getElementById('beginBtn');
+    const root = document.documentElement;
+
+    // Coordinate & state tracking
+    let currentX = 78;
+    let currentY = 50;
+    let currentRadius = 200;
+    let currentOpacity = 0.95;
+
+    let mouseTargetX = 78;
+    let mouseTargetY = 50;
+    let mouseTargetRadius = 200;
+    let mouseTargetOpacity = 0.95;
+
+    // Influence factor: 0 = completely autonomous drift, 1 = direct cursor tracking
+    let cursorInfluence = 0;
+    let targetInfluence = 0;
+    let lastMouseMoveTime = 0;
+
+    window.addEventListener('mousemove', (e) => {
+      lastMouseMoveTime = performance.now();
+      const rect = btn.getBoundingClientRect();
+      const btnCenterX = rect.left + rect.width / 2;
+      const btnCenterY = rect.top + rect.height / 2;
+
+      // Distance from cursor to center of button
+      const dist = Math.hypot(e.clientX - btnCenterX, e.clientY - btnCenterY);
+
+      // Clamped percentage inside button
+      const relX = ((e.clientX - rect.left) / rect.width) * 100;
+      const relY = ((e.clientY - rect.top) / rect.height) * 100;
+
+      const triggerDistance = 460;
+
+      if (dist < triggerDistance) {
+        targetInfluence = Math.min(1, Math.max(0, 1 - (dist / triggerDistance)));
+        mouseTargetX = Math.max(16, Math.min(84, relX));
+        mouseTargetY = Math.max(20, Math.min(80, relY));
+        
+        // When closer, glow slightly deepens & expands
+        mouseTargetOpacity = 0.92 + (0.08 * targetInfluence);
+        mouseTargetRadius = 190 + (30 * targetInfluence);
+      } else {
+        targetInfluence = 0;
+      }
+    });
+
+    // Autonomous organic wave & drift loop
+    function animate(now) {
+      const time = now * 0.0015; // smooth pacing
+
+      // Detect mouse stillness/inactivity to return seamlessly to idle wander
+      if (performance.now() - lastMouseMoveTime > 2200) {
+        targetInfluence = Math.max(0, targetInfluence - 0.02);
+      }
+
+      // Smoothly interpolate influence transition (cross-fade between auto drift & cursor)
+      cursorInfluence += (targetInfluence - cursorInfluence) * 0.06;
+
+      // Autonomous organic trajectory:
+      // Oscillates smoothly between ~24% and 82% horizontally with subtle vertical wave and breathing
+      const autoX = 54 + Math.sin(time * 0.9) * 26 + Math.sin(time * 1.7) * 4;
+      const autoY = 50 + Math.cos(time * 1.3) * 18 + Math.sin(time * 0.6) * 6;
+      const autoRadius = 195 + Math.sin(time * 1.8) * 22;
+      const autoOpacity = 0.90 + Math.sin(time * 1.2) * 0.08;
+
+      // Blend autonomous position with cursor position
+      const finalTargetX = (autoX * (1 - cursorInfluence)) + (mouseTargetX * cursorInfluence);
+      const finalTargetY = (autoY * (1 - cursorInfluence)) + (mouseTargetY * cursorInfluence);
+      const finalTargetRadius = (autoRadius * (1 - cursorInfluence)) + (mouseTargetRadius * cursorInfluence);
+      const finalTargetOpacity = (autoOpacity * (1 - cursorInfluence)) + (mouseTargetOpacity * cursorInfluence);
+
+      // Smooth lerp towards final blended target
+      currentX += (finalTargetX - currentX) * 0.1;
+      currentY += (finalTargetY - currentY) * 0.1;
+      currentRadius += (finalTargetRadius - currentRadius) * 0.1;
+      currentOpacity += (finalTargetOpacity - currentOpacity) * 0.1;
+
+      // Organic offset for secondary ambient harmonic glow
+      const secX = currentX + Math.sin(time * 1.1) * 8;
+      const secY = currentY + Math.cos(time * 1.4) * 8;
+
+      // Update CSS variables
+      root.style.setProperty('--mouse-x', `${currentX.toFixed(2)}%`);
+      root.style.setProperty('--mouse-y', `${currentY.toFixed(2)}%`);
+      root.style.setProperty('--secondary-glow-x', `${secX.toFixed(2)}%`);
+      root.style.setProperty('--secondary-glow-y', `${secY.toFixed(2)}%`);
+      root.style.setProperty('--glow-radius', `${currentRadius.toFixed(1)}px`);
+      root.style.setProperty('--glow-opacity', currentOpacity.toFixed(3));
+
+      requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+  </script>
+</body></html>
