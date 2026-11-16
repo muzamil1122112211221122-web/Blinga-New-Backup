@@ -1,0 +1,25 @@
+841:           </>
+842:         )}
+843:         {!isMini && <div className="flex-1 overflow-y-auto px-3">
+844:           <div className="space-y-2">
+845:             {/* ── Pinned section ── */}
+846:             {pinnedItems.length > 0 && (
+847:               <div className="space-y-0.5">
+848:                 <h4 className="text-[11px] font-bold text-amber-500 uppercase tracking-wider mb-1 px-3 flex items-center gap-1.5">
+849:                   <Pin className="w-2.5 h-2.5" /> Pinned
+850:                 </h4>
+851:                 <div className="space-y-1">
+852:                   {pinnedItems.map(chat => (
+853:                     <div key={chat.id}
+854:                       className={`group relative px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer ${currentProjectId === chat.id ? 'bg-zinc-100 dark:bg-zinc-800/50 text-zinc-900 dark:text-zinc-100 shadow-sm' : 'hover:bg-zinc-50 dark:hover:bg-zinc-900/30 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100'}`}
+855:                       onClick={() => onProjectSelect(chat.id)}
+856:                       onMouseEnter={() => setHoveredProject(`pinned-${chat.id}`)}
+857:                       onMouseLeave={() => setHoveredProject(null)}>
+858:                       <div className="flex items-center justify-between">
+859:                         <div className="flex items-center gap-1.5 min-w-0 flex-1">
+860:                           <p className="text-[13px] font-medium truncate leading-relaxed">{chat.title || 'New Chat'}</p>
+861:                           {chat.hasNomad && (
+862:                             <span className="flex-shrink-0" style={{
+863:                               display: 'inline-block', width: 14, height: 14,
+864:                               WebkitMaskImage: 'url(/creativity-icon.svg)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat',
+865:                               maskImage: 'url(/creativity-icon.svg)', maskSize: 'contain', maskRepeat: 'no-repeat',

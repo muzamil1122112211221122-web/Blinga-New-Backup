@@ -1,0 +1,14 @@
+--- at 118960 ---
+sTyping, setNomadIsTyping] = useState<{[model: string]: boolean}>({});
+  const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
+  const [nomadMode, setNomadMode] = useState<'multi' | 'auto'>('multi');
+  // Auto Mode st
+
+--- at 244815 ---
+───────────────────────────
+  const renderNomadModelSelector = () => {
+    if (!modelSelectorOpen) return null;
+    return (
+      <div
+        className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/50 backdr
+

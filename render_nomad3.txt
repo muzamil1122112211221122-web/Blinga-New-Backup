@@ -1,0 +1,41 @@
+></div>
+                              : <div className="w-5 h-5 rounded-full border-2 border-zinc-300 dark:border-zinc-600 flex-shrink-0" />
+                            }
+                          </div>
+                        </div>
+                      );
+                    });
+                  })
+              }
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="px-5 py-4 border-t border-border/30 flex justify-between items-center flex-shrink-0 bg-zinc-50/50 dark:bg-zinc-900/30">
+            <button
+              onClick={() => { nomadMode === 'auto' ? setNomadSoloModel('blinga-ai') : setActiveAIModels(new Set(['gpt-4o', 'claude-3.5-sonnet', 'gemini-pro', 'deepseek-r1', 'grok-4', 'blinga-ai'])); }}
+              className="w-9 h-9 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+              title="Reset to defaults"
+            >
+              <RefreshCcw className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setModelSelectorOpen(false)}
+              className="bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-100 dark:text-zinc-900 text-white px-6 py-2.5 rounded-full font-semibold text-sm transition-colors"
+            >
+              Apply for this chat
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  // ─────────────────────────────────────────────────────────────────────────
+
+  return (
+    <TooltipProvider delayDuration={400}>
+    <div
+      className={`h-screen overflow-hidden flex flex-col bg-background relative transition-[padding] duration-300 ${isSidebarOpen && sidebarOpenMode === 'mini' ? 'md:pl-[76px]' : ''} ${(isTyping || isAnyNomadModelTyping || philosopherIsTyping) ? 'ai-thinking' : ''} ${settingsToggles.minimalAnimations ? 'minimal-animations-enabled' : ''}`}
+    >
+
+      {/* Top Mini Navigation Pill *

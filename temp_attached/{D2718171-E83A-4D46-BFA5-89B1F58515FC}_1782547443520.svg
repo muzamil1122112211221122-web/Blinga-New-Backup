@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="135" height="56" viewBox="0 0 135 56">
+<path fill="#302f34" fill-rule="evenodd" d="M 49,28 L 49,31 L 88,31 L 88,28 Z"/>
+<path fill="#121212" fill-rule="evenodd" d="M 0,0 L 0,3 L 3,4 L 8,4 L 13,2 L 31,3 L 32,4 L 39,4 L 40,3 L 55,3 L 56,4 L 76,3 L 77,4 L 83,4 L 88,2 L 94,2 L 98,4 L 106,4 L 107,5 L 134,3 L 134,0 Z"/>
+<path fill="#0b0b0c" fill-rule="evenodd" d="M 14,11 L 32,11 L 27,11 L 26,10 Z M 0,4 L 0,5 L 5,6 L 9,5 L 33,5 L 34,6 L 39,5 L 56,5 L 57,6 L 98,5 L 108,7 L 134,5 L 134,4 L 127,4 L 117,6 L 107,6 L 106,5 L 98,5 L 94,3 L 88,3 L 83,5 L 77,5 L 76,4 L 70,4 L 69,5 L 56,5 L 55,4 L 32,5 L 31,4 L 18,4 L 17,3 L 13,3 L 8,5 Z"/>
+<path fill="#0a090a" fill-rule="evenodd" d="M 0,6 L 0,7 L 5,7 L 6,8 L 13,6 L 18,6 L 19,8 L 17,10 L 20,9 L 30,10 L 34,8 L 44,6 L 53,6 L 60,9 L 77,10 L 81,7 L 95,6 L 101,9 L 104,8 L 111,10 L 110,11 L 79,11 L 111,11 L 118,9 L 131,10 L 132,9 L 131,8 L 134,7 L 134,6 L 128,6 L 127,7 L 108,8 L 98,6 L 83,6 L 82,7 L 78,6 L 69,6 L 68,7 L 57,7 L 56,6 L 39,6 L 38,7 L 33,6 L 9,6 L 5,7 Z M 68,8 L 69,7 L 73,8 L 72,9 Z"/>
+<path fill="#09090b" fill-rule="evenodd" d="M 0,12 L 0,55 L 134,55 L 134,12 L 58,12 L 57,11 L 56,12 Z M 48,28 L 49,27 L 88,27 L 89,31 L 88,32 L 49,32 Z"/>
+<path fill="#09090a" fill-rule="evenodd" d="M 132,8 L 133,9 L 132,10 L 134,10 L 134,8 Z M 78,10 L 110,10 L 105,10 L 104,9 L 101,10 L 95,7 L 81,8 Z M 88,8 L 89,7 L 94,7 L 95,8 L 94,9 L 89,9 Z M 31,10 L 46,10 L 47,11 L 70,10 L 60,10 L 53,7 L 44,7 Z M 44,8 L 45,7 L 53,7 L 56,9 L 53,11 L 46,10 Z M 18,7 L 13,7 L 8,9 L 0,8 L 0,10 L 15,10 Z"/>
+<path fill="#08080a" fill-rule="evenodd" d="M 47,8 L 47,9 L 50,10 L 55,9 Z"/>
+</svg>

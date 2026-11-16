@@ -1,0 +1,12 @@
+--- at 245140 ---
+e.target === e.currentTarget) { setDraftNomadMode(nomadMode); setModelSelectorOpen(false); } }}
+      >
+        <div className="bg-white dark:bg-[#1C1
+
+--- at 245796 ---
+       <button onClick={() => { setDraftNomadMode(nomadMode); setModelSelectorOpen(false); }} className="text-muted-foreground hover:text-foreground p
+
+--- at 253033 ---
+           <button
+              onClick={() => { nomadMode === 'auto' ? setNomadSoloModel('blinga-ai') : setActiveAIModels(new Set(['gpt-4o', 'claude
+

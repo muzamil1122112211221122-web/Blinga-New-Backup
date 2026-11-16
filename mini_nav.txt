@@ -1,0 +1,51 @@
+MiniNavButton = ({
+    asset,
+    label,
+    onClick,
+    active,
+    iconSize,
+  }: {
+    asset: keyof typeof SIDEBAR_ASSETS;
+    label: string;
+    onClick: () => void;
+    active?: boolean;
+    iconSize?: string;
+  }) => (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          aria-label={label}
+          onClick={(event) => {
+            event.stopPropagation();
+            onClick();
+          }}
+          className="h-[36px] w-full mx-auto flex items-center justify-center group"
+        >
+          
+          <span className={`flex items-center justify-center w-[44px] h-[32px] rounded-full transition-colors duration-150 ${!active ? "group-hover:bg-zinc-100 dark:group-hover:bg-zinc-800/60" : ""}`}>
+            <img src={sidebarAsset(asset)} alt="" style={{ width: iconSize ?? '20px', height: iconSize ?? '20px', filter: isDarkTheme ? 'invert(0.75)' : 'brightness(0)', display: 'block' }} />
+          </span>
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="right" avoidCollisions={false}>{label}</TooltipContent>
+    </Tooltip>
+  );
+
+  useEffect(() => {
+    if (!isOpen) {
+      setIsMini(true);
+      setSpotlightOpen(false);
+    } else {
+      setIsMini(forceFull ? false : openMode !== 'full');
+    }
+  }, [isOpen, openMode, forceFull]);
+
+  const openSpotlight = useCallback((e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setSpotlightQuery("");
+    setSpotlightOpen(true);
+  }, []);
+
+  useEffect(() => {
+    o
