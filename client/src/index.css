@@ -726,7 +726,7 @@
 }
 
 /* Match the post-typing compact height from the very first render. */
-[data-message-bar] > div:not(.long-prompt-composer) textarea {
+[data-message-bar] > div:not(.long-prompt-composer):not(.composer-two-layer) textarea {
   height: 38px !important;
   min-height: 38px !important;
 }
@@ -2081,7 +2081,75 @@ textarea, input[type="text"], input[type="search"], input[type="email"], input[t
   100% { transform: translateY(0); }
 }
 .animate-vertical-model-runner {
-  animation: verticalModelRunner 10s linear infinite;
+  animation: verticalModelRunner 3s linear infinite;
+}
+
+.composer-two-layer .composer-text-layer textarea {
+  max-height: 200px;
+  overflow-y: auto;
+}
+.composer-two-layer .long-expand-control {
+  display: none;
+}
+.composer-two-layer .composer-attach-control {
+  display: flex;
+}
+.composer-two-layer button:has(img[src*="icon-orient-"]),
+.composer-two-layer div:has(> button img[src*="icon-orient-"]) {
+  display: none;
+}
+.composer-two-layer [data-testid="button-education-settings"],
+.composer-two-layer button:has(img[src="/integration-icon.svg"]),
+.composer-two-layer button:has(img[src="/settings-icon.svg"]) {
+  display: none;
+}
+.composer-two-layer .composer-controls-layer {
+  min-height: 44px;
+}
+.composer-two-layer .composer-controls-layer {
+  justify-content: flex-end;
+  gap: 0.25rem;
+}
+.composer-two-layer .composer-model-control {
+  order: 2;
+}
+.composer-two-layer .composer-action-controls {
+  order: 1;
+}
+.composer-two-layer .composer-model-control button:has(img[src="/integration-icon.svg"]),
+.composer-two-layer .composer-model-control button:has(img[src="/settings-icon.svg"]),
+.composer-two-layer .composer-model-control [data-testid="button-education-settings"] {
+  display: none;
+}
+.composer-two-layer .composer-compact-layout {
+  position: relative;
+  display: block;
+  min-height: 56px;
+  padding: 12px 10px 48px;
+  transition: min-height 220ms ease-out;
+}
+.composer-two-layer .composer-compact-layout > textarea {
+  display: block;
+  width: 100%;
+  min-height: 38px;
+  height: 38px;
+  max-height: 170px;
+  padding: 0 8px 8px !important;
+  overflow-y: hidden;
+  transition: height 180ms ease-out;
+}
+.composer-two-layer .composer-compact-layout > div:first-child,
+.composer-two-layer .composer-compact-layout > div:last-child {
+  position: absolute;
+  bottom: 7px;
+  z-index: 2;
+  margin: 0;
+}
+.composer-two-layer .composer-compact-layout > div:first-child {
+  left: 8px;
+}
+.composer-two-layer .composer-compact-layout > div:last-child {
+  right: 8px;
 }
 .nomad-selector-backdrop {
   animation: nomad-selector-fade-in 180ms ease-out both;

@@ -1355,7 +1355,42 @@ export function ChatInterface({ onShowAuth }: ChatInterfaceProps) {
   const [messageBarStyle, setMessageBarStyle] = useState<string>(
     () => localStorage.getItem('messageBarStyle') || 'compact'
   );
-  const isLongPrompt = inputValue.length > 41;
+  // Start the upward two-layer composer on the 38th character.
+  const isLongPrompt = inputValue.length >= 38;
+  const [functionBarTop, setFunctionBarTop] = useState<number | null>(null);
+  const [composerHeight, setComposerHeight] = useState(56);
+  const baseComposerTopRef = useRef<number | null>(null);
+  const [welcomeShift, setWelcomeShift] = useState(0);
+
+  useLayoutEffect(() => {
+    if (!((activeTab === 'ask' && messages.length === 0) || isLongPrompt)) return;
+    const syncFunctionBar = () => {
+      const messageBar = document.querySelector('[data-message-bar]') as HTMLElement | null;
+      const functionBar = document.querySelector('.macos-function-bar') as HTMLElement | null;
+      if (!messageBar || !functionBar) return;
+      const barRect = messageBar.getBoundingClientRect();
+      const functionRect = functionBar.getBoundingClientRect();
+      const gap = 10;
+      setComposerHeight(barRect.height);
+      if (!isLongPrompt) {
+        baseComposerTopRef.current = barRect.top;
+        setWelcomeShift(0);
+      } else if (baseComposerTopRef.current !== null) {
+        setWelcomeShift(barRect.top - baseComposerTopRef.current);
+      }
+      setFunctionBarTop(Math.max(8, barRect.top - functionRect.height - gap));
+    };
+    const frame = requestAnimationFrame(syncFunctionBar);
+    const observer = new ResizeObserver(syncFunctionBar);
+    const messageBar = document.querySelector('[data-message-bar]');
+    if (messageBar) observer.observe(messageBar);
+    window.addEventListener('resize', syncFunctionBar);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      window.removeEventListener('resize', syncFunctionBar);
+    };
+  }, [activeTab, messages.length, inputValue, isLongPrompt]);
 
   useEffect(() => {
     const handler = () => setFunctionBarStyle(localStorage.getItem('functionBarStyle') || 'pill');
@@ -2854,20 +2889,19 @@ Rules:
   useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
-      if (messageBarStyle === 'compact' && !isLongPrompt) {
-        // Measure real height without transition
-        const prevTransition = textarea.style.transition;
-        textarea.style.transition = 'none';
-        textarea.style.height = '38px';
-        const target = Math.min(textarea.scrollHeight, 200) + 'px';
-        textarea.style.height = target;
-        // Force reflow then re-enable transition
-        void textarea.offsetHeight;
-        textarea.style.transition = prevTransition;
-      } else {
+      const prevTransition = textarea.style.transition;
+      textarea.style.transition = 'none';
+      if (isLongPrompt) {
         textarea.style.height = 'auto';
-        textarea.style.height = Math.min(textarea.scrollHeight, 200) + 'px';
+        const contentHeight = textarea.scrollHeight;
+        textarea.style.height = `${Math.min(contentHeight, 170)}px`;
+        textarea.style.overflowY = contentHeight > 170 ? 'auto' : 'hidden';
+      } else {
+        textarea.style.height = '38px';
+        textarea.style.overflowY = 'auto';
       }
+      void textarea.offsetHeight;
+      textarea.style.transition = prevTransition;
     }
   }, [inputValue, messageBarStyle, isLongPrompt]);
 
@@ -4940,8 +4974,8 @@ Let's start the self-listen session!`;
             {/* Welcome screen — crossfade between Blinga and Owl Mode */}
             <div style={{
               position:'absolute',
-              top: !(settingsToggles.hideBlingaLogo) ? '18px' : 'calc(50% - 192px)',
-              left:'50%', transform:'translateX(-50%)', width:'100%',
+              top: (!(settingsToggles.hideBlingaLogo) ? '18px' : 'calc(50% - 192px)'),
+              left:'50%', transform:`translateX(-50%) translateY(${welcomeShift}px)`, width:'100%',
               display:'flex', flexDirection:'column', alignItems:'center',
               paddingTop: settingsToggles.hideBlingaLogo ? '165px' : '0px',
               transition:'all 0.3s ease'
@@ -7276,7 +7310,7 @@ Let's start the self-listen session!`;
         const askFnBarCentered = (activeTab === 'ask' && messages.length === 0) || (activeTab === 'workspace' && workspaceView === 'inner' && imagineMessages.length === 0);
         const contentCenterLeft = isSidebarOpen ? (sidebarOpenMode === 'full' ? 'calc(50vw + 144px)' : 'calc(50vw + 38px)') : '50vw';
         return (
-          <div className={`macos-function-bar ${!askFnBarCentered ? 'macos-function-bar-with-messages' : ''} rounded-3xl mx-3 sm:mx-4 mb-1 max-w-[50rem] mx-auto w-full !border-none !shadow-none ${activeTab === 'workspace' || activeTab === 'philosopher' || activeTab === 'blinga-games' || activeTab === 'blinga-labs' || ['imagine', 'presentations', 'motion-studio'].includes(activeTab) || activeTab === 'nomad' || functionBarStyle === 'message-bar' || isVoiceModeModalOpen || isVoiceModeOpen ? 'hidden' : ''}`} style={askFnBarCentered ? {width: 'fit-content', position: 'fixed', top: (activeTab === 'workspace' && workspaceView === 'inner') ? (isPill ? 'calc(50% - 40px)' : 'calc(50% - 55px)') : (activeTab === 'workspace' ? (isPill ? 'calc(50% - 22px)' : 'calc(50% - 38px)') : (isPill ? 'calc(50% - 48px)' : 'calc(50% - 68px)')), left: contentCenterLeft, transform: 'translateX(calc(-50% - 15px))', zIndex: 20, marginBottom: '10px', transition: 'left 320ms cubic-bezier(0.22, 1, 0.36, 1), transform 320ms cubic-bezier(0.22, 1, 0.36, 1)'} : {width: 'fit-content', marginLeft: 'auto', marginRight: 'auto', marginTop: isPill ? '43px' : '11px', marginBottom: '14px', transform: 'none', position: 'relative', zIndex: 30}}>
+          <div className={`macos-function-bar ${!askFnBarCentered ? 'macos-function-bar-with-messages' : ''} rounded-3xl mx-3 sm:mx-4 mb-1 max-w-[50rem] mx-auto w-full !border-none !shadow-none ${activeTab === 'workspace' || activeTab === 'philosopher' || activeTab === 'blinga-games' || activeTab === 'blinga-labs' || ['imagine', 'presentations', 'motion-studio'].includes(activeTab) || activeTab === 'nomad' || functionBarStyle === 'message-bar' || isVoiceModeModalOpen || isVoiceModeOpen || isCustomizeModalOpen ? 'hidden' : ''}`} style={askFnBarCentered ? {width: 'fit-content', position: 'fixed', top: functionBarTop !== null ? `${functionBarTop}px` : ((activeTab === 'workspace' && workspaceView === 'inner') ? (isPill ? 'calc(50% - 40px)' : 'calc(50% - 55px)') : (activeTab === 'workspace' ? (isPill ? 'calc(50% - 22px)' : 'calc(50% - 38px)') : (isPill ? 'calc(50% - 48px)' : 'calc(50% - 68px)'))), left: contentCenterLeft, transform: 'translateX(calc(-50% - 15px))', zIndex: 60, marginBottom: '10px', transition: 'left 320ms cubic-bezier(0.22, 1, 0.36, 1), transform 320ms cubic-bezier(0.22, 1, 0.36, 1), top 220ms ease-out'} : {width: 'fit-content', marginLeft: 'auto', marginRight: 'auto', marginTop: isPill ? '43px' : '11px', marginBottom: '14px', transform: 'none', position: 'relative', zIndex: 30}}>
             <div className={`flex flex-wrap justify-center p-3 bg-transparent !border-none ${isPill ? 'gap-2' : 'gap-4'}`}>
               {!(activeTab === 'workspace') && renderFunctionBtn(
                 <img src={resolvedTheme === 'dark' ? '/fn-voice-gray.png' : '/fn-voice-black.png'} alt="Long Answer" className="btn-icon" style={{ opacity: 1, width:'26px',height:'26px' }} />,
@@ -7775,11 +7809,11 @@ Let's start the self-listen session!`;
         )}
 
         <div
-          className={`relative w-full bg-white dark:bg-[#383838] transition-all duration-300 crisp-outline !border-none !outline-none ${isLongPrompt ? 'long-prompt-composer rounded-[1.75rem]' : messageBarStyle === 'compact' && attachedFiles.length === 0 ? 'rounded-full' : 'rounded-[1.5rem]'}`}
+          className={`relative w-full bg-white dark:bg-[#383838] transition-[height,border-radius] duration-200 crisp-outline !border-none !outline-none ${isLongPrompt ? 'composer-two-layer rounded-[1.75rem]' : messageBarStyle === 'compact' && attachedFiles.length === 0 ? 'rounded-full' : 'rounded-[1.5rem]'}`}
         >
-          {messageBarStyle === 'compact' && !isLongPrompt ? (
-            /* ── Compact: single-row pill layout ── */
-            <div className={`${isStudioComposerSurface ? 'flex items-center min-h-[56px]' : 'flex items-end'} px-2 pt-2 pb-[7px] gap-1`}>
+          {messageBarStyle === 'compact' ? (
+            /* ── Shared compact composer: normal row or new two-layer expansion ── */
+            <div className={`${isStudioComposerSurface ? 'flex items-center min-h-[56px]' : 'flex items-end'} composer-compact-layout px-2 pt-2 pb-[7px] gap-1`}>
               {/* LEFT: Attachment + function-bar buttons */}
               <div className={`flex items-center gap-1 ${isStudioComposerSurface ? 'mb-0' : 'mb-[3px]'}`}>
               <Tooltip open={attachOpen ? false : undefined}>
@@ -7863,7 +7897,7 @@ Let's start the self-listen session!`;
                 onPaste={handleComposePaste}
                 placeholder={['imagine', 'presentations', 'motion-studio'].includes(activeTab) ? 'Just Prompt and image is in your hands!' : activeTab === 'philosopher' && selectedPersonality ? `Talk with ${selectedPersonality.name}...` : typingPlaceholder}
                 className="flex-1 bg-transparent dark:text-white text-black placeholder-zinc-400 resize-none focus:outline-none border-none shadow-none ring-0 focus:ring-0 focus-visible:ring-0 focus-visible:outline-none focus-visible:ring-offset-0 text-sm leading-normal !rounded-none transition-[height] duration-300 ease-out"
-                style={{ minHeight: '38px', maxHeight: '200px', lineHeight: '1.5', overflowY: 'auto', paddingTop: '8px', paddingBottom: '8px', paddingLeft: '4px', paddingRight: '4px' }}
+                style={{ minHeight: '38px', maxHeight: '320px', lineHeight: '1.5', overflowY: 'auto', paddingTop: '8px', paddingBottom: '8px', paddingLeft: '4px', paddingRight: '4px' }}
                 data-testid="input-message"
               />
               {/* RIGHT: expand + model selector + mic + send */}
@@ -7880,7 +7914,7 @@ Let's start the self-listen session!`;
                 </TooltipTrigger>
                 <TooltipContent>Expand prompt</TooltipContent>
               </Tooltip>
-              {isMotionStudioSurface && (() => {
+              {isMotionStudioSurface && activeTab === 'imagine' && (() => {
                 const motionButton = 'flex items-center justify-center gap-1.5 rounded-full !border-0 !border-transparent !bg-transparent hover:!bg-transparent dark:!bg-transparent dark:hover:!bg-transparent px-2.5 !py-0 text-[11px] font-semibold leading-none text-zinc-700 dark:text-zinc-300 transition-all';
                 if (activeTab === 'presentations') {
                   return <>
@@ -8109,9 +8143,9 @@ Let's start the self-listen session!`;
               </div>
             </div>
           ) : (
-            /* ── Default: two-row layout (unchanged) ── */
+            /* ── New two-layer composer: text grows upward, controls stay docked ── */
             <>
-              <div className={`${isLongPrompt ? 'p-0' : 'p-1.5 sm:p-2'}`}>
+              <div className={`${isLongPrompt ? 'composer-text-layer px-3 pt-3 pb-12' : 'p-1.5 sm:p-2'}`}>
                 <Textarea
                   ref={textareaRef}
                   value={inputValue}
@@ -8125,20 +8159,20 @@ Let's start the self-listen session!`;
                 />
               </div>
 
-              <div className={`flex items-center justify-between px-2 pb-2 ${isLongPrompt ? 'absolute inset-x-0 bottom-0 rounded-b-[1.75rem] bg-white pt-1 dark:bg-[#383838]' : ''}`}>
-                <div className="flex items-center gap-1">
-                  {/* Expand prompt inline, left of model selector */}
+              <div className={`flex items-center justify-between px-2 pb-2 ${isLongPrompt ? 'composer-controls-layer absolute inset-x-0 bottom-0 rounded-b-[1.75rem] bg-white pt-1 dark:bg-[#383838]' : ''}`}>
+                <div className="composer-model-control flex items-center gap-1">
+                  {/* New two-layer left control: attachment */}
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <button
-                        className={`long-expand-control w-4 h-4 flex items-center justify-center transition-all flex-shrink-0 ${inputValue.trim() ? 'text-zinc-600 dark:text-zinc-300 opacity-90 hover:opacity-100 scale-110' : 'text-zinc-400 opacity-30 hover:opacity-60'}`}
-                        onClick={() => setPromptFullscreen(true)}
-                        tabIndex={-1}
+                        className="composer-attach-control flex h-9 w-9 items-center justify-center rounded-full text-zinc-700 transition-all hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-white/10"
+                        onClick={() => fileInputRef.current?.click()}
+                        aria-label="Attach files"
                       >
-                        <Maximize2 className="w-2.5 h-2.5" />
+                        <Plus className="h-5 w-5" />
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent>Expand prompt</TooltipContent>
+                    <TooltipContent>Attach</TooltipContent>
                   </Tooltip>
                   {['imagine', 'presentations', 'motion-studio'].includes(activeTab) && (() => {
                     const ORIENTS = [
@@ -8215,7 +8249,7 @@ Let's start the self-listen session!`;
                   )}
                 </div>
 
-                <div className="flex items-center space-x-1.5 sm:space-x-2">
+                <div className="composer-action-controls flex items-center space-x-1.5 sm:space-x-2">
                   {/* Function bar buttons in message bar mode */}
                   {functionBarStyle === 'message-bar' && activeTab !== 'philosopher' && activeTab !== 'blinga-games' && (
                     <>
@@ -8325,6 +8359,22 @@ Let's start the self-listen session!`;
                        </DropdownMenuContent>
                     </DropdownMenu>
                     <TooltipContent>Tools</TooltipContent>
+                  </Tooltip>
+
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="w-9 h-9 rounded-full text-zinc-400 transition-all hover:bg-black/5 hover:text-zinc-700 dark:hover:bg-white/10 dark:hover:text-white"
+                        onClick={() => setPromptFullscreen(true)}
+                        disabled={!inputValue.trim()}
+                        aria-label="Expand prompt"
+                      >
+                        <Maximize2 className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Expand prompt</TooltipContent>
                   </Tooltip>
 
                   <Tooltip>
@@ -9290,6 +9340,7 @@ Let's start the self-listen session!`;
 </TooltipProvider>
   );
 }
+
 
 
 
